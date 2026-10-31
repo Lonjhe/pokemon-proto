@@ -96,6 +96,13 @@ input{flex:1;min-width:140px}
 .opp .grow{flex:1;min-width:140px}
 .aura{position:absolute;inset:0;background:radial-gradient(circle at 70% 30%,#ff1744aa,transparent 55%);animation:aura 2s infinite alternate;mix-blend-mode:screen;pointer-events:none}
 @keyframes aura{from{opacity:.35}to{opacity:.9}}
+.bsc{position:relative;min-height:clamp(300px,50vh,460px);border:3px solid #0b1030;overflow:hidden;background:#07041c;container-type:inline-size}
+.bsc .bgimg{position:absolute;inset:0;background-size:cover;background-position:center bottom;image-rendering:pixelated;filter:saturate(.5) brightness(.35)}
+.bsc .fog{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 100%,#0b103099,transparent 60%),linear-gradient(#000a,transparent 40%);pointer-events:none}
+.bsp{position:absolute;left:50%;bottom:10%;width:clamp(150px,38cqw,280px);margin-left:calc(clamp(150px,38cqw,280px)/-2);animation:float 2.6s ease-in-out infinite alternate;image-rendering:auto}
+.bsi{position:absolute;left:0;right:0;top:0;padding:10px 12px;background:linear-gradient(#0b1030ee,transparent);z-index:2}.bsi .px{font-size:12px;color:#fff}
+.bsh{position:absolute;left:12px;right:12px;bottom:10px;display:flex;flex-direction:column;gap:4px;z-index:2}.bsh small{color:var(--m);font-weight:800}.bsh b{font-size:12px}
+.bcb{position:absolute;left:50%;bottom:-8%;width:36px;height:36px;margin-left:-18px;image-rendering:pixelated;z-index:3}
 .boss-hero{position:relative;min-height:320px;border:2px solid var(--b);overflow:hidden;background:#1a1040}
 .stg img.tsp{width:60px;height:60px;object-fit:contain;image-rendering:pixelated}.stg.lock{opacity:.5}.stg.cur{outline:2px solid var(--y);border-radius:10px}.tpv{display:flex;gap:2px;margin-top:3px}.tpv img{width:30px;height:30px;image-rendering:pixelated}.zh{position:relative;overflow:hidden;border-radius:10px;padding:12px;min-height:60px;margin-bottom:8px;display:flex;flex-direction:column;gap:2px}.zh::after{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#0b1030e8 30%,#0b103040)}.zh>*{z-index:2}.zh .bgimg{z-index:0!important;position:absolute;inset:0;background-size:cover;background-position:center bottom;image-rendering:pixelated}.panel.zh.lock{opacity:.5}
 .ibtn{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#4dd0e1;color:#0b1030;font:900 12px Nunito,sans-serif;cursor:pointer;vertical-align:middle;pointer-events:auto;margin-left:4px;border:2px solid #0b1030}

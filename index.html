@@ -100,6 +100,13 @@ input{flex:1;min-width:140px}
 .opp .grow{flex:1;min-width:140px}
 .aura{position:absolute;inset:0;background:radial-gradient(circle at 70% 30%,#ff1744aa,transparent 55%);animation:aura 2s infinite alternate;mix-blend-mode:screen;pointer-events:none}
 @keyframes aura{from{opacity:.35}to{opacity:.9}}
+.bsc{position:relative;min-height:clamp(300px,50vh,460px);border:3px solid #0b1030;overflow:hidden;background:#07041c;container-type:inline-size}
+.bsc .bgimg{position:absolute;inset:0;background-size:cover;background-position:center bottom;image-rendering:pixelated;filter:saturate(.5) brightness(.35)}
+.bsc .fog{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 100%,#0b103099,transparent 60%),linear-gradient(#000a,transparent 40%);pointer-events:none}
+.bsp{position:absolute;left:50%;bottom:10%;width:clamp(150px,38cqw,280px);margin-left:calc(clamp(150px,38cqw,280px)/-2);animation:float 2.6s ease-in-out infinite alternate;image-rendering:auto}
+.bsi{position:absolute;left:0;right:0;top:0;padding:10px 12px;background:linear-gradient(#0b1030ee,transparent);z-index:2}.bsi .px{font-size:12px;color:#fff}
+.bsh{position:absolute;left:12px;right:12px;bottom:10px;display:flex;flex-direction:column;gap:4px;z-index:2}.bsh small{color:var(--m);font-weight:800}.bsh b{font-size:12px}
+.bcb{position:absolute;left:50%;bottom:-8%;width:36px;height:36px;margin-left:-18px;image-rendering:pixelated;z-index:3}
 .boss-hero{position:relative;min-height:320px;border:2px solid var(--b);overflow:hidden;background:#1a1040}
 .stg img.tsp{width:60px;height:60px;object-fit:contain;image-rendering:pixelated}.stg.lock{opacity:.5}.stg.cur{outline:2px solid var(--y);border-radius:10px}.tpv{display:flex;gap:2px;margin-top:3px}.tpv img{width:30px;height:30px;image-rendering:pixelated}.zh{position:relative;overflow:hidden;border-radius:10px;padding:12px;min-height:60px;margin-bottom:8px;display:flex;flex-direction:column;gap:2px}.zh::after{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#0b1030e8 30%,#0b103040)}.zh>*{z-index:2}.zh .bgimg{z-index:0!important;position:absolute;inset:0;background-size:cover;background-position:center bottom;image-rendering:pixelated}.panel.zh.lock{opacity:.5}
 .ibtn{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#4dd0e1;color:#0b1030;font:900 12px Nunito,sans-serif;cursor:pointer;vertical-align:middle;pointer-events:auto;margin-left:4px;border:2px solid #0b1030}
@@ -651,7 +658,7 @@ function hub(){
  <div class="hm-t">
   <div class="hm-tile hm-g" data-go="gacha"><i class="ti ti-gift big"></i><b>Gacha</b><small>${d.gacha?gems()+' gemmes':'1 tirage offert'}</small>${d.gacha?'':'<span class="bd">1</span>'}</div>
   <div class="hm-tile hm-c" data-go="explorer"><i class="ti ti-pokeball big"></i><b>Capturer</b><small>${cs.n}/${CAP_MAX}${cs.n<CAP_MAX?' · '+fmtMS(cs.next):''}</small><div class="hm-pp">${pips}</div></div>
-  <div class="hm-tile hm-b" data-go="boss"><img src="${SP(150)}" referrerpolicy="no-referrer" alt=""><b>Boss mondial</b><small>${fmtT(bs.left).replace(/ \d+s$/,'')} · ${Math.round(bs.pct)} %</small><div class="hm-bb"><i style="width:${bs.pct}%"></i></div></div>
+  <div class="hm-tile hm-b" data-go="boss"><img src="${SP(bs.bo.id)}" style="${SHADE}" referrerpolicy="no-referrer" alt=""><b>Boss mondial${(S.bossRecs||[]).length?' · Récap !':''}</b><small>${fmtT(bs.left).replace(/ \d+s$/,'')} · ${Math.round(bs.pct)} %</small><div class="hm-bb"><i style="width:${bs.pct}%"></i></div></div>
  </div>
  <div class="hm-t2"><a data-go="elevage" class="hm-mini"><i class="ti ti-egg"></i><b>Élevage</b><small>${eggsReady()?eggsReady()+' œuf(s) prêt(s)':'3 incubateurs'}</small>${eggsReady()?'<span class="bd">'+eggsReady()+'</span>':''}</a><a data-act="gocamp" class="hm-mini"><i class="ti ti-tent"></i><b>Camp EV</b><small>${campN()}/${CAMP_MAX} au camp</small></a></div>
  <div class="panel hm-ch ${d.chest?'':'rdy'}"><div class="cb"><i class="ti ti-box"></i></div><div style="flex:1;min-width:0"><b>Coffre quotidien</b><small>Série ${streak} jour${streak>1?'s':''} · quêtes ${qd}/${DAY_QUESTS.length}</small><div class="hm-dy">${Array.from({length:7},(_,i)=>`<i class="${i<streak%7||(streak>0&&streak%7===0)?'on':''}"></i>`).join('')}</div></div><a class="btn y sm ${d.chest?'off':''}" data-act="chest">${d.chest?'Ouvert':'Ouvrir'}</a></div>
@@ -1292,21 +1299,43 @@ const fmtN=n=>Math.round(n).toLocaleString('fr-FR');
 const fmtT=ms=>{const s=Math.floor(ms/1000);return `${Math.floor(s/3600)}h ${String(Math.floor(s/60)%60).padStart(2,'0')}m ${String(s%60).padStart(2,'0')}s`};
 
 /* --- boss de monde (communauté simulée) --- */
-const RAID=40,TOT=250000,DUR=36*36e5;
-const GOALS=[[1000,'Hyper Ball ×2',s=>{s.balls.hyper+=2}],[3000,'Super Ball ×5',s=>{s.balls.super+=5}],[6000,'1 000 pièces',s=>{s.coins+=1000}]];
-const FAKE=[['Aqua_Léo',.034],['Misty42',.029],['DraculeFR',.025],['Pika_Max',.021],['Sacha_J',.018],['Noctali',.015],['Ondine7',.012],['Rondou_King',.01]];
+const RAID=40,TOT=250000,BSLOT=2*36e5,CHN=.10,THROWS=5,BCAP={poke:.10,super:.15,hyper:.20},BK3=['poke','super','hyper'];
+const BOSSES=[
+ {id:150,name:'Mewtwo',lvl:90,bg:'mountain',moves:[{n:'Psyko',t:'Psy',p:90},{n:'Ball\'Ombre',t:'Spectre',p:80},{n:'Choc Mental',t:'Psy',p:50}]},
+ {id:149,name:'Dracolosse',lvl:80,bg:'beach',moves:[{n:'Dracogriffe',t:'Dragon',p:80},{n:'Ouragan',t:'Vol',p:70},{n:'Tonnerre',t:'Électrik',p:90}]},
+ {id:34,name:'Nidoking',lvl:75,sh:true,bg:'desert',moves:[{n:'Détricanon',t:'Poison',p:90},{n:'Séisme',t:'Normal',p:100},{n:'Mégacorne',t:'Insecte',p:75}]}];
+const curSlot=()=>Math.floor(Date.now()/BSLOT),bossOf=sl=>BOSSES[sl%BOSSES.length];
+const FAKE=['Aqua_Léo','Misty42','DraculeFR','Pika_Max','Sacha_J','Noctali','Ondine7','Rondou_King','Tauros_X','Lokhlass','Ronflex_Zzz','Evoli_Fan','Pierre_89','Kanto_Boy','Jirachi','Mew_Hunter','Arcanin_Rush','Carapuce_Sq','Roucool_Air','Magicarpe_Lv100','Mimiqui','Ptitard','Etourmi_Pro','Rattata_Cap','Piplup_Ice','Lucario_Z','Zekrom_77','Gardevoir','Heliolisk','Florizarre_V'];
+const BTIER=[
+ [1,1,'1er',[{k:'coin',q:5000},{k:'gem',q:150},{k:'ball',v:'hyper',q:5},{k:'item',v:'bonbonxl',q:3}]],
+ [2,3,'2e et 3e',[{k:'coin',q:3000},{k:'gem',q:80},{k:'ball',v:'hyper',q:3},{k:'item',v:'bonbonxl',q:2}]],
+ [4,10,'4e à 10e',[{k:'coin',q:2000},{k:'gem',q:40},{k:'ball',v:'super',q:5},{k:'item',v:'bonbonxl',q:1}]],
+ [11,20,'11e à 20e',[{k:'coin',q:1000},{k:'gem',q:20},{k:'ball',v:'super',q:3},{k:'item',v:'bonbonm',q:2}]],
+ [21,999,'Autres participants',[{k:'coin',q:500},{k:'gem',q:10},{k:'ball',v:'poke',q:5},{k:'item',v:'bonbon',q:3}]]];
+const BDEAD=[{k:'egg',v:'c'}];
+const tierOf=r=>BTIER.find(t=>r>=t[0]&&r<=t[1]);
+function rewTxt(e){return e.k==='coin'?e.q+' Pokédollars':e.k==='gem'?e.q+' gemmes':e.k==='ball'?BALLS[e.v].n+' ×'+e.q:e.k==='egg'?EGGT[e.v].n:ITN(e.v)+' ×'+e.q}
+function bossGive(e){if(e.k==='gem'){S.gems=gems()+e.q;return{n:e.q+' gemmes'}}return gzDo(e)}
+function bossClose(b,dead){
+ if(b.mine<=0||b.closed)return;b.closed=true;
+ const el=dead?Math.min(1,(Date.now()-b.slot*BSLOT)/BSLOT):1,oth=TOT*.86*el;
+ const w=FAKE.map((n,i)=>1/Math.pow(i+1,.85)),sw=w.reduce((x,y)=>x+y,0),rows=FAKE.map((n,i)=>({n,d:Math.round(oth*w[i]/sw)}));
+ const rank=1+rows.filter(r=>r.d>b.mine).length,all=[...rows,{n:S.name||'Toi',d:b.mine,me:1}].sort((x,y)=>y.d-x.d);
+ (S.bossRecs||(S.bossRecs=[])).push({slot:b.slot,dead,mine:b.mine,rank,n:all.length,top:all.slice(0,10),rew:[...tierOf(rank)[3],...(dead?BDEAD:[])],chance:Math.random()<CHN,phase:'recap',throws:0});
+ save();
+}
 function bossS(){
- const today=new Date().toISOString().slice(0,10);
- if(!S.boss)S.boss={start:Date.now()-5*36e5,mine:0,tries:3,day:today,claimed:[]};
- if(S.boss.day!==today){S.boss.day=today;S.boss.tries=3}
+ const slot=curSlot();
+ if(!S.boss||S.boss.slot==null)S.boss={slot,mine:0,tries:3};
+ else if(S.boss.slot!==slot){bossClose(S.boss,false);S.boss={slot,mine:0,tries:3}}
  return S.boss;
 }
 function bossStat(){
- const b=bossS(),now=Date.now(),el=Math.min(1,Math.max(0,(now-b.start)/DUR)),others=Math.round(TOT*.82*el),sh=FAKE.reduce((s,f)=>s+f[1],0);
- const rows=FAKE.map(f=>[f[0],Math.round(others*f[1]/sh*.55)]);rows.push(['Toi',b.mine,1]);rows.sort((a,c)=>c[1]-a[1]);
- const hp=Math.max(0,TOT-others-b.mine);
- return{hp,pct:hp/TOT*100,left:Math.max(0,b.start+DUR-now),rows};
+ const b=bossS(),now=Date.now(),el=Math.min(1,Math.max(0,(now-b.slot*BSLOT)/BSLOT)),hp=Math.max(0,TOT-TOT*.86*el-b.mine);
+ if(hp<=0&&!b.dead){b.dead=true;bossClose(b,true);save()}
+ return{hp,pct:hp/TOT*100,left:Math.max(0,(b.slot+1)*BSLOT-now),bo:bossOf(b.slot),dead:!!b.dead,mine:b.mine};
 }
+const SHADE='filter:brightness(0) drop-shadow(0 0 8px #ff2d55) drop-shadow(0 0 20px #7a0030)';
 
 /*FX-BEGIN*/
 /* --- moteur d'effets canvas 2D (particules additives, bolts, beams, caméra) --- */
@@ -1878,12 +1907,12 @@ const avgLvl=()=>{const t=S.box.filter(m=>m.team);return t.length?Math.round(t.r
 function lobby(){const a=avgLvl();LOBBY=[['meadow','Prairie des Brumes','Dresseuse Léa',-2],['forest','Forêt Argentée','Garde forestier',1],['mountain','Mont Éclair','Alpiniste Marc',4]].map(([bg,zone,name,d])=>({bg,zone,name,id:pick(SPECIES)[0],lvl:Math.max(3,a+d)}))}
 function begin(cfg){
  const team=S.box.filter(m=>m.team).slice(0,6).map(m=>(ensure(m),(()=>{const f=fighter(m.id,m.lvl,{uid:m.uid,sh:!!m.sh,moves:movesFrom(m)}),k=statMul(m);f.hp=f.max=Math.round(f.max*k);f.atk=Math.round(f.atk*k);f.def=Math.round(f.def*k);f.spd=Math.round(f.spd*k);f.held=m.held||null;if(m.held==='orbe')f.dmgMul=1.3;return f})()));if(!team.length)return;
- B={...cfg,team,i:0,turn:1,busy:false,over:false,pick:false,showSw:false,res:null,fresh:true,dealt:0,msg:cfg.mode==='boss'?'Mewtwo te toise du regard !':cfg.fname?`${cfg.fname} te défie et envoie ${cfg.foe.name} !`:`${cfg.foe.name} veut se battre !`};
+ B={...cfg,team,i:0,turn:1,busy:false,over:false,pick:false,showSw:false,res:null,fresh:true,dealt:0,msg:cfg.mode==='boss'?`${cfg.foe.name} te toise du regard !`:cfg.fname?`${cfg.fname} te défie et envoie ${cfg.foe.name} !`:`${cfg.foe.name} veut se battre !`};
  save();render();
 }
 function startBoss(){
- const b=bossS();if(b.tries<=0||!S.box.some(m=>m.team))return;b.tries--;
- begin({mode:'boss',bg:'mountain',maxTurns:6,foe:fighter(150,90,{hp:1e9,dmgMul:.3,moves:[{n:'Psyko',t:'Psy',p:90},{n:'Ball\'Ombre',t:'Spectre',p:80},{n:'Choc Mental',t:'Psy',p:50}]})});
+ const b=bossS(),st=bossStat();if(st.dead||b.tries<=0||!S.box.some(m=>m.team))return;b.tries--;const bo=st.bo;
+ begin({mode:'boss',bg:bo.bg,maxTurns:6,foe:fighter(bo.id,bo.lvl,{hp:1e9,dmgMul:.3,sh:!!bo.sh,moves:bo.moves})});
 }
 function foeMove(){
  const me=B.team[B.i],F=B.foe,ms=F.moves,ai=B.ai??1,sc=m=>m.p*eff(m.t,me.types)*(F.types.includes(m.t)?1.5:1);
@@ -1960,7 +1989,7 @@ function finish(win){
  if(B.adv!=null)advFinish(win,lines);
  else if(B.mode==='duel'){const c=win?60+B.foe.lvl*5:10,x=win?30+B.foe.lvl*4:5;S.coins+=c;S.xp+=x;while(S.xp>=need()){S.xp-=need();S.lvl++}lines.push(`+${fmtN(c)} pièces · +${x} XP`)}
  else{const b=bossS(),c=Math.round(B.dealt/30);S.coins+=c;S.xp+=20;lines.push(`${fmtN(B.dealt)} dégâts infligés au boss`,`+${fmtN(c)} pièces`);
-  GOALS.forEach(([n,l,f],k)=>{if(b.mine>=n&&!b.claimed.includes(k)){b.claimed.push(k);f(S);lines.push('Palier atteint : '+l)}})}
+  if(bossStat().dead)lines.push('Le boss est vaincu ! Ouvre l\'onglet Boss pour le récap et tes lots.')}
  B.res={win,lines};say(win?'Victoire !':B.mode==='boss'?'Tentative terminée.':'Défaite...');save();LOBBY=null;render(true);
 }
 
@@ -1971,7 +2000,7 @@ function battleView(){
  const mvs=m.moves.map((v,k)=>`<a class="btn mvb ${v.pp<=0||B.busy||B.over||B.pick?'off':''}" data-b="mv" data-k="${k}" style="border-color:${TC[v.t]||'#555'}"><b>${v.n}</b><small>${v.t} · Puiss. ${v.p}${v.max<90?` · PP ${v.pp}/${v.max}`:''}</small></a>`).join('');
  const strip=B.team.map((t,k)=>{const r=t.hp/t.max;return `<div class="tm ${k===B.i?'sel':''} ${t.hp<=0?'ko':''} ${B.busy&&!B.pick?'off':''}" data-b="sw" data-k="${k}"><img class="pmi" src="${t.sh?SH(t.id):SP(t.id)}" referrerpolicy="no-referrer" alt=""><b>${t.name}</b><div class="bar"><i style="width:${r*100}%;background:${hpc(r)}"></i></div><small>${t.hp}/${t.max}</small></div>`}).join('');
  const arena=`<div class="arena" id="arena"><div id="stage"><div class="sky"></div><div class="gr"></div><div class="gr2"></div><div class="bgimg" style="background-image:url(${BG_}${B.bg}.png)"></div>${boss?'<div class="aura"></div>':''}
- <img class="sp${inn}" id="foe" ${boss?'data-boss=1':''} src="${SP(f.id)}" style="right:12%;top:${boss?2:10}%;width:${boss?'clamp(130px,34cqw,250px)':'clamp(90px,24cqw,170px)'}" referrerpolicy="no-referrer" alt="">
+ <img class="sp${inn}" id="foe" ${boss?'data-boss=1':''} src="${f.sh?SH(f.id):SP(f.id)}" style="right:12%;top:${boss?2:10}%;width:${boss?'clamp(130px,34cqw,250px)':'clamp(90px,24cqw,170px)'}" referrerpolicy="no-referrer" alt="">
  <img class="sp${inn}" id="me" src="${m.sh?BKS(m.id):BK(m.id)}" style="left:8%;bottom:4%;width:clamp(110px,30cqw,220px)" referrerpolicy="no-referrer" alt=""></div>
  <div id="dim"></div>
  <div class="tag" style="left:3%;top:5%"><span class="px" style="font-size:10px">${f.name}</span><div style="font-size:12px">Niv. ${f.lvl}${boss?` · <span id="foeTxt">${fmtN(st.hp)}</span> PV`:''}</div>${B.fteam?`<div style="font-size:11px;color:var(--m)">${B.fname} · ${B.fteam.filter(x=>x.hp>0).length}/${B.fteam.length} Pokémon</div>`:''}<div class="bar"><i id="foeHp" style="width:${fr*100}%;background:${boss?'var(--r)':hpc(fr)}"></i></div></div>
@@ -1995,18 +2024,54 @@ function combat(){
  <div class="panel" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-color:var(--y)"><i class="ti ti-trophy" style="font-size:30px;color:var(--y)"></i><div class="grow" style="flex:1;min-width:150px"><b>Ligue : progression</b><div style="color:var(--m);font-size:12px">Dresseurs de route, villes, arènes, Conseil des 4.</div></div><a class="btn y" data-go="ligue">Ouvrir</a></div>
  <div class="panel" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-color:var(--r)"><i class="ti ti-skull" style="font-size:30px;color:var(--r)"></i><div class="grow" style="flex:1;min-width:150px"><b>Boss de monde actif</b><div style="color:var(--m);font-size:12px">Toute la communauté attaque le même boss.</div></div><a class="btn r" data-go="boss">Voir le boss</a></div>`;
 }
+function bossLots(){
+ const t=BTIER.map(([lo,hi,n,r])=>`<div class="svnote" style="margin:0"><b>${n}</b><br>${r.map(rewTxt).join(' · ')}</div>`).join('');
+ modalOv(`<h4 class="px">Lots du boss</h4><div class="svnote" style="margin:0">Les lots sont remis à la fin du chrono (ou à la défaite du boss), selon ton classement parmi tous les dresseurs.</div>${t}<div class="svnote" style="margin:0"><b>Boss vaincu avant la fin</b><br>+ ${rewTxt(BDEAD[0])} pour chaque participant</div><div class="svnote" style="margin:0"><b>Capture</b><br>${Math.round(CHN*100)} % de chance d'obtenir ${THROWS} lancers pour capturer le boss. Réussite selon la Ball : Poké ${BCAP.poke*100} %, Super ${BCAP.super*100} %, Hyper ${BCAP.hyper*100} % par lancer. Sinon, il s'enfuit.</div><div class="pbt"><a class="btn y" data-m="x">Fermer</a></div>`);
+}
+function bossRecapView(r){
+ const bo=bossOf(r.slot),img=`<img class="bsp" id="bcimg" src="${bo.sh?SH(bo.id):SP(bo.id)}" referrerpolicy="no-referrer" alt="">`,sc=(txt)=>`<div class="bsc" id="bcs"><div class="bgimg" style="background-image:url(${BG_}${bo.bg}.png)"></div><div class="aura"></div>${img}<img id="bcb" class="bcb" alt="" style="display:none"><div class="bsi"><span class="px">${bo.name}${bo.sh?' ✦':''}</span> <span class="chip">${txt}</span></div></div>`;
+ const head=`<div class="title"><h3 class="px">Boss de monde</h3></div>`;
+ if(r.phase==='cap'){
+  const left=THROWS-r.throws,balls=BK3.map((k,i)=>`<a class="btn ${(S.balls[k]||0)<=0||r.busy?'off':''}" data-b="bthrow" data-k="${i}"><img src="${BI(k)}" width="22" height="22" style="image-rendering:pixelated" alt="">${BALLS[k].n} · ${S.balls[k]||0}<small>${BCAP[k]*100} %</small></a>`).join('');
+  return `${head}${sc('Capture')}<div class="panel"><h4 class="px">Une chance de capture !</h4><div id="bcm" style="margin:6px 0">${r.msg||`${bo.name} est à ta portée ! Lancers restants : <b>${left}/${THROWS}</b>.`}</div><div class="mvg">${balls}</div></div>`;
+ }
+ if(r.phase==='won')return `${head}${sc('Capturé !')}<div class="panel"><h4 class="px">${bo.name}${bo.sh?' ✦':''} capturé !</h4><div>Il rejoint ta boîte (Niv. 50).</div><div style="margin-top:10px"><a class="btn y" data-b="bend"><i class="ti ti-check"></i>Continuer</a></div></div>`;
+ if(r.phase==='fled')return `${head}${sc('En fuite')}<div class="panel"><h4 class="px">${bo.name} s'est enfui…</h4><div>Plus de lancers. Une prochaine fois !</div><div style="margin-top:10px"><a class="btn y" data-b="bend"><i class="ti ti-check"></i>Continuer</a></div></div>`;
+ const rows=r.top.map((x,i)=>`<div class="lb ${x.me?'me':''}"><b>${i+1}</b><span>${esc(x.n)}</span><b>${fmtN(x.d)}</b></div>`).join('')+(r.rank>10?`<div class="lb me"><b>${r.rank}</b><span>${esc(S.name||'Toi')}</span><b>${fmtN(r.mine)}</b></div>`:'');
+ return `${head}${sc(r.dead?'Vaincu !':'Temps écoulé')}
+ <div class="panel"><h4 class="px">${r.dead?'Boss vaincu !':'Fin du combat'}</h4><div>Ton classement : <b>${r.rank}${r.rank===1?'er':'e'}</b> sur ${r.n} · ${fmtN(r.mine)} dégâts</div></div>
+ <div class="cols"><div class="panel"><h4 class="px">Classement</h4>${rows}</div><div class="panel"><h4 class="px">Tes lots</h4><div class="list">${r.rew.map(e=>`<div class="li"><div class="ico"><i class="ti ti-gift" style="color:var(--y)"></i></div><div class="grow"><b>${rewTxt(e)}</b></div></div>`).join('')}</div><div style="margin-top:10px"><a class="btn y" data-b="bclaim"><i class="ti ti-gift"></i>Récupérer mes lots</a></div></div></div>`;
+}
 function boss(){
  if(B&&B.mode==='boss')return battleView();
- const b=bossS(),st=bossStat(),hasTeam=S.box.some(m=>m.team);
- const goals=GOALS.map(([n,l],k)=>{const ok=b.claimed.includes(k);return `<div class="li"><div class="ico"><i class="ti ti-${ok?'circle-check':'gift'}" style="color:${ok?'var(--g)':'var(--y)'}"></i></div><div class="grow"><b>${l}</b><div style="font-size:12px;color:var(--m)">${fmtN(b.mine)} / ${fmtN(n)} dégâts</div>${bar(Math.min(100,b.mine/n*100),ok?'var(--g)':'var(--o)')}</div></div>`}).join('');
- const lb=st.rows.slice(0,8).map((r,k)=>`<div class="lb ${r[2]?'me':''}"><b>${k+1}</b><span>${r[0]}</span><b>${fmtN(r[1])}</b></div>`).join('');
+ const b=bossS(),st=bossStat(),hasTeam=S.box.some(m=>m.team),r=(S.bossRecs||[])[0];window.BSL=b.slot;
+ if(r)return bossRecapView(r);
+ const bo=st.bo;
  return `<div class="title"><h3 class="px">Boss de monde</h3><span class="chip"><i class="ti ti-clock"></i><span id="bt">${fmtT(st.left)}</span></span></div>
- <div class="cols"><div style="display:flex;flex-direction:column;gap:10px">
-  <div class="boss-hero"><div class="bgimg" style="background-image:url(${BG_}mountain.png)"></div><div class="aura"></div><img class="sp" id="bossimg" src="${SP(150)}" referrerpolicy="no-referrer" alt="">
-   <div class="info"><span class="px" style="font-size:12px;color:#fff">MEWTWO</span> <span class="chip">Niv. 90</span> ${ty('Psy')}
-    <div style="display:flex;align-items:center;gap:8px;margin-top:8px"><div class="bar" style="height:14px"><i id="bh" style="width:${st.pct}%;background:var(--r)"></i></div><b id="bhp" style="font-size:12px;white-space:nowrap">${fmtN(st.hp)} PV</b></div></div></div>
-  <div class="panel" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><div style="flex:1;min-width:160px"><b>Faiblesses</b><div>${ty('Spectre')}${ty('Insecte')}</div><div style="color:var(--m);font-size:12px">6 tours par tentative, 3 tentatives par jour. Dégâts ×${RAID} comptés pour la communauté.</div></div><a class="btn r ${b.tries<=0||!hasTeam?'off':''}" data-b="boss"><i class="ti ti-swords"></i>Attaquer · ${b.tries}/3</a></div>
- </div><div style="display:flex;flex-direction:column;gap:10px"><div class="panel"><h4 class="px">Classement</h4>${lb}</div><div class="panel"><h4 class="px">Paliers de récompense</h4><div class="list">${goals}</div></div></div></div>`;
+ <div class="bsc"><div class="bgimg" style="background-image:url(${BG_}${bo.bg}.png)"></div><div class="aura"></div><div class="fog"></div>
+  <img class="bsp" src="${SP(bo.id)}" style="${SHADE}" referrerpolicy="no-referrer" alt="">
+  <div class="bsi"><span class="px">${st.dead?bo.name:'? ? ?'}</span> <span class="chip">${st.dead?'Vaincu':'Niv. ??'}</span></div>
+  <div class="bsh"><small>${st.dead?'Le boss est vaincu !':'Vie du boss · toute la communauté'}</small><div class="bar" style="height:14px"><i id="bh" style="width:${st.pct}%;background:var(--r)"></i></div><b id="bhp">${Math.ceil(st.pct)} %</b></div></div>
+ <div class="panel" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><div style="flex:1;min-width:170px"><b>Ta contribution : ${fmtN(b.mine)} dégâts</b><div style="color:var(--m);font-size:12px">Un nouveau boss toutes les 2 h. 6 tours par tentative, 3 tentatives par boss. Le classement est révélé à la fin.</div></div><a class="btn" data-b="blots"><i class="ti ti-gift"></i>Lots <span class="ibtn">i</span></a><a class="btn r ${st.dead||b.tries<=0||!hasTeam?'off':''}" data-b="boss"><i class="ti ti-swords"></i>Attaquer · ${b.tries}/3</a></div>`;
+}
+async function bossThrow(i){
+ const r=(S.bossRecs||[])[0],ball=BK3[i];if(!r||r.phase!=='cap'||r.busy||r.throws>=THROWS)return;
+ if((S.balls[ball]||0)<=0)return;
+ r.busy=true;S.balls[ball]--;r.throws++;save();const bo=bossOf(r.slot);
+ const bi=$('#bcimg'),bl=$('#bcb'),m=$('#bcm');if(!bi||!bl){r.busy=false;return}
+ document.querySelectorAll('[data-b=bthrow]').forEach(x=>x.classList.add('off'));
+ bl.src=BI(ball);bl.style.display='block';if(m)m.textContent=`Tu lances une ${BALLS[ball].n} !`;
+ await anim(bl,[{bottom:'-8%',transform:'scale(1.3)'},{bottom:'46%',transform:'scale(.9)'}],{duration:650,easing:'ease-out'});
+ bi.style.transition='opacity .3s,transform .3s';bi.style.opacity=0;bi.style.transform='scale(.2)';await sleep(350);
+ await anim(bl,[{bottom:'46%'},{bottom:'14%'}],{duration:450,easing:'ease-in'});
+ const ok=Math.random()<BCAP[ball],sh=ok?3:Math.floor(Math.random()*3);
+ if(m)m.textContent='…';
+ for(let k=0;k<sh;k++){await sleep(250);await anim(bl,[{transform:'rotate(0)'},{transform:'rotate(-25deg)'},{transform:'rotate(25deg)'},{transform:'rotate(0)'}],{duration:600});await sleep(200)}
+ await sleep(350);
+ if(ok){const mon=mk(bo.id,50,!!bo.sh);S.box.push(mon);S.dex[bo.id]='c';r.phase='won'}
+ else if(r.throws>=THROWS)r.phase='fled';
+ else r.msg=`Il s'est libéré ! Lancers restants : <b>${THROWS-r.throws}/${THROWS}</b>.`;
+ r.busy=false;save();render(true);
 }
 /* --- LIGUE (mode histoire) : dresseurs de Pokémon Rouge Feu, dans l'ordre de l'aventure --- */
 const KIND={route:'Dresseur',city:'Dresseur',rival:'Rival',rocket:'Team Rocket',gym:'Chef d\'arène',elite:'Conseil des 4',champ:'Champion'};
@@ -2674,13 +2739,17 @@ document.addEventListener('click',e=>{
  const t=e.target.closest('[data-b]');if(!t)return;const a=t.dataset.b,k=+t.dataset.k;
  if(a==='duel'){const o=LOBBY&&LOBBY[k];if(o)begin({mode:'duel',bg:o.bg,foe:fighter(o.id,o.lvl),title:`${o.name} · ${o.zone}`,maxTurns:99})}
  else if(a==='boss')startBoss();
+ else if(a==='blots')bossLots();
+ else if(a==='bthrow')bossThrow(k);
+ else if(a==='bend'){S.bossRecs.shift();save();render()}
+ else if(a==='bclaim'){const r=S.bossRecs[0];if(!r)return;const got=r.rew.map(bossGive);if(r.chance){r.phase='cap';save();render()}else{S.bossRecs.shift();save();render();modalOv(`<h4 class="px">Lots récupérés</h4><div class="list">${got.map(c=>`<div class="li"><div class="grow"><b>${c.n}</b></div></div>`).join('')}</div><div class="svnote" style="margin:0">Pas de chance de capture cette fois-ci (${Math.round(CHN*100)} %). À la prochaine !</div><div class="pbt"><a class="btn y" data-m="x">OK</a></div>`)}}
  else if(a==='adv')startAdv(k);
  else if(a==='mv')useMove(k);
  else if(a==='sw')swTo(k);
  else if(a==='toggle'){if(B&&!B.busy){B.showSw=!B.showSw;render(true)}}
  else if(a==='leave'){if(B&&B.busy)return;B=null;render()}
 });
-setInterval(()=>{if(route==='boss'&&!B){const st=bossStat(),f=(i,v)=>{const e=$(i);if(e)e.textContent=v};f('#bt',fmtT(st.left));f('#bhp',fmtN(st.hp)+' PV');const h=$('#bh');if(h)h.style.width=st.pct+'%'}},1000);
+setInterval(()=>{if(route==='boss'&&!B){if(curSlot()!==window.BSL){render();return}const st=bossStat(),f=(i,v)=>{const e=$(i);if(e)e.textContent=v};f('#bt',fmtT(st.left));f('#bhp',Math.ceil(st.pct)+' %');const h=$('#bh');if(h)h.style.width=st.pct+'%'}},1000);
 
 /* --- exploration : attaquer pour affaiblir, objets --- */
 const leadMon=()=>S.box.find(m=>m.team);
