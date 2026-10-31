@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <title>Prototype — Explorer et Mes Pokémon</title>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
@@ -59,7 +59,7 @@ html,body{margin:0;height:100%;background:#060919;color:var(--t);font:14px/1.4 '
 .mon.unk img{filter:brightness(0);opacity:.5}
 .ty{display:inline-block;font-size:10px;font-weight:800;padding:1px 6px;margin:1px;color:#fff;text-transform:uppercase}
 .stat{display:grid;grid-template-columns:44px 1fr 30px;gap:6px;align-items:center;font-size:12px;margin:3px 0}
-input,select{background:#080c26;color:var(--t);border:2px solid var(--b);padding:8px 10px;font:700 13px 'Nunito',sans-serif;min-width:0}
+input,select,textarea{background:#080c26;color:var(--t);border:2px solid var(--b);padding:8px 10px;font:700 16px 'Nunito',sans-serif;min-width:0}
 input{flex:1;min-width:140px}
 .arena{position:relative;height:clamp(250px,42cqw,340px);overflow:hidden;border:2px solid #0b1030;user-select:none}
 .arena .sky{position:absolute;inset:0 0 50% 0;background:#79b8f0}
@@ -536,6 +536,7 @@ input{flex:1;min-width:140px}
 .rt{display:flex;justify-content:space-between;gap:10px;background:var(--p2);border:2px solid var(--b);padding:5px 10px;font-size:13px}.rt span{color:var(--y);font-weight:800;white-space:nowrap}.rt.feat{border-color:#ffd24a}
 .gz-ov{position:fixed;inset:0;z-index:400;background:radial-gradient(circle at 50% 40%,#3a1f8a,#07041c 75%);display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:12px;padding:16px;overflow:auto}
 .gzs{position:relative;width:200px;height:260px;display:grid;place-items:center}
+.gzdna{width:200px;height:260px;image-rendering:pixelated;filter:drop-shadow(0 0 14px var(--rc))}
 .gzcap{position:relative;width:192px;height:240px;filter:drop-shadow(0 0 14px var(--rc))}
 .gzcap canvas{position:absolute;left:0;width:192px;height:120px;image-rendering:pixelated}.gzcap .ct{top:0}.gzcap .cb{bottom:0}
 .gzcap.drop{animation:gdrop .8s cubic-bezier(.3,0,.7,1) both}
@@ -850,7 +851,7 @@ function bzLayout(){
 function czFrame(cv,t){const x=cv.getContext('2d');x.drawImage(czBG(),0,0)}
 function bzStart(){bzLayout();if(window.bzAnim)clearTimeout(window.bzAnim);
  const loop=()=>{const a=document.getElementById('bzc')||document.getElementById('gzc');if(!a){window.bzAnim=0;return}
-  if(a.id==='gzc')gzFrame(a,performance.now());else bzFrame(a,performance.now());window.bzAnim=setTimeout(()=>requestAnimationFrame(loop),120)};
+  if(a.id==='gzc')gzFrame(a,performance.now());else bzFrame(a,performance.now());window.bzAnim=setTimeout(()=>requestAnimationFrame(loop),a.id==='gzc'?45:120)};
  requestAnimationFrame(loop)}
 window.addEventListener('resize',()=>{if(document.querySelector('.bz'))bzLayout()});
 document.addEventListener('load',e=>{const t=e.target;if(t&&t.tagName==='IMG'&&t.classList.contains('bz-sp')&&t.naturalWidth){const n=Math.max(t.naturalWidth,t.naturalHeight),bw=(t.closest('.bz')||{}).clientWidth||360,k=Math.min(1.6,bw/520);t.style.width=Math.round(t.naturalWidth*k)+'px'}},true);
@@ -1035,13 +1036,20 @@ function gzPlay(res,n){
  const best=['n','r','sr','ur'].reduce((a,r)=>res.some(c=>c.r===r)?r:a,'n'),col=RC[best];
  const o=document.createElement('div');o.className='gz-ov';
  const cards=res.map((c,i)=>`<div class="gzc r-${c.r}" style="--i:${i};--rc:${RC[c.r]}"><span class="gzr">${RN[c.r]}</span><div class="gzv">${c.vis}</div><b>${c.n}</b><small>${c.sub}</small></div>`).join('');
- o.innerHTML=`<div class="gzs"><div class="gzcap" style="--rc:${col}"><canvas class="ct" width="32" height="20"></canvas><canvas class="cb" width="32" height="20"></canvas></div><div class="gzfl"></div></div><div class="gzres n${n}" hidden>${cards}</div><div class="gzbt" hidden><a class="btn y" data-m="ok">OK</a><a class="btn" data-m="again" data-n="${n}">Encore ×${n}</a></div><a class="gzskip" data-m="skip">Passer</a>`;
+ o.innerHTML=`<div class="gzs"><canvas class="gzdna" width="100" height="130" style="--rc:${col}"></canvas><div class="gzfl"></div></div><div class="gzres n${n}" hidden>${cards}</div><div class="gzbt" hidden><a class="btn y" data-m="ok">OK</a><a class="btn" data-m="again" data-n="${n}">Encore ×${n}</a></div><a class="gzskip" data-m="skip">Passer</a>`;
  document.body.appendChild(o);
- capHalf(o.querySelector('.ct'),true,col);capHalf(o.querySelector('.cb'),false,col);
- const cap=o.querySelector('.gzcap'),fl=o.querySelector('.gzfl'),rs=o.querySelector('.gzres'),bt=o.querySelector('.gzbt'),sk=o.querySelector('.gzskip'),st=o.querySelector('.gzs');
+ const cap=o.querySelector('.gzdna'),fl=o.querySelector('.gzfl'),rs=o.querySelector('.gzres'),bt=o.querySelector('.gzbt'),sk=o.querySelector('.gzskip'),st=o.querySelector('.gzs');
  const TM=[];const T=(f,ms)=>TM.push(setTimeout(f,ms));
- const reveal=()=>{TM.forEach(clearTimeout);cap.classList.add('open');fl.classList.add('on');sk.hidden=true;setTimeout(()=>{st.style.display='none';rs.hidden=false;bt.hidden=false},350)};
- cap.classList.add('drop');T(()=>{cap.classList.remove('drop');cap.classList.add('shake')},800);T(reveal,2200);
+ const dx=cap.getContext('2d'),t0=performance.now(),TOT=3000;let raf=0,done=false;
+ const cols={n:'#8fa0d8',r:'#4dd0e1',sr:'#c084fc',ur:'#ffd24a'};
+ const frame=()=>{const e=performance.now()-t0,u=Math.min(1,e/TOT);dx.clearRect(0,0,100,130);
+  const sp=u*u*5+.6,ph=e/1000*sp*3+u*u*u*14,k=u<.72?0:Math.pow((u-.72)/.28,2),amp=17+Math.sin(u*9)*1.5*u,c=u<.35?'#ffd24a':u<.6?cols.r:cols[best];
+  dnaDraw(dx,50,10,122,ph,amp,u<.5?'#ffd24a':col,k,u);
+  if(u>.4){dx.globalAlpha=.7;for(let i=0;i<10;i++){const a=i*.628+e/300,r=(1-u)*34+8+i%3*4;PX(dx,Math.round(50+Math.cos(a)*r),Math.round(66+Math.sin(a)*r*1.6),2,2,i%2?'#fff':col)}dx.globalAlpha=1}
+  if(u<1&&!done)raf=requestAnimationFrame(frame)};
+ frame();
+ const reveal=()=>{done=true;cancelAnimationFrame(raf);TM.forEach(clearTimeout);fl.classList.add('on');sk.hidden=true;setTimeout(()=>{st.style.display='none';rs.hidden=false;bt.hidden=false},350)};
+ T(reveal,TOT+100);
  o.addEventListener('click',e=>{const b=e.target.closest('[data-m]');if(!b)return;const m=b.dataset.m;
   if(m==='skip'){reveal();return}
   if(m==='ok'){o.remove();render(true)}
@@ -1075,21 +1083,23 @@ function gzBG(){
  PX(x,0,by,W,H-by,'#2a1f5a');for(let y=by;y<H;y+=8)for(let i=0;i<W;i+=16)PX(x,i+((y-by)/8%2?8:0),y,8,8,'#35286e');PX(x,0,by,W,2,'#ffd24a');PX(x,0,by+2,W,1,'#a8832a');
  GZB=cv;return cv;
 }
+
+function dnaDraw(x,cx,y0,y1,t,amp,col,k,glow){
+ const mid=(y0+y1)/2,hr=(y1-y0)*.62,g=x.createRadialGradient(cx,mid,2,cx,mid,hr);g.addColorStop(0,col+'88');g.addColorStop(1,col+'00');
+ x.globalAlpha=Math.min(1,.35+glow*.65);x.fillStyle=g;x.fillRect(cx-hr,mid-hr,hr*2,hr*2);x.globalAlpha=1;
+ const rows=[],pc=['#ff6b6b','#6bd0ff','#ffd24a','#7dffb0'];let n=0;
+ for(let y=y0;y<=y1;y+=2,n++){const ph=(y-y0)*.085+t,sn=Math.sin(ph),cs=Math.cos(ph),yy=Math.round(y+(mid-y)*k*.92),a=amp*(1-k);rows.push({y:yy,xa:Math.round(cx+sn*a),xb:Math.round(cx-sn*a),z:cs,n})}
+ for(const r of rows)if(r.n%3===0&&Math.abs(r.xa-r.xb)>3){const lo=Math.min(r.xa,r.xb),hi=Math.max(r.xa,r.xb),c1=pc[r.n%4],c2=pc[(r.n+1)%4],m=Math.round((lo+hi)/2);PX(x,lo,r.y,m-lo,2,c1);PX(x,m,r.y,hi-m,2,c2)}
+ const it=[];for(const r of rows){it.push([r.z,r.xa,r.y]);it.push([-r.z,r.xb,r.y])}
+ it.sort((a,b)=>a[0]-b[0]);
+ for(const[z,px,py]of it){const sz=z>0?5:3,c=z>0?'#ffffff':col;PX(x,px-(sz>>1)-1,py-1,sz+2,sz,'#0b1030');PX(x,px-(sz>>1),py,sz,sz-1,c);if(z>0)PX(x,px-(sz>>1),py,sz,1,col)}
+}
 function gzFrame(cv,t){
  const x=cv.getContext('2d'),by=Math.round(G.H*.8),s=G.s;x.drawImage(gzBG(),0,0);
- x.save();x.translate(G.mx,by);x.scale(s,s);
- PX(x,-44,-3,88,5,'rgba(0,0,0,.35)');
- const caps=['#e8402c','#3a86e0','#ffd24a','#4cc08a','#c084fc','#ff9ed8'];
- for(let i=0;i<16;i++){const a=i*2.4,r=8+(i%5)*5.6,bx=Math.cos(a)*r*.95+Math.sin(t/420+i)*1.6,byy=-72+Math.sin(a)*r*.95+Math.cos(t/360+i*1.7)*2,c=caps[i%6];
-  x.fillStyle='#0b1030';x.beginPath();x.arc(bx,byy,6.4,0,6.28);x.fill();x.fillStyle='#f4f4ff';x.beginPath();x.arc(bx,byy,5.4,0,6.28);x.fill();x.fillStyle=c;x.beginPath();x.arc(bx,byy,5.4,Math.PI,6.28);x.fill();x.fillStyle='#fff8';x.fillRect(bx-3,byy-3,2,2)}
- x.fillStyle='rgba(190,232,255,.28)';x.beginPath();x.arc(0,-72,37,0,6.28);x.fill();x.strokeStyle='#e8f6ff';x.lineWidth=2;x.stroke();x.fillStyle='#fff9';x.fillRect(-26,-96,3,10);x.fillRect(-23,-100,6,2);
- PX(x,-14,-112,28,6,'#c8c8d0');PX(x,-14,-112,28,1,'#fff');PX(x,-4,-118,8,6,'#ffd24a');
- PX(x,-42,-44,84,6,'#a82a2a');PX(x,-42,-44,84,1,'#ff8a8a');PX(x,-40,-38,80,38,'#d94a4a');PX(x,-40,-38,80,2,'#ff7a7a');PX(x,-40,-4,80,4,'#8a1f1f');PX(x,-42,-44,3,44,'#a82a2a');PX(x,39,-44,3,44,'#a82a2a');
- PX(x,-32,-34,36,10,'#ffd24a');PX(x,-32,-34,36,1,'#fff2a0');x.fillStyle='#7a2a10';x.font='bold 8px monospace';x.textAlign='center';x.fillText('GACHA',-14,-26);
- PX(x,-18,-18,24,14,'#2a1018');PX(x,-16,-16,20,2,'#000');PX(x,-12,-12,12,6,'#4a2430');
- x.save();x.translate(24,-26);x.rotate(t/500);x.fillStyle='#0b1030';x.beginPath();x.arc(0,0,9,0,6.28);x.fill();x.fillStyle='#ffd24a';x.beginPath();x.arc(0,0,7.5,0,6.28);x.fill();x.fillStyle='#a8832a';for(let k=0;k<4;k++){x.save();x.rotate(k*1.57);x.fillRect(-1,-7,2,14);x.restore()}x.fillStyle='#fff';x.fillRect(5,-1,3,3);x.restore();
- PX(x,26,-14,10,4,'#ffd24a');
- x.restore();
+ const hh=Math.min(by-18,G.H*.74),top=Math.round(by-hh-6),cx=Math.round(G.mx),amp=Math.min(30,G.W*.15);
+ x.fillStyle='rgba(255,210,74,.22)';x.beginPath();x.ellipse(cx,by+2,amp+16,5,0,0,6.28);x.fill();PX(x,cx-amp-12,by,amp*2+24,2,'#ffd24a');
+ dnaDraw(x,cx,top,by-6,t/520,amp,'#ffd24a',0,.7+.3*Math.sin(t/400));
+ for(let i=0;i<14;i++){const u=((t/2600+i*.137)%1),sx=cx+Math.sin(i*2.3+t/900)*(amp+8),sy=by-u*hh;PX(x,Math.round(sx),Math.round(sy),2,2,i%2?'#fff':'#9fe8ff')}
  for(let i=0;i<5;i++){const a=t/700+i*1.26,sx=G.mx+Math.cos(a)*50*s,sy=by-70*s+Math.sin(a*1.3)*40*s;PX(x,Math.round(sx),Math.round(sy),2,2,i%2?'#fff':'#ffe97a')}
 }
 function teamAsk(uid){
