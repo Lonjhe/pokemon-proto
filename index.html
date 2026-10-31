@@ -457,6 +457,15 @@ input{flex:1;min-width:140px}
 .bz-hot .hl.add{flex-direction:row;gap:4px;border-color:var(--y);color:var(--y)}.bz-hot .hl.rdy{flex-direction:row;gap:4px;background:#1f6b34;border-color:var(--g);animation:pul .9s infinite alternate}
 @keyframes pul{to{transform:scale(1.08)}}
 .hl .hb{display:block;width:100%;height:5px;background:#000;border:1px solid var(--b)}.hl .hb i{display:block;height:100%;background:var(--o)}
+
+.intro{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:20px;text-align:center;background:radial-gradient(circle at 50% 0,#1b2a6b,#070b24 70%)}
+.intro h1{font-size:18px;color:var(--y);line-height:1.5;margin:0}.intro p{margin:0;color:var(--t);font-size:14px}
+.intro input{flex:none;height:auto;font:inherit;font-size:18px;text-align:center;padding:12px;width:min(320px,100%);background:var(--p);color:#fff;border:3px solid var(--b);border-radius:10px;outline:0}.intro input:focus{border-color:var(--y)}
+.intro .go{font-size:13px;padding:12px 22px;border:3px solid #0b1030;border-radius:10px;background:var(--y);color:#0b1030;cursor:pointer}.intro .go:disabled{opacity:.4}
+.sts{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;width:100%;max-width:560px}
+.st{flex:1 1 140px;max-width:180px;background:var(--p);border:3px solid var(--b);border-radius:12px;padding:10px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;color:#fff;font:inherit}
+.st.on{border-color:var(--y);box-shadow:0 0 0 3px #ffd54a55;transform:translateY(-3px)}.st img{height:96px;width:auto;image-rendering:pixelated;object-fit:contain}
+.st b{font-size:11px}.st small{color:var(--t);font-size:11px}
 .pick-ov{position:fixed;inset:0;z-index:200;background:#05071acc;display:flex;align-items:center;justify-content:center;padding:16px}
 .pick-c{background:var(--p);border:3px solid var(--b);box-shadow:0 0 0 2px #0b1030;max-width:460px;width:100%;max-height:86vh;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
 .prows{display:flex;flex-direction:column;gap:8px}.prow{display:flex;align-items:center;gap:10px;background:var(--p2);border:2px solid var(--b);padding:6px 10px}.prow small{display:block;color:var(--m);font-size:12px}.prow .grow{flex:1}
@@ -578,7 +587,7 @@ const WATER=SPECIES.filter(x=>x[2].includes('Eau')).map(x=>x[0]);
 const BALLS={poke:{n:'Poké Ball',m:1,c:'var(--r)',p:100},super:{n:'Super Ball',m:1.5,c:'var(--c)',p:300},hyper:{n:'Hyper Ball',m:2,c:'var(--y)',p:800}};
 const CAP_MAX=10,CAP_REGEN_MIN=15; /* capture : stock max et minutes par recharge (à ajuster) */
 const KEY='proto-pokemon-v1';
-const fresh=()=>({coins:1200,xp:0,lvl:1,balls:{poke:20,super:4,hyper:1},next:1,box:[mk(25,12),mk(4,9),mk(133,7),mk(143,15),mk(1,8)].map((m,i)=>(m.team=i<3,m)),dex:{25:'c',4:'c',133:'c',143:'c',1:'c'}});
+const fresh=()=>({coins:1200,xp:0,lvl:1,balls:{poke:20,super:4,hyper:1},next:1,box:[],dex:{}});
 function mk(id,lvl,sh=false){const s=BY[id];return{uid:Math.random().toString(36).slice(2,9),id,lvl,sh,fav:false,team:false}}
 let S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!S||!S.box)S=fresh();
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
@@ -613,7 +622,7 @@ setInterval(capTick,1000);
 function shell(c){
  const rail=NAV.map(([k,i,l])=>`<a data-go="${k}" class="${k===route?'on':''}"><i class="ti ti-${i}"></i>${l}</a>`).join('');
  const tabs=[['hub','map-2','Accueil'],['pokemon','pokeball','Pokémon'],['explorer','compass',''],['combat','swords','Combat'],['sac','backpack','Sac'],['plus','menu-2','Plus']].map(([k,i,l])=>`<a data-go="${k==='plus'?'boutique':k}" class="${k===route||(k==='plus'&&!['hub','pokemon','explorer','combat','sac'].includes(route))?'on':''} ${k==='explorer'?'go':''}"><i class="ti ti-${i}"></i>${l}</a>`).join('');
- return `<div class="hud"><div class="av"><i class="ti ti-user"></i></div><b class="name">Jérôme</b><span class="lv px">Niv.${S.lvl}</span><div class="bar"><i style="width:${Math.min(100,S.xp/need()*100)}%;background:var(--c)"></i></div><span class="chip"><i class="ti ti-coin" style="color:var(--y)"></i>${S.coins}</span><span class="chip" title="Gemmes" data-go="gacha"><i class="ti ti-diamond" style="color:#ff7ad9"></i>${gems()}</span><span class="chip opt" title="Poké Balls"><i class="ti ti-circle-dot" style="color:var(--r)"></i>${S.balls.poke}</span></div><div class="main"><nav class="rail">${rail}</nav><div class="content">${c}</div></div><nav class="tabs">${tabs}</nav>`;
+ return `<div class="hud"><div class="av"><i class="ti ti-user"></i></div><b class="name">${esc(S.name||"")}</b><span class="lv px">Niv.${S.lvl}</span><div class="bar"><i style="width:${Math.min(100,S.xp/need()*100)}%;background:var(--c)"></i></div><span class="chip"><i class="ti ti-coin" style="color:var(--y)"></i>${S.coins}</span><span class="chip" title="Gemmes" data-go="gacha"><i class="ti ti-diamond" style="color:#ff7ad9"></i>${gems()}</span><span class="chip opt" title="Poké Balls"><i class="ti ti-circle-dot" style="color:var(--r)"></i>${S.balls.poke}</span></div><div class="main"><nav class="rail">${rail}</nav><div class="content">${c}</div></div><nav class="tabs">${tabs}</nav>`;
 }
 function card(m,o={}){const s=BY[m.id],c=TC[s[2][0]]||'#8a8a7a';
  const img=o.anim?`<img class="pmi" src="${m.sh?SH(m.id):SP(m.id)}" referrerpolicy="no-referrer" alt="">`:`<img src="${m.sh?R+'shiny/'+m.id+'.png':SPS(m.id)}" referrerpolicy="no-referrer" alt="">`;
@@ -1160,7 +1169,27 @@ function stub(){
  const n=NAV.find(x=>x[0]===route);
  return `<div class="panel stub"><div class="ico" style="margin:0 auto 10px;width:56px;height:56px;font-size:30px"><i class="ti ti-${n?n[1]:'help'}"></i></div><h4 class="px">${n?n[2]:'Écran'}</h4><div style="color:var(--m);margin-bottom:14px">Cet écran n'est pas dans le prototype. Voir la maquette statique.</div><a class="btn y" href="../index.html#${route==='boutique'?'boutique':route}">Ouvrir la maquette</a></div>`;
 }
+
+const esc=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const STARTERS=[[1,'Plante'],[4,'Feu'],[7,'Eau']];
+function intro(){
+ const old=S.box.length>0,st={n:S.name||'',p:old?0:null};
+ const draw=()=>{
+  $('#app').innerHTML=`<div class="intro"><h1 class="px">Bienvenue, Dresseur !</h1><p>Comment t'appelles-tu ?</p>
+  <input id="inm" maxlength="14" placeholder="Ton pseudo" value="${esc(st.n)}" autocomplete="off">
+  ${old?'':`<p>Choisis ton Pokémon de départ (Niv. 5)</p><div class="sts">${STARTERS.map(([id,t])=>`<button class="st ${st.p===id?'on':''}" data-p="${id}"><img src="${SP(id)}" referrerpolicy="no-referrer" alt=""><b class="px">${BY[id][1]}</b><small>${t}</small></button>`).join('')}</div>`}
+  <button class="go px" id="igo" ${st.n.trim()&&st.p!==null?'':'disabled'}>Commencer l'aventure</button></div>`;
+  const inp=document.getElementById('inm'),go=document.getElementById('igo');
+  inp.oninput=()=>{st.n=inp.value;go.disabled=!(st.n.trim()&&st.p!==null)};
+  document.querySelectorAll('.st').forEach(b=>b.onclick=()=>{st.p=+b.dataset.p;const v=inp.value;st.n=v;draw();const i2=document.getElementById('inm');i2.focus();i2.setSelectionRange(v.length,v.length)});
+  go.onclick=()=>{if(!st.n.trim()||st.p===null)return;S.name=st.n.trim().slice(0,14);
+   if(!old){const m=mk(st.p,5);m.team=true;S.box=[m];S.dex={[st.p]:'c'};S.partner=m.uid}
+   save();render()};
+ };
+ draw();
+}
 function render(keep){
+ if(!S.name||!S.box.length){intro();return}
  const c=route==='hub'?hub():route==='explorer'?explorer():route==='pokemon'?pokemon():route==='combat'?combat():route==='boss'?boss():route==='ligue'?ligue():route==='boutique'?boutique():route==='sac'?sac():route==='elevage'?elevageView():route==='gacha'?gachaView():stub();
  const y=window.scrollY;
  $('#app').innerHTML=shell(c);capTick();drawZone();zScroll();if(document.getElementById('bzc')||document.getElementById('czc')||document.getElementById('gzc'))bzStart();if(document.getElementById('fa')){fsInit();}
