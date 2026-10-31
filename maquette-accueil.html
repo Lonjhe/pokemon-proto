@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Maquette accueil</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.11.0/dist/tabler-icons.min.css" rel="stylesheet">
+<style>
+:root{--bg:#0b1030;--p:#151a42;--p2:#1d2358;--b:#2f3a86;--y:#ffcb05;--c:#4dd0e1;--g:#66bb6a;--r:#ef5350;--v:#9575cd;--o:#ff9800;--t:#e8ebff;--m:#98a0d6}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+body{background:#05081c;color:var(--t);font:700 14px Nunito,system-ui,sans-serif;display:flex;justify-content:center}
+.app{width:100%;max-width:430px;min-height:100vh;background:var(--bg);position:relative;overflow:hidden;padding-bottom:92px}
+.px{font-family:'Press Start 2P',monospace}
+/* barre du haut */
+.top{display:flex;align-items:center;gap:8px;padding:calc(10px + env(safe-area-inset-top,0px)) 14px 8px;position:relative;z-index:5}
+.av{width:38px;height:38px;border-radius:50%;background:var(--p2) url(https://play.pokemonshowdown.com/sprites/trainers/ethan.png) center 20%/150% no-repeat;border:2px solid var(--y)}
+.lv{font-size:11px;line-height:1.2}.lv b{display:block;font-size:14px}
+.xp{height:5px;border-radius:3px;background:#0006;margin-top:3px;overflow:hidden;width:90px}.xp i{display:block;height:100%;width:62%;background:var(--c)}
+.sp{flex:1}
+.chip{background:#0007;border:1px solid #fff2;border-radius:99px;padding:5px 10px;font-size:12px;display:flex;gap:5px;align-items:center;backdrop-filter:blur(4px)}
+.chip i{font-size:15px}
+/* scène */
+.scene{position:relative;height:350px;margin-top:-58px;background:linear-gradient(#5fb3ff 0%,#bfe6ff 55%,#7fd36b 55%,#4aa64a 100%);overflow:hidden}
+.scene .bgimg{position:absolute;inset:0;background:url(https://play.pokemonshowdown.com/fx/bg-meadow.png) center bottom/cover;opacity:.95}
+.scene::after{content:"";position:absolute;left:0;right:0;bottom:0;height:90px;background:linear-gradient(transparent,var(--bg))}
+.cloud{position:absolute;background:#fff;border-radius:99px;opacity:.85;height:16px;box-shadow:18px -7px 0 2px #fff,36px 0 0 0 #fff;animation:drift 38s linear infinite}
+.c1{top:90px;left:-90px;width:44px}.c2{top:130px;left:-90px;width:30px;animation-duration:55s;animation-delay:-20s;opacity:.6}
+@keyframes drift{to{transform:translateX(560px)}}
+.grass{position:absolute;bottom:68px;width:22px;height:22px;background:radial-gradient(circle at 50% 100%,#2f8a35 55%,transparent 56%);opacity:.8;animation:sway 3s ease-in-out infinite;transform-origin:bottom}
+@keyframes sway{50%{transform:skewX(8deg)}}
+.pk{position:absolute;left:50%;bottom:46px;height:190px;width:auto;max-width:230px;transform:translateX(-50%);filter:drop-shadow(0 10px 6px #0006);cursor:pointer}
+@keyframes bob{50%{transform:translateX(-50%) translateY(-7px)}}
+.pk:active{animation:hop .4s}
+@keyframes hop{40%{transform:translateX(-50%) translateY(-28px) scale(1.06)}}
+.bub{position:absolute;left:50%;top:70px;transform:translateX(30px);background:#fff;color:#1a1f4d;border-radius:14px;padding:7px 11px;font-size:12px;font-weight:800;box-shadow:0 4px 10px #0004}
+.bub::after{content:"";position:absolute;left:14px;bottom:-7px;border:7px solid transparent;border-top-color:#fff;border-bottom:0}
+.name{position:absolute;left:14px;bottom:60px;z-index:3}
+.name .px{font-size:11px;text-shadow:0 2px 0 #000a}
+.name small{display:block;color:#fffc;font-size:11px;margin-top:5px;text-shadow:0 1px 2px #000}
+.hp{position:absolute;right:14px;bottom:64px;z-index:3;width:112px;font-size:11px;text-align:right}
+.hp .bar{height:7px;border-radius:4px;background:#0008;margin-top:3px;overflow:hidden}.hp .bar i{display:block;height:100%;width:84%;background:var(--g)}
+/* CTA */
+.cta{margin:-34px 14px 0;position:relative;z-index:4;border-radius:20px;padding:14px 16px;display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#ff6b3d,#ffb300);color:#2a1300;box-shadow:0 8px 0 #b24a1e,0 14px 24px #0008;cursor:pointer;transition:transform .1s}
+.cta:active{transform:translateY(6px);box-shadow:0 2px 0 #b24a1e}
+.cta .ic{width:48px;height:48px;border-radius:14px;background:#2a130022;display:grid;place-items:center;font-size:28px}
+.cta small{display:block;font-size:11px;font-weight:800;opacity:.75;text-transform:uppercase;letter-spacing:.06em}
+.cta b{font-size:18px;font-weight:900;line-height:1.15}
+.cta .go{margin-left:auto;font-size:26px;animation:nudge 1.2s infinite}
+@keyframes nudge{50%{transform:translateX(5px)}}
+.cta::before{content:"";position:absolute;inset:0;border-radius:20px;background:linear-gradient(105deg,transparent 40%,#fff6 50%,transparent 60%);background-size:250% 100%;animation:shine 3.5s infinite}
+@keyframes shine{from{background-position:150% 0}to{background-position:-50% 0}}
+/* grille d'accès rapide */
+.sec{padding:20px 14px 0}
+.h{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px}
+.h b{font-size:15px;font-weight:900}.h span{color:var(--m);font-size:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.tile{position:relative;border-radius:18px;height:136px;padding:10px;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;border:2px solid #fff2;cursor:pointer;transition:transform .12s}
+.tile:active{transform:scale(.95)}
+.tile small{white-space:nowrap}.tile i.big{position:absolute;top:12px;left:50%;transform:translateX(-50%);font-size:44px;filter:drop-shadow(0 3px 0 #0005)}
+.tile b{font-size:13px;font-weight:900;text-shadow:0 1px 0 #0006}
+.tile small{font-size:10.5px;opacity:.9;font-weight:700}
+.bd{position:absolute;top:7px;right:7px;min-width:20px;height:20px;border-radius:10px;background:var(--r);font-size:11px;font-weight:900;display:grid;place-items:center;padding:0 6px;box-shadow:0 0 0 2px #0006;animation:pulse 1.6s infinite}
+@keyframes pulse{50%{transform:scale(1.15)}}
+.t-gacha{background:radial-gradient(circle at 50% 30%,#c06bff,#5b2bb8 70%)}
+.t-gacha i.big{font-size:52px;animation:wob 2.2s ease-in-out infinite;color:#ffe27a}
+@keyframes wob{25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+.t-gacha::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 20% 50%,#ffe27a55,transparent 50%)}
+.t-cap .pips{margin-top:6px;gap:2px;flex:none}.t-cap .pips i{height:6px;border-radius:2px}.t-cap .pips i.on{background:#fff}.t-cap .pips i{background:#0004}.t-cap .pips i.nx{background:#fff6}
+.t-boss img{position:absolute;top:6px;left:50%;transform:translateX(-50%);height:56px;filter:drop-shadow(0 0 8px #b388ff)}
+.bbar{height:6px;border-radius:3px;background:#0008;margin-top:5px;overflow:hidden}.bbar i{display:block;height:100%;width:57%;background:linear-gradient(90deg,#ef5350,#ff8a65)}
+.t-cap{background:linear-gradient(160deg,#ef5350,#a02222)}
+.t-fight{background:linear-gradient(160deg,#ff9800,#c25e00)}
+.t-boss{background:linear-gradient(160deg,#7e57c2,#33196b)}
+.t-team{background:linear-gradient(160deg,#26a69a,#0b6b62)}
+.t-bag{background:linear-gradient(160deg,#5c6bc0,#26327f)}
+.t-lig{background:linear-gradient(160deg,#ffca28,#b88700);color:#2a1d00}
+.t-lig b,.t-lig small{text-shadow:none}
+/* quêtes + coffre */
+.card{background:var(--p);border:1px solid var(--b);border-radius:18px;padding:14px}
+.chest{display:flex;align-items:center;gap:12px}
+.chest .cb{width:54px;height:54px;border-radius:14px;background:linear-gradient(145deg,#ffd54f,#ff8f00);display:grid;place-items:center;font-size:32px;color:#4a2a00;box-shadow:0 0 0 0 #ffcb0088;animation:glow 2s infinite}
+@keyframes glow{70%{box-shadow:0 0 0 14px #ffcb0000}}
+.chest b{font-size:14px}.chest small{display:block;color:var(--m);font-size:12px;margin-top:2px}
+.days{display:flex;gap:4px;margin-top:6px}.days i{flex:1;height:6px;border-radius:3px;background:#ffffff1f}.days i.on{background:var(--y)}
+.btn{margin-left:auto;background:var(--y);color:#3a2a00;border:0;border-radius:12px;padding:9px 13px;font:900 13px Nunito;box-shadow:0 3px 0 #a37f00}
+.q{display:flex;align-items:center;gap:10px;padding:8px 0}
+.q .ck{width:24px;height:24px;border-radius:50%;border:2px solid var(--b);display:grid;place-items:center;font-size:14px;color:transparent;flex:none}
+.q.ok .ck{background:var(--g);border-color:var(--g);color:#06260a}
+.q .tx{flex:1;font-size:13px}.q .tx s{opacity:.5}
+.q .pg{height:5px;border-radius:3px;background:#ffffff1a;margin-top:5px;overflow:hidden}.q .pg i{display:block;height:100%;background:var(--c)}
+.q em{font-style:normal;color:var(--y);font-size:12px;font-weight:900;white-space:nowrap}
+/* boss + pokémon du jour */
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.boss{background:linear-gradient(160deg,#3a1565,#16083a);border-color:#7e57c2;position:relative;overflow:hidden}
+.boss img{position:absolute;right:-14px;top:-4px;width:96px;opacity:.9;image-rendering:pixelated;filter:drop-shadow(0 0 10px #b388ff)}
+.boss .lab,.day .lab{font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--m);font-weight:800}
+.boss b{display:block;font-size:15px;margin:4px 0 8px;position:relative}
+.boss .bar{height:9px;border-radius:5px;background:#0008;overflow:hidden;position:relative}.boss .bar i{display:block;height:100%;width:57%;background:linear-gradient(90deg,#ef5350,#ff8a65)}
+.boss small{display:block;margin-top:5px;font-size:11px;color:#d8c8ff;position:relative}
+.day{background:linear-gradient(160deg,#10473f,#0b2a31);border-color:#26a69a;text-align:center;position:relative}
+.day img{width:78px;height:78px;image-rendering:pixelated;margin:2px auto 0;display:block;filter:drop-shadow(0 4px 0 #0005)}
+.day b{display:block;font-size:13px}.day small{color:#9be0d6;font-size:11px}
+.shiny{position:absolute;top:8px;right:9px;color:var(--y);animation:tw 1.6s infinite}@keyframes tw{50%{opacity:.3;transform:scale(.8)}}
+/* timer capture */
+.cap{display:flex;align-items:center;gap:12px}
+.ball{width:34px;height:34px;border-radius:50%;background:linear-gradient(#ef5350 50%,#fff 50%);border:3px solid #1a1f4d;position:relative;flex:none}
+.ball::after{content:"";position:absolute;inset:9px;border-radius:50%;background:#fff;border:3px solid #1a1f4d}
+.pips{display:flex;gap:4px;flex:1}.pips i{flex:1;height:12px;border-radius:4px;background:#ffffff1f}.pips i.on{background:var(--r);box-shadow:inset 0 -3px 0 #0003}.pips i.nx{background:repeating-linear-gradient(45deg,#ef535066 0 4px,#ef535033 4px 8px)}
+/* nav bas */
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:#0a0e2aee;backdrop-filter:blur(12px);border-top:1px solid var(--b);display:flex;padding:8px 6px calc(8px + env(safe-area-inset-bottom,0px));z-index:20}
+.nav a{flex:1;text-align:center;color:var(--m);font-size:10.5px;font-weight:800;display:flex;flex-direction:column;align-items:center;gap:2px}
+.nav a i{font-size:24px}.nav a.on{color:var(--y)}
+.nav a.mid i{width:50px;height:50px;border-radius:50%;background:linear-gradient(145deg,#ff6b3d,#ffb300);color:#2a1300;display:grid;place-items:center;margin-top:-26px;box-shadow:0 0 0 5px var(--bg),0 5px 14px #0008;font-size:28px}
+.note{margin:22px 14px 0;color:var(--m);font-size:12px;text-align:center;line-height:1.5}
+</style></head>
+<body><div class="app">
+
+<div class="top">
+  <div class="av"></div>
+  <div class="lv"><span style="opacity:.8">Dresseur</span><b>Niv. 14</b><div class="xp"><i></i></div></div>
+  <div class="sp"></div>
+  <div class="chip"><i class="ti ti-coin" style="color:var(--y)"></i>2 480</div>
+  <div class="chip"><i class="ti ti-diamond" style="color:var(--c)"></i>35</div>
+</div>
+
+<div class="scene">
+  <div class="bgimg"></div>
+  <div class="cloud c1"></div><div class="cloud c2"></div>
+  <div class="grass" style="left:12%"></div><div class="grass" style="left:78%;bottom:74px"></div><div class="grass" style="left:90%"></div>
+  <div class="bub" id="bub">On y va ?</div>
+  <img class="pk" id="pk" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/6.gif" alt="">
+  <div class="name"><div class="px">Dracaufeu</div><small>Niv. 36 · Partenaire</small></div>
+  <div class="hp">PV 142/168<div class="bar"><i></i></div></div>
+</div>
+
+<div class="cta" onclick="alert('→ prochain combat')">
+  <div class="ic"><i class="ti ti-swords"></i></div>
+  <div><small>Continuer l'aventure</small><b>Arène d'Argenta<br><span style="font-weight:700;font-size:13px">Pierre · 1er champion</span></b></div>
+  <i class="ti ti-chevron-right go"></i>
+</div>
+
+<div class="sec" style="padding-top:16px">
+  <div class="grid3">
+    <div class="tile t-gacha"><i class="ti ti-gift big"></i><b>Gacha</b><small>1 tirage offert</small><span class="bd">1</span></div>
+    <div class="tile t-cap"><i class="ti ti-pokeball big"></i><b>Capturer</b><small>7/10 · 08:42</small><div class="pips"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="nx"></i><i></i><i></i></div></div>
+    <div class="tile t-boss"><img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/150.gif" alt=""><b>Mewtwo</b><small>2 h 14 · 57 %</small><div class="bbar"><i></i></div></div>
+  </div>
+</div>
+
+<div class="sec" style="padding-top:12px">
+  <div class="card chest">
+    <div class="cb"><i class="ti ti-box"></i></div>
+    <div style="flex:1"><b>Coffre quotidien</b><small>Série 4 jours · quêtes 1/3</small>
+      <div class="days"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div></div>
+    <button class="btn">Ouvrir</button>
+  </div>
+</div>
+
+
+
+<nav class="nav">
+  <a class="on"><i class="ti ti-home-2"></i>Accueil</a>
+  <a><i class="ti ti-users"></i>Équipe</a>
+  <a><i class="ti ti-book"></i>Pokédex</a>
+  <a><i class="ti ti-backpack"></i>Sac</a>
+  <a><i class="ti ti-user"></i>Profil</a>
+</nav>
+</div>
+<script>
+const L=["On y va ?","Prêt pour l'arène !","J'ai faim…","Un tirage gacha ?","Grrraou !","Allons capturer !"];
+let k=0;pk.onclick=()=>{bub.textContent=L[++k%L.length];pk.style.animation='none';void pk.offsetWidth;pk.style.animation=''};
+</script>
+</body></html>
