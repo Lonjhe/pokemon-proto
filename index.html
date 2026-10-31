@@ -516,6 +516,35 @@ input{flex:1;min-width:140px}
 .cinfo em.v{color:var(--g)}
 .cinfo .btn{font-size:clamp(8px,2.2cqw,11px);padding:2px 6px;min-height:0}
 .cinfo.idle{font-size:clamp(8px,2.2cqw,11px);background:#0b1030cc;border:2px dashed #fff6;padding:3px 6px;font-weight:800}
+
+.gz-feat{position:absolute;left:3%;right:3%;top:4%;display:flex;gap:8px;justify-content:center;z-index:3}
+.gf{flex:1;max-width:30%;background:#0b1030d0;border:2px solid #ffd24a;box-shadow:0 0 12px #ffd24a55;padding:4px;display:flex;flex-direction:column;align-items:center;text-align:center;min-width:0}
+.gf-sp{height:clamp(44px,12cqw,84px);width:auto;max-width:100%;object-fit:contain}
+.gf b{font-size:clamp(9px,2.5cqw,12px);line-height:1.15}.gf small{font-size:clamp(8px,2.2cqw,11px);color:#ffd24a;font-weight:800}
+.gz.wide .gz-feat{left:auto;right:3%;top:6%;width:26%;flex-direction:column;gap:6px}.gz.wide .gf{max-width:none;flex-direction:row;gap:8px;text-align:left;padding:3px 6px}.gz.wide .gf-sp{height:clamp(34px,7cqw,60px)}
+.gz-bar .btn{position:relative}.gz-bar .bd{position:absolute;right:-6px;top:-8px;background:var(--r);border-radius:9px;padding:0 6px;font-size:11px;color:#fff}
+.gemi{color:#ff7ad9}.chip.gem b{font-size:14px}
+.rt{display:flex;justify-content:space-between;gap:10px;background:var(--p2);border:2px solid var(--b);padding:5px 10px;font-size:13px}.rt span{color:var(--y);font-weight:800;white-space:nowrap}.rt.feat{border-color:#ffd24a}
+.gz-ov{position:fixed;inset:0;z-index:400;background:radial-gradient(circle at 50% 40%,#3a1f8a,#07041c 75%);display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:12px;padding:16px;overflow:auto}
+.gzs{position:relative;width:200px;height:260px;display:grid;place-items:center}
+.gzcap{position:relative;width:192px;height:240px;filter:drop-shadow(0 0 14px var(--rc))}
+.gzcap canvas{position:absolute;left:0;width:192px;height:120px;image-rendering:pixelated}.gzcap .ct{top:0}.gzcap .cb{bottom:0}
+.gzcap.drop{animation:gdrop .8s cubic-bezier(.3,0,.7,1) both}
+@keyframes gdrop{0%{transform:translateY(-320px)}60%{transform:translateY(0)}72%{transform:translateY(-40px)}84%{transform:translateY(0)}92%{transform:translateY(-10px)}100%{transform:translateY(0)}}
+.gzcap.shake{animation:gshk .5s ease-in-out infinite;filter:drop-shadow(0 0 26px var(--rc))}
+@keyframes gshk{0%,100%{transform:rotate(0)}25%{transform:rotate(-9deg)}75%{transform:rotate(9deg)}}
+.gzcap.open .ct{transition:transform .35s ease-in,opacity .35s;transform:translateY(-140px) rotate(-30deg);opacity:0}.gzcap.open .cb{transition:transform .35s ease-in,opacity .35s;transform:translateY(100px) rotate(20deg);opacity:0}
+.gzfl{position:absolute;inset:-100vmax;background:#fff;opacity:0;pointer-events:none}.gzfl.on{animation:gfl .5s ease-out}
+@keyframes gfl{0%{opacity:.95}100%{opacity:0}}
+.gzres{display:grid;gap:10px;width:100%;max-width:640px;grid-template-columns:repeat(auto-fit,minmax(104px,1fr))}.gzres.n1{grid-template-columns:minmax(180px,240px);justify-content:center}.gzres[hidden],.gzbt[hidden]{display:none}
+.gzc{position:relative;background:linear-gradient(180deg,#1d2358,#0b1030);border:3px solid var(--rc);box-shadow:0 0 14px var(--rc),inset 0 0 0 2px #0b1030;padding:8px 6px;display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;animation:gzin .45s both;animation-delay:calc(var(--i)*.13s)}
+@keyframes gzin{0%{opacity:0;transform:translateY(24px) scale(.6) rotateY(90deg)}100%{opacity:1;transform:none}}
+.gzc .gzr{font-size:10px;font-weight:900;color:var(--rc);letter-spacing:.05em;text-transform:uppercase}.gzc b{font-size:13px;line-height:1.15}.gzc small{font-size:11px;color:var(--m)}
+.gzv{height:76px;display:grid;place-items:center;font-size:44px;color:var(--rc)}.gzv .gcs{max-height:76px;max-width:100%}.gzv .eggi{transform:scale(1.2)}
+.gzc.r-ur{background:linear-gradient(180deg,#4a3a0a,#0b1030);animation-name:gzin,gzglow;animation-duration:.45s,1.4s;animation-iteration-count:1,infinite;animation-delay:calc(var(--i)*.13s),calc(var(--i)*.13s + .5s)}
+@keyframes gzglow{50%{box-shadow:0 0 26px var(--rc),inset 0 0 0 2px #0b1030}}
+.gzbt{display:flex;gap:10px}.gzskip{position:absolute;right:14px;top:14px;color:var(--m);font-weight:800;cursor:pointer;border:2px solid var(--b);padding:2px 10px;background:#0b1030}
+.gz .bz-b{top:auto;bottom:8px;left:8px}
 </style>
 </head>
 <body>
@@ -559,7 +588,7 @@ const bar=(w,c='var(--c)')=>`<div class="bar"><i style="width:${w}%;background:$
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const stats=id=>[['PV',30+(id*7)%60],['Att',35+(id*11)%60],['Déf',30+(id*13)%60],['Vit',30+(id*17)%65]];
-const NAV=[['hub','map-2','Accueil'],['explorer','compass','Explorer'],['pokemon','pokeball','Pokémon'],['elevage','egg','Élevage'],['sac','backpack','Sac'],['boutique','shopping-bag','Boutique'],['combat','swords','Combat'],['ligue','trophy','Ligue'],['boss','skull','Boss'],['social','users','Social'],['quetes','list-check','Quêtes'],['evenement','ghost','Événement']];
+const NAV=[['hub','map-2','Accueil'],['explorer','compass','Explorer'],['pokemon','pokeball','Pokémon'],['elevage','egg','Élevage'],['gacha','gift','Gacha'],['sac','backpack','Sac'],['boutique','shopping-bag','Boutique'],['combat','swords','Combat'],['ligue','trophy','Ligue'],['boss','skull','Boss'],['social','users','Social'],['quetes','list-check','Quêtes'],['evenement','ghost','Événement']];
 const IMPL=['hub','explorer','pokemon'];
 const need=()=>S.lvl*60;
 /* --- minuteur de capture : 10 essais max, +1 toutes les CAP_REGEN_MIN min, pleins à chaque nouveau jour --- */
@@ -583,7 +612,7 @@ setInterval(capTick,1000);
 function shell(c){
  const rail=NAV.map(([k,i,l])=>`<a data-go="${k}" class="${k===route?'on':''}"><i class="ti ti-${i}"></i>${l}</a>`).join('');
  const tabs=[['hub','map-2','Accueil'],['pokemon','pokeball','Pokémon'],['explorer','compass',''],['combat','swords','Combat'],['sac','backpack','Sac'],['plus','menu-2','Plus']].map(([k,i,l])=>`<a data-go="${k==='plus'?'boutique':k}" class="${k===route||(k==='plus'&&!['hub','pokemon','explorer','combat','sac'].includes(route))?'on':''} ${k==='explorer'?'go':''}"><i class="ti ti-${i}"></i>${l}</a>`).join('');
- return `<div class="hud"><div class="av"><i class="ti ti-user"></i></div><b class="name">Jérôme</b><span class="lv px">Niv.${S.lvl}</span><div class="bar"><i style="width:${Math.min(100,S.xp/need()*100)}%;background:var(--c)"></i></div><span class="chip"><i class="ti ti-coin" style="color:var(--y)"></i>${S.coins}</span><span class="chip opt" title="Poké Balls"><i class="ti ti-circle-dot" style="color:var(--r)"></i>${S.balls.poke}</span></div><div class="main"><nav class="rail">${rail}</nav><div class="content">${c}</div></div><nav class="tabs">${tabs}</nav>`;
+ return `<div class="hud"><div class="av"><i class="ti ti-user"></i></div><b class="name">Jérôme</b><span class="lv px">Niv.${S.lvl}</span><div class="bar"><i style="width:${Math.min(100,S.xp/need()*100)}%;background:var(--c)"></i></div><span class="chip"><i class="ti ti-coin" style="color:var(--y)"></i>${S.coins}</span><span class="chip" title="Gemmes" data-go="gacha"><i class="ti ti-diamond" style="color:#ff7ad9"></i>${gems()}</span><span class="chip opt" title="Poké Balls"><i class="ti ti-circle-dot" style="color:var(--r)"></i>${S.balls.poke}</span></div><div class="main"><nav class="rail">${rail}</nav><div class="content">${c}</div></div><nav class="tabs">${tabs}</nav>`;
 }
 function card(m,o={}){const s=BY[m.id],c=TC[s[2][0]]||'#8a8a7a';
  const img=o.anim?`<img class="pmi" src="${m.sh?SH(m.id):SP(m.id)}" referrerpolicy="no-referrer" alt="">`:`<img src="${m.sh?R+'shiny/'+m.id+'.png':SPS(m.id)}" referrerpolicy="no-referrer" alt="">`;
@@ -609,7 +638,7 @@ function hub(){
  <div class="hm-side">
  <a class="hm-cta" data-go="ligue"><div class="ic"><i class="ti ti-swords"></i></div><div><small>${done?'Ligue terminée':'Continuer l\'aventure'}</small><b>${st.name}</b><span>${ZONES[st.zone].city} · ${wait?'revenir demain':KIND[st.kind]||''}</span></div><i class="ti ti-chevron-right go"></i></a>
  <div class="hm-t">
-  <div class="hm-tile hm-g" data-act="gacha"><i class="ti ti-gift big"></i><b>Gacha</b><small>${d.gacha?'Revenir demain':'1 tirage offert'}</small>${d.gacha?'':'<span class="bd">1</span>'}</div>
+  <div class="hm-tile hm-g" data-go="gacha"><i class="ti ti-gift big"></i><b>Gacha</b><small>${d.gacha?gems()+' gemmes':'1 tirage offert'}</small>${d.gacha?'':'<span class="bd">1</span>'}</div>
   <div class="hm-tile hm-c" data-go="explorer"><i class="ti ti-pokeball big"></i><b>Capturer</b><small>${cs.n}/${CAP_MAX}${cs.n<CAP_MAX?' · '+fmtMS(cs.next):''}</small><div class="hm-pp">${pips}</div></div>
   <div class="hm-tile hm-b" data-go="boss"><img src="${SP(150)}" referrerpolicy="no-referrer" alt=""><b>Boss mondial</b><small>${fmtT(bs.left).replace(/ \d+s$/,'')} · ${Math.round(bs.pct)} %</small><div class="hm-bb"><i style="width:${bs.pct}%"></i></div></div>
  </div>
@@ -630,7 +659,7 @@ function openChest(){
  const d=dayS();if(d.chest)return;d.chest=true;
  const k=todayKey(),y=new Date(Date.now()+((S.dayShift||0)-1)*864e5),yk=y.getFullYear()+'-'+(y.getMonth()+1)+'-'+y.getDate();
  const stk=S.streak||(S.streak={last:'',n:0});stk.n=stk.last===yk?stk.n+1:1;stk.last=k;
- const coins=100+stk.n*20,sup=stk.n%5===0?5:0;S.coins+=coins;S.balls.poke+=2;let egn='';if(stk.n%7===0){breed();S.eggs.push({k:'l',id:pickEgg('l')});egn='<div style="color:var(--y);margin-top:4px">Événement série de 7 jours : <b>Œuf légendaire</b> !</div>'}if(sup)S.balls.super=(S.balls.super||0)+sup;
+ const coins=100+stk.n*20,sup=stk.n%5===0?5:0;S.coins+=coins;S.gems=gems()+10;S.balls.poke+=2;let egn='';if(stk.n%7===0){breed();S.eggs.push({k:'l',id:pickEgg('l')});egn='<div style="color:var(--y);margin-top:4px">Événement série de 7 jours : <b>Œuf légendaire</b> !</div>'}if(sup)S.balls.super=(S.balls.super||0)+sup;
  const qs=DAY_QUESTS.filter(q=>d[q[0]]>=q[2]);const qc=qs.reduce((a,q)=>a+q[3],0);S.coins+=qc;
  save();
  hmOverlay(`<h4 class="px" style="font-size:11px;color:var(--y)">Coffre ouvert</h4><i class="ti ti-box" style="font-size:64px;color:#ffd54f"></i><div style="font-weight:900;font-size:16px;margin-top:6px">+${coins} pièces · +2 Poké Balls${sup?' · +5 Super Balls':''}</div>${egn}${qc?`<div style="color:var(--y);margin-top:4px">Quêtes : +${qc} pièces</div>`:''}<div style="color:var(--m);margin-top:4px">Série : ${stk.n} jour${stk.n>1?'s':''}</div>`);
@@ -798,19 +827,20 @@ function czBG(){
 }
 function bzLayout(){
  const bz=document.querySelector('.bz');if(!bz)return;const isC=bz.classList.contains('cz');
- const top=bz.getBoundingClientRect().top,tabs=document.querySelector('.tabs'),tH=tabs&&getComputedStyle(tabs).display!=='none'?tabs.offsetHeight:0,bar=document.querySelector('.bz-bar'),bH=(bar?bar.offsetHeight:36)+16;
+ const isG=bz.classList.contains('gz');const top=bz.getBoundingClientRect().top,tabs=document.querySelector('.tabs'),tH=tabs&&getComputedStyle(tabs).display!=='none'?tabs.offsetHeight:0,bar=document.querySelector('.bz-bar'),bH=(bar?bar.offsetHeight:36)+16;
  const ch=Math.max(300,Math.round(window.innerHeight-top-tH-bH-8));bz.style.height=ch+'px';
  const cw=bz.clientWidth||360,W=200,H=Math.max(110,Math.round(W*ch/cw));
  const cv=bz.querySelector('canvas');cv.width=W;cv.height=H;
  const cTop=Math.max(68,Math.min(Math.round(H*.5),H-78)),wallH=Math.round(Math.max(30,Math.min(H*.15,52))),laneH=(H-wallH)/3;
  G={W,H,cTop,d:cTop-66,wallH,laneH};BZC=null;CZC=null;
- if(isC){czFrame(cv,0);bz.querySelectorAll('.cl').forEach(el=>{const i=+el.dataset.l;el.style.top=((wallH+i*laneH)/H*100)+'%';el.style.height=(laneH/H*100)+'%'})}
+ const wide=cw/ch>1.25;bz.classList.toggle('wide',wide);G.wide=wide;G.mx=wide?62:100;G.s=Math.max(.55,Math.min(1.25,wide?(H*.66)/124:(H*.5)/124));GZB=null;
+ if(isG){gzFrame(cv,0)}else if(isC){czFrame(cv,0);bz.querySelectorAll('.cl').forEach(el=>{const i=+el.dataset.l;el.style.top=((wallH+i*laneH)/H*100)+'%';el.style.height=(laneH/H*100)+'%'})}
  else{bz.querySelectorAll('.bz-hot').forEach(el=>{el.style.top=((cTop-38)/H*100)+'%';el.style.height=(72/H*100)+'%'});const kp=bz.querySelector('.bz-kp');if(kp)kp.style.height=Math.max(20,(H-cTop-34-6)/H*100)+'%'}
 }
 function czFrame(cv,t){const x=cv.getContext('2d');x.drawImage(czBG(),0,0)}
 function bzStart(){bzLayout();if(window.bzAnim)clearTimeout(window.bzAnim);
- const loop=()=>{const a=document.getElementById('bzc');if(!a){window.bzAnim=0;return}
-  bzFrame(a,performance.now());window.bzAnim=setTimeout(()=>requestAnimationFrame(loop),120)};
+ const loop=()=>{const a=document.getElementById('bzc')||document.getElementById('gzc');if(!a){window.bzAnim=0;return}
+  if(a.id==='gzc')gzFrame(a,performance.now());else bzFrame(a,performance.now());window.bzAnim=setTimeout(()=>requestAnimationFrame(loop),120)};
  requestAnimationFrame(loop)}
 window.addEventListener('resize',()=>{if(document.querySelector('.bz'))bzLayout()});
 document.addEventListener('load',e=>{const t=e.target;if(t&&t.tagName==='IMG'&&t.classList.contains('bz-sp')&&t.naturalWidth){const n=Math.max(t.naturalWidth,t.naturalHeight),bw=(t.closest('.bz')||{}).clientWidth||360,k=Math.min(1.6,bw/520);t.style.width=Math.round(t.naturalWidth*k)+'px'}},true);
@@ -913,6 +943,9 @@ function breedAct(a,t){
  if(a==='einfo'){BR.info=BR.info===v?null:v;render(true);return true}
  if(a==='vit'){const m=S.box.find(x=>x.uid===t.dataset.uid);if(m)useVit(m,t.dataset.k);return true}
  if(a==='noop')return true;
+ if(a==='gzpull'){gzPull(+v);return true}
+ if(a==='gzrates'){gzRates();return true}
+ if(a==='gzbuy'){S.gems=gems()+100;save();render(true);return true}
  if(a==='kopen'){BR.kp=true;render(true);return true}
  if(a==='kset'){S.keeper=v||null;BR.kp=false;save();render(true);return true}
  if(a==='pclose'){BR.pick=null;BR.info=null;BR.kp=false;BR.cd=null;BR.cm=null;render(true);return true}
@@ -932,6 +965,127 @@ function breedAct(a,t){
  if(a==='ccol'){breed();collectLane(+v);save();render(true);return true}
  if(a==='crel'){breed();const i=+v,c=laneOf(i);if(c){collectLane(i);c.uid=null}BR.cm=null;save();render(true);return true}
  return false;
+}
+
+/* ===== GACHA PREMIUM (gemmes) + remplacement d'équipe ===== */
+const gems=()=>{if(typeof S.gems!=='number')S.gems=300;return S.gems};
+const GZF=[{id:150,lv:50,n:'Mewtwo'},{id:149,lv:40,n:'Dracolosse'},{id:6,lv:36,sh:true,n:'Dracaufeu chromatique'}];
+const GZ_PITY=80,GZ_C1=10,GZ_C10=100;
+const RC={n:'#8fa0d8',r:'#4dd0e1',sr:'#c084fc',ur:'#ffd24a'},RN={n:'Commun',r:'Rare',sr:'Super rare',ur:'Ultra rare'};
+let GZE=null,GZW=0;
+function gzInit(){if(GZE)return;
+GZE=[];const gw=(w,r,o)=>GZE.push({w,r,...o});
+gw(8,'n',{k:'egg',v:'a'});gw(5,'r',{k:'egg',v:'b'});gw(3,'sr',{k:'egg',v:'c'});gw(.6,'ur',{k:'egg',v:'l'});gw(.3,'ur',{k:'egg',v:'f'});
+gw(16,'n',{k:'item',v:'bonbon',q:2});gw(8,'r',{k:'item',v:'bonbonm',q:1});gw(2.5,'sr',{k:'item',v:'bonbonxl',q:1});
+VIT.forEach(([k])=>gw(1.4,'r',{k:'item',v:k,q:1}));
+gw(1.2,'r',{k:'item',v:'restes'});gw(.8,'sr',{k:'item',v:'orbe'});gw(2.5,'n',{k:'item',v:'sitrus',q:2});gw(.8,'sr',{k:'item',v:'ceinture'});
+Object.values(STONE).forEach(k=>gw(1,'r',{k:'item',v:k}));
+gw(1.5,'r',{k:'item',v:'capargent'});gw(1.5,'r',{k:'item',v:'capoeuf'});gw(1.5,'r',{k:'item',v:'captal'});gw(.4,'sr',{k:'item',v:'capor'});
+gw(6,'n',{k:'ball',v:'poke',q:5});gw(4,'n',{k:'ball',v:'super',q:3});gw(2,'r',{k:'ball',v:'hyper',q:2});
+gw(6,'n',{k:'coin',q:500});gw(2,'r',{k:'coin',q:2000});gw(8,'n',{k:'mon'});
+GZF.forEach((f,i)=>gw(.3,'ur',{k:'feat',i}));
+GZW=GZE.reduce((a,e)=>a+e.w,0);
+}
+const ITN=k=>CANDY[k]?CANDY[k].n:CAPS[k]?CAPS[k].n:HELD[k]?HELD[k].n:(VIT.find(x=>x[0]===k)||[])[1]||(Object.entries(STONE).find(([n,v])=>v===k)||[k])[0];
+const ITI=k=>CANDY[k]?'candy':CAPS[k]?CAPS[k].ic:HELD[k]?HELD[k].ic:(VIT.find(x=>x[0]===k)||[])[2]||'diamond';
+const gzPick=()=>{gzInit();let r=Math.random()*GZW;for(const e of GZE){r-=e.w;if(r<=0)return e}return GZE[0]};
+const LEGS=[144,145,146,150,151];
+function gzDo(e){
+ const it=itm(),c={r:e.r};
+ if(e.k==='egg'){breed();S.eggs.push({k:e.v,id:pickEgg(e.v)});c.n=EGGT[e.v].n;c.sub='En réserve (Élevage)';c.vis=eggImg(e.v,72)}
+ else if(e.k==='item'){it[e.v]=(it[e.v]||0)+(e.q||1);c.n=ITN(e.v)+((e.q||1)>1?' ×'+e.q:'');c.sub='Dans le Sac';c.vis=`<i class="ti ti-${ITI(e.v)}"></i>`}
+ else if(e.k==='ball'){S.balls[e.v]=(S.balls[e.v]||0)+e.q;c.n=BALLS[e.v].n+' ×'+e.q;c.sub='Dans le Sac';c.vis=`<img src="${BI(e.v)}" style="width:56px;image-rendering:pixelated" alt="">`}
+ else if(e.k==='coin'){S.coins+=e.q;c.n=e.q+' P$';c.sub='Pokédollars';c.vis='<i class="ti ti-coin"></i>'}
+ else if(e.k==='mon'){const pool=SPECIES.map(s=>s[0]).filter(i=>!LEGS.includes(i)),id=pool[Math.floor(Math.random()*pool.length)],sh=Math.random()<1/64,m=mk(id,5+Math.floor(Math.random()*11),sh);S.box.push(m);if(!S.dex[id]||S.dex[id]==='s')S.dex[id]='c';c.n=BY[id][1]+(sh?' ✦':'');c.sub='Niv. '+m.lvl+' · dans la boîte';c.vis=`<img class="gcs" src="${sh?SH(id):SP(id)}" referrerpolicy="no-referrer" alt="">`}
+ else if(e.k==='feat'){const f=GZF[e.i],m=mk(f.id,f.lv,!!f.sh);S.box.push(m);S.dex[f.id]='c';c.n=f.n;c.sub='Pokémon vedette · Niv. '+f.lv;c.vis=`<img class="gcs" src="${f.sh?SH(f.id):SP(f.id)}" referrerpolicy="no-referrer" alt="">`}
+ return c;
+}
+function gzPull(n){
+ gzInit();
+ const d=dayS(),free=n===1&&!d.gacha,cost=free?0:n===1?GZ_C1:GZ_C10;
+ if(gems()<cost){modalOv(`<h4 class="px">Pas assez de gemmes</h4><div class="svnote" style="margin:0">Il te faut ${cost} gemmes (tu en as ${gems()}). Utilise « +100 (démo) » pour en obtenir.</div><div class="pbt"><a class="btn y" data-m="x">OK</a></div>`);return}
+ S.gems-=cost;if(free)d.gacha=true;
+ const z=S.gz||(S.gz={n:0,tot:0}),es=[];
+ for(let i=0;i<n;i++){let e;if(z.n+1>=GZ_PITY){e=GZE.filter(x=>x.k==='feat')[Math.floor(Math.random()*GZF.length)]}else e=gzPick();z.tot++;if(e.k==='feat')z.n=0;else z.n++;es.push(e)}
+ if(n===10&&!es.some(e=>e.r!=='n')){const rr=GZE.filter(e=>e.r==='r');es[9]=rr[Math.floor(Math.random()*rr.length)]}
+ const res=es.map(gzDo);save();gzPlay(res,n);
+}
+function capHalf(cv,top,col){
+ const x=cv.getContext('2d');x.clearRect(0,0,32,20);
+ for(let y=0;y<20;y++){const yy=top?y:y+20,w=Math.round(15*Math.sqrt(Math.max(0,1-Math.pow((yy-19.5)/20,2))));if(w<1)continue;
+  PX(x,16-w-1,y,w*2+2,1,'#0b1030');PX(x,16-w,y,w*2,1,top?col:'#f4f4ff');if(!top)PX(x,16+w-3,y,3,1,'#cfd2f0');else PX(x,16+w-3,y,3,1,'rgba(0,0,0,.18)')}
+ if(top){PX(x,8,5,6,2,'rgba(255,255,255,.8)');PX(x,7,7,2,3,'rgba(255,255,255,.7)')}
+ PX(x,0,top?19:0,32,1,'#0b1030');
+}
+function modalOv(html){
+ const o=document.createElement('div');o.className='pick-ov';o.innerHTML=`<div class="pick-c">${html}</div>`;document.body.appendChild(o);
+ o.addEventListener('click',e=>{const b=e.target.closest('[data-m]');if(b){const f=o._h&&o._h(b);if(f!==false){o.remove();render(true)}}else if(e.target===o){o.remove()}});return o;
+}
+function gzPlay(res,n){
+ const best=['n','r','sr','ur'].reduce((a,r)=>res.some(c=>c.r===r)?r:a,'n'),col=RC[best];
+ const o=document.createElement('div');o.className='gz-ov';
+ const cards=res.map((c,i)=>`<div class="gzc r-${c.r}" style="--i:${i};--rc:${RC[c.r]}"><span class="gzr">${RN[c.r]}</span><div class="gzv">${c.vis}</div><b>${c.n}</b><small>${c.sub}</small></div>`).join('');
+ o.innerHTML=`<div class="gzs"><div class="gzcap" style="--rc:${col}"><canvas class="ct" width="32" height="20"></canvas><canvas class="cb" width="32" height="20"></canvas></div><div class="gzfl"></div></div><div class="gzres n${n}" hidden>${cards}</div><div class="gzbt" hidden><a class="btn y" data-m="ok">OK</a><a class="btn" data-m="again" data-n="${n}">Encore ×${n}</a></div><a class="gzskip" data-m="skip">Passer</a>`;
+ document.body.appendChild(o);
+ capHalf(o.querySelector('.ct'),true,col);capHalf(o.querySelector('.cb'),false,col);
+ const cap=o.querySelector('.gzcap'),fl=o.querySelector('.gzfl'),rs=o.querySelector('.gzres'),bt=o.querySelector('.gzbt'),sk=o.querySelector('.gzskip'),st=o.querySelector('.gzs');
+ const TM=[];const T=(f,ms)=>TM.push(setTimeout(f,ms));
+ const reveal=()=>{TM.forEach(clearTimeout);cap.classList.add('open');fl.classList.add('on');sk.hidden=true;setTimeout(()=>{st.style.display='none';rs.hidden=false;bt.hidden=false},350)};
+ cap.classList.add('drop');T(()=>{cap.classList.remove('drop');cap.classList.add('shake')},800);T(reveal,2200);
+ o.addEventListener('click',e=>{const b=e.target.closest('[data-m]');if(!b)return;const m=b.dataset.m;
+  if(m==='skip'){reveal();return}
+  if(m==='ok'){o.remove();render(true)}
+  if(m==='again'){o.remove();render(true);gzPull(+b.dataset.n)}});
+}
+function gzRates(){
+ gzInit();
+ const pc=w=>(w/GZW*100).toFixed(w/GZW*100<1?2:1).replace('.',',')+' %';
+ const grp=(t,fn)=>{const l=GZE.filter(fn);return l.length?`<div class="rt"><b>${t}</b><span>${pc(l.reduce((a,e)=>a+e.w,0))}</span></div>`:''};
+ modalOv(`<h4 class="px">Taux et récompenses</h4>
+ <div class="rt feat"><b><i class="ti ti-star-filled"></i> Vedettes : ${GZF.map(f=>f.n).join(', ')}</b><span>${pc(GZF.length*.3)}</span></div>
+ ${grp('Œufs communs / peu communs / rares',e=>e.k==='egg'&&['a','b','c'].includes(e.v))}${grp('Œuf légendaire / fabuleux',e=>e.k==='egg'&&['l','f'].includes(e.v))}
+ ${grp('Bonbons',e=>e.k==='item'&&CANDY[e.v])}${grp('Vitamines',e=>e.k==='item'&&VIT.some(v=>v[0]===e.v))}${grp('Objets à tenir',e=>e.k==='item'&&HELD[e.v])}${grp('Pierres',e=>e.k==='item'&&Object.values(STONE).includes(e.v))}${grp('Capsules',e=>e.k==='item'&&CAPS[e.v])}${grp('Poké Balls',e=>e.k==='ball')}${grp('Pokédollars',e=>e.k==='coin')}${grp('Pokémon aléatoire (niv. 5 à 15)',e=>e.k==='mon')}
+ <div class="svnote" style="margin:0">Pitié : une vedette est garantie au plus tard au tirage n° ${GZ_PITY}. Un ×10 contient toujours au moins un objet Rare ou mieux.</div><div class="pbt"><a class="btn y" data-m="x">Fermer</a></div>`);
+}
+function gachaView(){
+ const d=dayS(),z=S.gz||(S.gz={n:0,tot:0}),left=GZ_PITY-z.n,free=!d.gacha;
+ const feat=GZF.map(f=>`<div class="gf"><img class="gf-sp" src="${f.sh?SH(f.id):SP(f.id)}" referrerpolicy="no-referrer" alt=""><b>${f.n}</b><small><i class="ti ti-star-filled"></i> 0,3 %</small></div>`).join('');
+ const gi='<i class="ti ti-diamond gemi"></i>';
+ return `<div class="bz gz"><canvas id="gzc" width="200" height="125"></canvas><div class="gz-feat">${feat}</div><div class="bz-b">Vedette garantie dans ${left} tirage${left>1?'s':''}</div></div>
+ <div class="bz-bar gz-bar"><span class="chip gem">${gi}<b id="gemc">${gems()}</b></span><a class="btn y" data-act="gzpull" data-v="1">${free?'Tirage gratuit':'Tirer ×1 · '+GZ_C1+' '+gi}${free?'<span class="bd">1</span>':''}</a><a class="btn y" data-act="gzpull" data-v="10">Tirer ×10 · ${GZ_C10} ${gi}</a><a class="btn sm" data-act="gzrates"><i class="ti ti-info-circle"></i>Taux</a><a class="btn sm" data-act="gzbuy">+100 (démo)</a></div>`;
+}
+let GZB=null;
+function gzBG(){
+ if(GZB)return GZB;const {W,H}=G,cv=document.createElement('canvas');cv.width=W;cv.height=H;const x=cv.getContext('2d'),R=zmRng(9),by=Math.round(H*.8);
+ const bands=['#120d3d','#1a1250','#231766','#2d1c7a','#3c2092','#52269e','#6b2aa6','#8a30ab'];
+ const bh=Math.ceil(by/bands.length);bands.forEach((c,i)=>PX(x,0,i*bh,W,bh,c));
+ for(let i=0;i<70;i++){const sx=Math.floor(R()*W),sy=Math.floor(R()*by*.8);PX(x,sx,sy,1,1,['#fff','#ffe97a','#9fe8ff'][i%3]);if(i%9===0)PX(x,sx-1,sy,3,1,'#fff6')}
+ for(const[bx,w,h]of[[-5,34,30],[28,24,22],[150,30,28],[178,34,36]]){const y=by-h;PX(x,bx,y,w,h,'#190f46');for(let k=0;k<h/6;k++)for(let j=0;j<w/8;j++)if(R()<.4)PX(x,bx+3+j*8,y+3+k*6,2,2,'#ffe97a')}
+ x.fillStyle='rgba(255,240,170,.10)';x.beginPath();x.moveTo(40,0);x.lineTo(70,0);x.lineTo(G.mx+30,by);x.lineTo(G.mx-50,by);x.fill();x.beginPath();x.moveTo(160,0);x.lineTo(130,0);x.lineTo(G.mx+50,by);x.lineTo(G.mx-30,by);x.fill();
+ PX(x,0,by,W,H-by,'#2a1f5a');for(let y=by;y<H;y+=8)for(let i=0;i<W;i+=16)PX(x,i+((y-by)/8%2?8:0),y,8,8,'#35286e');PX(x,0,by,W,2,'#ffd24a');PX(x,0,by+2,W,1,'#a8832a');
+ GZB=cv;return cv;
+}
+function gzFrame(cv,t){
+ const x=cv.getContext('2d'),by=Math.round(G.H*.8),s=G.s;x.drawImage(gzBG(),0,0);
+ x.save();x.translate(G.mx,by);x.scale(s,s);
+ PX(x,-44,-3,88,5,'rgba(0,0,0,.35)');
+ const caps=['#e8402c','#3a86e0','#ffd24a','#4cc08a','#c084fc','#ff9ed8'];
+ for(let i=0;i<16;i++){const a=i*2.4,r=8+(i%5)*5.6,bx=Math.cos(a)*r*.95+Math.sin(t/420+i)*1.6,byy=-72+Math.sin(a)*r*.95+Math.cos(t/360+i*1.7)*2,c=caps[i%6];
+  x.fillStyle='#0b1030';x.beginPath();x.arc(bx,byy,6.4,0,6.28);x.fill();x.fillStyle='#f4f4ff';x.beginPath();x.arc(bx,byy,5.4,0,6.28);x.fill();x.fillStyle=c;x.beginPath();x.arc(bx,byy,5.4,Math.PI,6.28);x.fill();x.fillStyle='#fff8';x.fillRect(bx-3,byy-3,2,2)}
+ x.fillStyle='rgba(190,232,255,.28)';x.beginPath();x.arc(0,-72,37,0,6.28);x.fill();x.strokeStyle='#e8f6ff';x.lineWidth=2;x.stroke();x.fillStyle='#fff9';x.fillRect(-26,-96,3,10);x.fillRect(-23,-100,6,2);
+ PX(x,-14,-112,28,6,'#c8c8d0');PX(x,-14,-112,28,1,'#fff');PX(x,-4,-118,8,6,'#ffd24a');
+ PX(x,-42,-44,84,6,'#a82a2a');PX(x,-42,-44,84,1,'#ff8a8a');PX(x,-40,-38,80,38,'#d94a4a');PX(x,-40,-38,80,2,'#ff7a7a');PX(x,-40,-4,80,4,'#8a1f1f');PX(x,-42,-44,3,44,'#a82a2a');PX(x,39,-44,3,44,'#a82a2a');
+ PX(x,-32,-34,36,10,'#ffd24a');PX(x,-32,-34,36,1,'#fff2a0');x.fillStyle='#7a2a10';x.font='bold 8px monospace';x.textAlign='center';x.fillText('GACHA',-14,-26);
+ PX(x,-18,-18,24,14,'#2a1018');PX(x,-16,-16,20,2,'#000');PX(x,-12,-12,12,6,'#4a2430');
+ x.save();x.translate(24,-26);x.rotate(t/500);x.fillStyle='#0b1030';x.beginPath();x.arc(0,0,9,0,6.28);x.fill();x.fillStyle='#ffd24a';x.beginPath();x.arc(0,0,7.5,0,6.28);x.fill();x.fillStyle='#a8832a';for(let k=0;k<4;k++){x.save();x.rotate(k*1.57);x.fillRect(-1,-7,2,14);x.restore()}x.fillStyle='#fff';x.fillRect(5,-1,3,3);x.restore();
+ PX(x,26,-14,10,4,'#ffd24a');
+ x.restore();
+ for(let i=0;i<5;i++){const a=t/700+i*1.26,sx=G.mx+Math.cos(a)*50*s,sy=by-70*s+Math.sin(a*1.3)*40*s;PX(x,Math.round(sx),Math.round(sy),2,2,i%2?'#fff':'#ffe97a')}
+}
+function teamAsk(uid){
+ const m=S.box.find(x=>x.uid===uid),team=S.box.filter(x=>x.team);
+ const o=modalOv(`<h4 class="px">Équipe complète</h4><div class="svnote" style="margin:0">Ajouter ${BY[m.id][1]} (Niv. ${m.lvl}) : quel Pokémon remplacer ?</div><div class="prows">${team.map(t=>`<div class="prow" data-m="rep" data-v="${t.uid}" style="cursor:pointer"><img class="pmi" src="${SPS(t.id)}" referrerpolicy="no-referrer" alt=""><div class="grow"><b>${BY[t.id][1]}</b><small>Niv. ${t.lvl}</small></div><span class="btn sm y">Remplacer</span></div>`).join('')}</div><div class="pbt"><a class="btn" data-m="x">Annuler</a></div>`);
+ o._h=b=>{if(b.dataset.m==='rep'){const old=S.box.find(x=>x.uid===b.dataset.v);if(old)old.team=false;m.team=true;save()}};
 }
 
 function setBallUI(){
@@ -1006,9 +1160,9 @@ function stub(){
  return `<div class="panel stub"><div class="ico" style="margin:0 auto 10px;width:56px;height:56px;font-size:30px"><i class="ti ti-${n?n[1]:'help'}"></i></div><h4 class="px">${n?n[2]:'Écran'}</h4><div style="color:var(--m);margin-bottom:14px">Cet écran n'est pas dans le prototype. Voir la maquette statique.</div><a class="btn y" href="../index.html#${route==='boutique'?'boutique':route}">Ouvrir la maquette</a></div>`;
 }
 function render(keep){
- const c=route==='hub'?hub():route==='explorer'?explorer():route==='pokemon'?pokemon():route==='combat'?combat():route==='boss'?boss():route==='ligue'?ligue():route==='boutique'?boutique():route==='sac'?sac():route==='elevage'?elevageView():stub();
+ const c=route==='hub'?hub():route==='explorer'?explorer():route==='pokemon'?pokemon():route==='combat'?combat():route==='boss'?boss():route==='ligue'?ligue():route==='boutique'?boutique():route==='sac'?sac():route==='elevage'?elevageView():route==='gacha'?gachaView():stub();
  const y=window.scrollY;
- $('#app').innerHTML=shell(c);capTick();drawZone();zScroll();if(document.getElementById('bzc')||document.getElementById('czc'))bzStart();if(document.getElementById('fa')){fsInit();}
+ $('#app').innerHTML=shell(c);capTick();drawZone();zScroll();if(document.getElementById('bzc')||document.getElementById('czc')||document.getElementById('gzc'))bzStart();if(document.getElementById('fa')){fsInit();}
  if(keep)window.scrollTo(0,y);
  document.querySelectorAll('img').forEach(i=>i.addEventListener('error',()=>{i.style.visibility='hidden'},{once:true}));
 }
@@ -1038,7 +1192,7 @@ document.addEventListener('click',e=>{
  else if(a==='resetadv'){S.adv=null;save();render(true)}
  else if(a==='info')openInfo()
  else if(a==='infoclose')closeInfo()
- else if(a==='team'&&m){if(!m.team&&S.box.filter(x=>x.team).length>=6)return;m.team=!m.team;save();render(true)}
+ else if(a==='team'&&m){if(!m.team&&S.box.filter(x=>x.team).length>=6){teamAsk(m.uid);return}m.team=!m.team;save();render(true)}
  else if(a==='fav'&&m){m.fav=!m.fav;save();render(true)}
  else if(a==='release'&&m){if(P.confirm!==m.uid){P.confirm=m.uid;render(true);return}S.coins+=20+m.lvl*3+(m.sh?300:0);S.box=S.box.filter(x=>x!==m);P.sel=null;P.confirm=null;save();render(true)}
  else if(a==='zsel'){mapSel=t.dataset.v;render(true)}
