@@ -112,7 +112,7 @@ input{flex:1;min-width:140px}
 .rm.seen{background:#2a1a4a;color:#e8dcff}.rm.dn{opacity:.55}.rm.adj{cursor:pointer;border-color:#ffb020;box-shadow:0 0 10px #ff8a1f88,inset 0 0 0 2px #5a3a12;color:#ffd47a}
 .rm.cur{border-color:#66e07a;background:#1f4a35}.rm.cur img{width:90%;height:90%;object-fit:contain;object-position:center bottom}.rm.bs{color:#ff6b6b}
 .hw-lock{text-align:center;padding:30px 10px;color:var(--m);font-weight:800}.hw-lock i{display:block;font-size:34px;color:var(--y);margin-bottom:6px}
-.eggi.hw1 img{filter:sepia(1) saturate(5) hue-rotate(-12deg) drop-shadow(0 0 6px #ff9a2a)}.eggi.hw2 img{filter:sepia(1) saturate(4) hue-rotate(235deg) drop-shadow(0 0 6px #b06bff)}.eggi.hw3 img{filter:sepia(1) saturate(5) hue-rotate(300deg) drop-shadow(0 0 6px #ff4d6d)}
+.eggi.hw1 img{filter:sepia(1) saturate(5) hue-rotate(-12deg) drop-shadow(0 0 6px #ff9a2a)}.eggi.hw2 img{filter:sepia(1) saturate(4) hue-rotate(235deg) drop-shadow(0 0 6px #b06bff)}.eggi.hw4 img{filter:grayscale(1) brightness(.55) contrast(1.3) drop-shadow(0 0 8px #7a5aff)}.eggi.hw3 img{filter:sepia(1) saturate(5) hue-rotate(300deg) drop-shadow(0 0 6px #ff4d6d)}
 .boss-hero{position:relative;min-height:320px;border:2px solid var(--b);overflow:hidden;background:#1a1040}
 .stg img.tsp{width:60px;height:60px;object-fit:contain;image-rendering:pixelated}.stg.lock{opacity:.5}.stg.cur{outline:2px solid var(--y);border-radius:10px}.tpv{display:flex;gap:2px;margin-top:3px}.tpv img{width:30px;height:30px;image-rendering:pixelated}.zh{position:relative;overflow:hidden;border-radius:10px;padding:12px;min-height:60px;margin-bottom:8px;display:flex;flex-direction:column;gap:2px}.zh::after{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#0b1030e8 30%,#0b103040)}.zh>*{z-index:2}.zh .bgimg{z-index:0!important;position:absolute;inset:0;background-size:cover;background-position:center bottom;image-rendering:pixelated}.panel.zh.lock{opacity:.5}
 .ibtn{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#4dd0e1;color:#0b1030;font:900 12px Nunito,sans-serif;cursor:pointer;vertical-align:middle;pointer-events:auto;margin-left:4px;border:2px solid #0b1030}
@@ -634,6 +634,8 @@ const MD={
  'Pisto-Poing':['Combat','P',40,1,30,1,'Poing ultra rapide.'],'Casse-Brique':['Combat','P',75,1,15,0,'Frappe qui brise.'],'Close Combat':['Combat','P',120,1,5,0,'Assaut furieux.'],
  'Coupe':['Normal','P',50,.95,30,0,'CS : tranche avec des lames.'],'Force':['Normal','P',80,1,15,0,'CS : frappe avec une force brute.']
 };
+Object.assign(MD,{'Morsure':['Ténèbres','P',60,1,25,0,'Mord avec des crocs acérés.'],'Tranche-Nuit':['Ténèbres','P',70,1,15,0,'Un coup rapide dans l\'ombre.'],'Vibrobscur':['Ténèbres','S',80,1,15,0,'Une onde de ténèbres.']});
+(()=>{const a=(k,t,l)=>{TE[k][t]=[...new Set([...(TE[k][t]||[]),...l])]};a('se','Ténèbres',['Spectre','Psy']);a('nv','Ténèbres',['Combat','Ténèbres','Fée']);a('im','Psy',['Ténèbres'])})();
 const MK=Object.keys(MD);
 
 
