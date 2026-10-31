@@ -108,14 +108,12 @@ input{flex:1;min-width:140px}
 .bsh{position:absolute;left:12px;right:12px;bottom:10px;display:flex;flex-direction:column;gap:4px;z-index:2}.bsh small{color:var(--m);font-weight:800}.bsh b{font-size:12px}
 .bcb{position:absolute;left:50%;bottom:-8%;width:36px;height:36px;margin-left:-18px;image-rendering:pixelated;z-index:3}
 .hw-cta{background:linear-gradient(120deg,#ff8a1f,#6a1fb0)!important;color:#fff}.hw-cta .ic{font-size:30px}
-.hw{display:flex;flex-direction:column;gap:10px;background:radial-gradient(circle at 50% 0,#2a1348,#0a0618 75%);border:3px solid #0b1030;box-shadow:inset 0 0 0 2px #3a1f66;padding:12px}
-.hw-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}.hw-c{text-align:right}.hw-c small{color:var(--m);font-weight:800}
-.hw-c .ti-flame{font-size:15px;color:#3a3560}.hw-c .ti-flame.on{color:#ffb020;filter:drop-shadow(0 0 4px #ff8a1f)}
-.hw-g{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;max-width:520px;width:100%;margin:0 auto}
-.rm{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:22px;background:#1a1030;border:3px solid #0b1030;box-shadow:inset 0 0 0 2px #2d1b52;color:#7a6aa8;cursor:default;position:relative;user-select:none}
-.rm.seen{background:#2a1a4a;color:#e8dcff}.rm.dn{opacity:.55}.rm.adj{cursor:pointer;border-color:#ffb020;box-shadow:0 0 10px #ff8a1f88,inset 0 0 0 2px #5a3a12;color:#ffd47a}
-.rm.cur{border-color:#66e07a;background:#1f4a35}.rm.cur img{width:90%;height:90%;object-fit:contain;object-position:center bottom}.rm.bs{color:#ff6b6b}
-.hw-lock{text-align:center;padding:30px 10px;color:var(--m);font-weight:800}.hw-lock i{display:block;font-size:34px;color:var(--y);margin-bottom:6px}
+.hw .bz-b{z-index:5}.hw .hw-t{top:auto;bottom:6%;height:auto;white-space:normal;text-align:center;max-width:88%}
+.hw-r{position:absolute;z-index:3;display:flex;align-items:center;justify-content:center;font-size:clamp(14px,5.2cqw,26px);font-weight:900;color:#cdbbff;cursor:default;user-select:none;text-shadow:0 2px 0 #0b0618}
+.hw-r.adj{cursor:pointer}.hw-r.adj:hover{outline:2px dashed #ffd47a}.hw-r.dn{opacity:.6}
+.hw-r.cur img{width:80%;height:72%;object-fit:contain;object-position:center bottom;margin-top:auto;margin-bottom:6%}
+.hw-r .ti{font-size:inherit}.hw-r .ti-skull,.hw-r .ti-lock{color:#ff7a7a}.hw-r .ti-key{color:#ffd24a}.hw-r .ti-alert-triangle{color:#ffb020}.hw-r .ti-ghost{color:#c9b8ff}
+.hw-cd .ti-flame{font-size:14px;color:#3a3560}.hw-cd .ti-flame.on{color:#ffb020;filter:drop-shadow(0 0 3px #ff8a1f)}.hw-cd small{color:var(--m);font-weight:800}
 .eggi.hw1 img{filter:sepia(1) saturate(5) hue-rotate(-12deg) drop-shadow(0 0 6px #ff9a2a)}.eggi.hw2 img{filter:sepia(1) saturate(4) hue-rotate(235deg) drop-shadow(0 0 6px #b06bff)}.eggi.hw4 img{filter:grayscale(1) brightness(.55) contrast(1.3) drop-shadow(0 0 8px #7a5aff)}.eggi.hw3 img{filter:sepia(1) saturate(5) hue-rotate(300deg) drop-shadow(0 0 6px #ff4d6d)}
 .boss-hero{position:relative;min-height:320px;border:2px solid var(--b);overflow:hidden;background:#1a1040}
 .stg img.tsp{width:60px;height:60px;object-fit:contain;image-rendering:pixelated}.stg.lock{opacity:.5}.stg.cur{outline:2px solid var(--y);border-radius:10px}.tpv{display:flex;gap:2px;margin-top:3px}.tpv img{width:30px;height:30px;image-rendering:pixelated}.zh{position:relative;overflow:hidden;border-radius:10px;padding:12px;min-height:60px;margin-bottom:8px;display:flex;flex-direction:column;gap:2px}.zh::after{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#0b1030e8 30%,#0b103040)}.zh>*{z-index:2}.zh .bgimg{z-index:0!important;position:absolute;inset:0;background-size:cover;background-position:center bottom;image-rendering:pixelated}.panel.zh.lock{opacity:.5}
@@ -865,20 +863,22 @@ function czBG(){
 }
 function bzLayout(){
  const bz=document.querySelector('.bz');if(!bz)return;const isC=bz.classList.contains('cz');
- const isG=bz.classList.contains('gz');const top=bz.getBoundingClientRect().top,tabs=document.querySelector('.tabs'),tH=tabs&&getComputedStyle(tabs).display!=='none'?tabs.offsetHeight:0,bar=document.querySelector('.bz-bar'),bH=(bar?bar.offsetHeight:36)+16;
+ const isG=bz.classList.contains('gz'),isH=bz.classList.contains('hw');const top=bz.getBoundingClientRect().top,tabs=document.querySelector('.tabs'),tH=tabs&&getComputedStyle(tabs).display!=='none'?tabs.offsetHeight:0,bar=document.querySelector('.bz-bar'),bH=(bar?bar.offsetHeight:36)+16;
  const ch=Math.max(300,Math.round(window.innerHeight-top-tH-bH-8));bz.style.height=ch+'px';
  const cw=bz.clientWidth||360,W=200,H=Math.max(110,Math.round(W*ch/cw));
  const cv=bz.querySelector('canvas');cv.width=W;cv.height=H;
  const cTop=Math.max(68,Math.min(Math.round(H*.5),H-78)),wallH=Math.round(Math.max(30,Math.min(H*.15,52))),laneH=(H-wallH)/3;
  G={W,H,cTop,d:cTop-66,wallH,laneH};BZC=null;CZC=null;
  const wide=cw/ch>1.25;bz.classList.toggle('wide',wide);G.wide=wide;G.mx=wide?62:100;G.s=Math.max(.55,Math.min(1.25,wide?(H*.66)/124:(H*.5)/124));GZB=null;
- if(isG){gzFrame(cv,0)}else if(isC){czFrame(cv,0);bz.querySelectorAll('.cl').forEach(el=>{const i=+el.dataset.l;el.style.top=((wallH+i*laneH)/H*100)+'%';el.style.height=(laneH/H*100)+'%'})}
+ if(isH){const rh=Math.max(14,Math.round(H*.09)),gr=Math.max(12,Math.round(H*.07)),y0=rh+3,y1=H-gr-1,cwc=(W-16)/5,chh=(y1-y0)/4;G.hw={x0:8,y0,y1,cw:cwc,ch:chh,rh,gr};HWBG=null;
+  bz.querySelectorAll('.hw-r').forEach(el=>{const i=+el.dataset.i,r=Math.floor(i/5),c=i%5;el.style.left=((8+c*cwc)/W*100)+'%';el.style.top=((y0+r*chh)/H*100)+'%';el.style.width=(cwc/W*100)+'%';el.style.height=(chh/H*100)+'%'});hwFrame(cv,0)}
+ else if(isG){gzFrame(cv,0)}else if(isC){czFrame(cv,0);bz.querySelectorAll('.cl').forEach(el=>{const i=+el.dataset.l;el.style.top=((wallH+i*laneH)/H*100)+'%';el.style.height=(laneH/H*100)+'%'})}
  else{bz.querySelectorAll('.bz-hot').forEach(el=>{el.style.top=((cTop-38)/H*100)+'%';el.style.height=(72/H*100)+'%'});const kp=bz.querySelector('.bz-kp');if(kp)kp.style.height=Math.max(20,(H-cTop-34-6)/H*100)+'%'}
 }
 function czFrame(cv,t){const x=cv.getContext('2d');x.drawImage(czBG(),0,0)}
 function bzStart(){bzLayout();if(window.bzAnim)clearTimeout(window.bzAnim);
- const loop=()=>{const a=document.getElementById('bzc')||document.getElementById('gzc');if(!a){window.bzAnim=0;return}
-  if(a.id==='gzc')gzFrame(a,performance.now());else bzFrame(a,performance.now());window.bzAnim=setTimeout(()=>requestAnimationFrame(loop),a.id==='gzc'?45:120)};
+ const loop=()=>{const a=document.getElementById('bzc')||document.getElementById('gzc')||document.getElementById('hwc');if(!a){window.bzAnim=0;return}
+  if(a.id==='hwc')hwFrame(a,performance.now());else if(a.id==='gzc')gzFrame(a,performance.now());else bzFrame(a,performance.now());window.bzAnim=setTimeout(()=>requestAnimationFrame(loop),a.id==='gzc'?45:120)};
  requestAnimationFrame(loop)}
 window.addEventListener('resize',()=>{if(document.querySelector('.bz'))bzLayout()});
 document.addEventListener('load',e=>{const t=e.target;if(t&&t.tagName==='IMG'&&t.classList.contains('bz-sp')&&t.naturalWidth){const n=Math.max(t.naturalWidth,t.naturalHeight),bw=(t.closest('.bz')||{}).clientWidth||360,k=Math.min(1.6,bw/520);t.style.width=Math.round(t.naturalWidth*k)+'px'}},true);
@@ -1180,30 +1180,70 @@ function hwInfo(k){
  modalOv(`<h4 class="px">${EGGT[k].n}</h4><div class="svnote" style="margin:0">Espèces possibles :</div><div class="prows">${EGGPOOL[k].map(id=>`<div class="prow"><img class="pmi" src="${SP(id)}" referrerpolicy="no-referrer" alt=""><div class="grow"><b>${BY[id][1]}</b></div></div>`).join('')}</div><div class="pbt"><a class="btn y" data-m="x">Fermer</a></div>`);
 }
 function hwBuy(k){
- const h=hwS(),c=HWSHOP.find(x=>x[0]===k)[1];
- if(h.pk<c){h.msg=`Il te faut ${c} 🎃 pour cet œuf.`;save();render(true);return}
- h.pk-=c;breed();S.eggs.push({k,id:pickEgg(k)});h.msg=`${EGGT[k].n} acheté ! Il t'attend dans la réserve (Élevage).`;save();render(true);
+ const h=hwS(),c=HWSHOP.find(x=>x[0]===k)[1];let note;
+ if(h.pk<c)note=`Il te faut ${c} 🎃 pour cet œuf.`;
+ else{h.pk-=c;breed();S.eggs.push({k,id:pickEgg(k)});note=`${EGGT[k].n} acheté ! Il t'attend dans la réserve (Élevage).`;save()}
+ const o=document.querySelector('.pick-ov');if(o)o.remove();render(true);hwShop(note);
 }
 function hwPips(h){return Array.from({length:HW_MAX},(_,i)=>`<i class="ti ti-flame ${i<h.candles?'on':''}"></i>`).join('')}
+let HWBG=null;
+function hwBG(){
+ if(HWBG)return HWBG;const {W,H}=G,m=G.hw,cv=document.createElement('canvas');cv.width=W;cv.height=H;const x=cv.getContext('2d'),R=zmRng(5);
+ const bands=['#0a0620','#120a30','#1c0f45','#2a1458'],by=H-m.gr,bh=Math.ceil(by/bands.length);bands.forEach((c,i)=>PX(x,0,i*bh,W,bh,c));
+ for(let i=0;i<60;i++){const sx=Math.floor(R()*W),sy=Math.floor(R()*by*.5);PX(x,sx,sy,1,1,['#fff','#ffe97a','#9fe8ff'][i%3])}
+ x.fillStyle='#ffe9a8';x.beginPath();x.arc(W-22,m.rh+6,7,0,6.28);x.fill();x.fillStyle='#e0c880';x.fillRect(W-25,m.rh+4,2,2);x.fillRect(W-20,m.rh+8,3,2);
+ PX(x,0,by,W,m.gr,'#0e2a1a');for(let i=0;i<W;i+=6)PX(x,i,by,2,1,'#1f5a36');PX(x,0,by+m.gr-3,W,3,'#08170f');
+ for(const gx of[3,W-12]){PX(x,gx,by-8,8,9,'#4a4a5e');PX(x,gx+1,by-9,6,1,'#4a4a5e');PX(x,gx+3,by-6,2,4,'#2a2a3a')}
+ const mx0=m.x0-3,mw=W-2*m.x0+6;
+ x.fillStyle='#241448';x.beginPath();x.moveTo(mx0-6,m.y0);x.lineTo(W/2,2);x.lineTo(mx0+mw+6,m.y0);x.closePath();x.fill();
+ x.strokeStyle='#0b0618';x.lineWidth=1;x.stroke();for(let k=1;k<4;k++){const yy=m.y0-k*(m.y0-2)/4;PX(x,Math.round(W/2-(W/2-mx0+6)*(yy-2)/(m.y0-2)),Math.round(yy),Math.round(2*(W/2-mx0+6)*(yy-2)/(m.y0-2)),1,'#1a0f36')}
+ PX(x,W*.72,m.y0*.3,8,m.y0*.6,'#1a0f36');PX(x,W*.72-1,m.y0*.3-2,10,2,'#0b0618');
+ PX(x,mx0,m.y0,mw,m.y1-m.y0+3,'#0b0618');
+ for(let r=0;r<4;r++)for(let c=0;c<5;c++){
+  const rx=Math.round(m.x0+c*m.cw)+1,ry=Math.round(m.y0+r*m.ch)+1,rw=Math.round(m.cw)-2,rh=Math.round(m.ch)-2;
+  PX(x,rx,ry,rw,rh,'#3a2468');for(let k=0;k<rw;k+=4)PX(x,rx+k,ry,2,rh,'#33205c');
+  PX(x,rx,ry+Math.round(rh*.62),rw,Math.round(rh*.38),'#2a1a4a');PX(x,rx,ry+Math.round(rh*.62),rw,1,'#4a3480');
+  PX(x,rx,ry+rh-3,rw,3,'#5a3a22');for(let k=0;k<rw;k+=7)PX(x,rx+k,ry+rh-3,1,3,'#3a2414');
+  if((r+c)%2){const wx=rx+Math.round(rw/2)-5,wy=ry+4;PX(x,wx-1,wy-1,12,12,'#0b0618');PX(x,wx,wy,10,10,'#1a2a5a');PX(x,wx+4,wy,1,10,'#0b0618');PX(x,wx,wy+4,10,1,'#0b0618');PX(x,wx+1,wy+1,2,2,'#9fb8ff')}
+  else{const fx=rx+Math.round(rw/2)-5,fy=ry+5;PX(x,fx-1,fy-1,12,10,'#7a5a22');PX(x,fx,fy,10,8,'#241448');PX(x,fx+2,fy+2,6,4,'#4a3480')}
+  PX(x,rx,ry,rw,1,'#0b0618');PX(x,rx,ry+rh-1,rw,1,'#0b0618');PX(x,rx,ry,1,rh,'#0b0618');PX(x,rx+rw-1,ry,1,rh,'#0b0618')}
+ HWBG=cv;return cv;
+}
+function hwFrame(cv,t){
+ const x=cv.getContext('2d'),m=G.hw,h=hwS(),lock=hwLocked(h);x.drawImage(hwBG(),0,0);
+ const fl=.5+.5*Math.sin(t/160),fl2=.5+.5*Math.sin(t/97+1);
+ for(let i=0;i<HW_N;i++){
+  const r=Math.floor(i/HW_W),c=i%HW_W,rx=Math.round(m.x0+c*m.cw)+1,ry=Math.round(m.y0+r*m.ch)+1,rw=Math.round(m.cw)-2,rh=Math.round(m.ch)-2,rm=!lock&&h.rooms&&h.rooms[i];
+  if(!rm||!rm.seen){PX(x,rx,ry,rw,rh,'rgba(6,3,16,.88)');if(!lock&&rm&&rm.t==='boss'){PX(x,rx,ry+Math.round(rh/2)-1,rw,2,'#6a6a7a');PX(x,rx+Math.round(rw/2)-1,ry,2,rh,'#6a6a7a')}}
+  else if(rm.done)PX(x,rx,ry,rw,rh,'rgba(0,0,0,.28)');
+  if(rm&&!lock&&hwAdj(h.pos,i)){PX(x,rx,ry,rw,rh,`rgba(255,${150+fl*40|0},40,${.08+.07*fl})`);
+   const cx=rx+Math.round(rw/2)-1,cy=ry+rh-14;PX(x,cx,cy,3,7,'#e8dcc0');PX(x,cx,cy,3,1,'#fff');PX(x,cx+1,cy-3-(fl2>.5?1:0),1,3,'#ffd24a');PX(x,cx+1,cy-2,1,2,'#ff8a1f')}
+  if(rm&&!lock&&i===h.pos){PX(x,rx,ry,rw,rh,`rgba(255,200,90,${.10+.05*fl})`);PX(x,rx,ry,rw,1,'#66e07a');PX(x,rx,ry+rh-1,rw,1,'#66e07a');PX(x,rx,ry,1,rh,'#66e07a');PX(x,rx+rw-1,ry,1,rh,'#66e07a')}
+  if(rm&&!lock&&rm.t==='boss'&&h.key&&hwAdj(h.pos,i)){PX(x,rx,ry,rw,rh,`rgba(255,40,70,${.12+.1*fl})`)}
+ }
+ for(let k=0;k<3;k++){const a=t/900+k*2.1,bx=(a*14+k*70)%(G.W+20)-10,byy=m.rh*.5+Math.sin(a*2)*4;PX(x,Math.round(bx),Math.round(byy),3,1,'#0b0618');PX(x,Math.round(bx)-1,Math.round(byy)-1,1,1,'#0b0618');PX(x,Math.round(bx)+3,Math.round(byy)-1,1,1,'#0b0618')}
+}
+function hwShop(note){
+ const h=hwS(),rows=HWSHOP.map(([k,c])=>`<div class="li"><div class="ico">${eggImg(k,36)}</div><div class="grow"><b>${EGGT[k].n}</b> <span class="ibtn" data-hw="info" data-k="${k}">i</span><div style="font-size:12px;color:var(--m)">Éclosion ${Math.round(EGGT[k].dur/60000)} min · espèces exclusives</div></div><a class="btn y ${h.pk<c?'off':''}" data-hw="buy" data-k="${k}">🎃 ${c}</a></div>`).join('');
+ modalOv(`<h4 class="px">Boutique de l'événement</h4><div class="svnote" style="margin:0">Tu as <b>🎃 ${h.pk}</b> citrouilles.${note?'<br>'+note:''}</div><div class="list">${rows}</div><div class="pbt"><a class="btn y" data-m="x">Fermer</a></div>`);
+}
 function manoirView(){
  if(B&&B.hw!=null)return battleView();
  const h=hwS(),lock=hwLocked(h);if(!lock&&!h.rooms)hwGen(h);
- const icn={start:'home',pump:'',trap:'alert-triangle',wild:'ghost',trainer:'user',key:'key',boss:'skull',empty:'door'};
- const grid=lock?'':h.rooms.map((r,i)=>{
-  const adj=hwAdj(h.pos,i),cur=i===h.pos,cls=['rm',r.seen?'seen':'dark',adj?'adj':'',cur?'cur':'',r.done&&r.seen?'dn':'',r.t==='boss'?'bs':''].join(' ');
+ const icn={start:'home',trap:'alert-triangle',wild:'ghost',trainer:'user',key:'key',boss:'skull',empty:'door'};
+ const spots=lock?'':h.rooms.map((r,i)=>{
+  const cur=i===h.pos,adj=hwAdj(h.pos,i);
   let ico=r.seen||r.t==='boss'?(r.t==='pump'?'🎃':r.t==='boss'&&!h.key&&!r.seen?'<i class="ti ti-lock"></i>':`<i class="ti ti-${icn[r.t]}"></i>`):'?';
-  if(cur)ico='<img class="pmi" src="'+SP(partner().id)+'" referrerpolicy="no-referrer" alt="">';
-  return `<a class="${cls}" data-hw="mv" data-k="${i}">${ico}</a>`}).join('');
- const shop=HWSHOP.map(([k,c])=>`<div class="li"><div class="ico">${eggImg(k,36)}</div><div class="grow"><b>${EGGT[k].n}</b> <span class="ibtn" data-hw="info" data-k="${k}">i</span><div style="font-size:12px;color:var(--m)">Éclosion ${Math.round(EGGT[k].dur/60000)} min · espèces exclusives</div></div><a class="btn y ${h.pk<c?'off':''}" data-hw="buy" data-k="${k}">🎃 ${c}</a></div>`).join('');
- return `<div class="title"><h3 class="px">Manoir hanté</h3><span class="chip">🎃 <b id="hwpk">${h.pk}</b></span></div>
- <div class="hw"><div class="hw-top"><div><b class="px" style="font-size:11px">Étage ${h.floor}</b><div style="font-size:12px;color:var(--m)">${lock?'Étage terminé aujourd\'hui. Reviens demain !':h.key?'🗝️ Clé trouvée : le gardien t\'attend':'Trouve la clé, puis affronte le gardien'}</div></div><div class="hw-c"><div id="hwp">${hwPips(h)}</div><small><span id="hwn">${h.candles}/${HW_MAX}</span> bougies${h.candles<HW_MAX?` · +1 dans <b id="hwx">${fmtMS(Math.max(0,h.ct+HW_REG-nowMs()))}</b>`:''}</small></div></div>
- ${lock?'<div class="hw-lock"><i class="ti ti-lock"></i>Un étage par jour</div>':`<div class="hw-g">${grid}</div>`}
- <div class="dialog" id="hwm">${h.msg||(lock?'Dépense tes citrouilles à la boutique de l\'événement.':'Touche une pièce voisine : chaque déplacement consomme une bougie.')}</div></div>
- <div class="panel"><h4 class="px">Boutique de l'événement</h4><div class="list">${shop}</div></div>`;
+  if(cur)ico=`<img class="pmi" src="${SP(partner().id)}" referrerpolicy="no-referrer" alt="">`;
+  return `<a class="hw-r ${r.seen?'seen':''} ${r.done&&r.seen?'dn':''} ${adj?'adj':''} ${cur?'cur':''}" data-hw="mv" data-k="${i}" data-i="${i}">${ico}</a>`}).join('');
+ const toast=h.msg?(()=>{const m=h.msg;h.msg='';return `<div class="bz-toast hw-t">${m}</div>`})():'';
+ return `<div class="bz hw"><canvas id="hwc" width="200" height="125"></canvas>${spots}
+  <div class="bz-b">Étage ${h.floor} · ${lock?'terminé aujourd\'hui, reviens demain':h.key?'🗝️ clé trouvée : le gardien t\'attend':'trouve la clé, puis affronte le gardien'}</div>${toast}</div>
+ <div class="bz-bar"><span class="chip hw-cd"><span id="hwp">${hwPips(h)}</span><b id="hwn">${h.candles}/${HW_MAX}</b>${h.candles<HW_MAX?` <small>+1 dans <b id="hwx">${fmtMS(Math.max(0,h.ct+HW_REG-nowMs()))}</b></small>`:''}</span><span class="chip">🎃 <b id="hwpk">${h.pk}</b></span><a class="btn y" data-hw="shop"><i class="ti ti-shopping-bag"></i>Boutique</a></div>`;
 }
 document.addEventListener('click',e=>{const t=e.target.closest('[data-hw]');if(!t)return;const a=t.dataset.hw,k=t.dataset.k;
- if(a==='mv')hwMove(+k);else if(a==='info')hwInfo(k);else if(a==='buy')hwBuy(k)});
-setInterval(()=>{if(route!=='manoir'||B)return;const h=hwS(),f=(i,v)=>{const e=$(i);if(e)e.textContent=v};f('#hwn',h.candles+'/'+HW_MAX);f('#hwx',fmtMS(Math.max(0,h.ct+HW_REG-nowMs())));const p=$('#hwp');if(p)p.innerHTML=hwPips(h)},1000);
+ if(a==='mv')hwMove(+k);else if(a==='info')hwInfo(k);else if(a==='buy')hwBuy(k);else if(a==='shop')hwShop()});
+setInterval(()=>{if(route!=='manoir'||B)return;const h=hwS(),f=(i,v)=>{const e=$(i);if(e)e.textContent=v};f('#hwn',h.candles+'/'+HW_MAX);f('#hwpk',h.pk);f('#hwx',fmtMS(Math.max(0,h.ct+HW_REG-nowMs())));const p=$('#hwp');if(p)p.innerHTML=hwPips(h)},1000);
 function teamAsk(uid){
  const m=S.box.find(x=>x.uid===uid),team=S.box.filter(x=>x.team);
  const o=modalOv(`<h4 class="px">Équipe complète</h4><div class="svnote" style="margin:0">Ajouter ${BY[m.id][1]} (Niv. ${m.lvl}) : quel Pokémon remplacer ?</div><div class="prows">${team.map(t=>`<div class="prow" data-m="rep" data-v="${t.uid}" style="cursor:pointer"><img class="pmi" src="${SPS(t.id)}" referrerpolicy="no-referrer" alt=""><div class="grow"><b>${BY[t.id][1]}</b><small>Niv. ${t.lvl}</small></div><span class="btn sm y">Remplacer</span></div>`).join('')}</div><div class="pbt"><a class="btn" data-m="x">Annuler</a></div>`);
@@ -1304,7 +1344,7 @@ function render(keep){
  if(!S.name||!S.box.length){intro();return}
  const c=route==='hub'?hub():route==='explorer'?explorer():route==='pokemon'?pokemon():route==='combat'?combat():route==='boss'?boss():route==='ligue'?ligue():route==='boutique'?boutique():route==='sac'?sac():route==='elevage'?elevageView():route==='gacha'?gachaView():route==='manoir'?manoirView():stub();
  const y=window.scrollY;
- $('#app').innerHTML=shell(c);capTick();drawZone();zScroll();if(document.getElementById('bzc')||document.getElementById('czc')||document.getElementById('gzc'))bzStart();if(document.getElementById('fa')){fsInit();}
+ $('#app').innerHTML=shell(c);capTick();drawZone();zScroll();if(document.getElementById('bzc')||document.getElementById('czc')||document.getElementById('gzc')||document.getElementById('hwc'))bzStart();if(document.getElementById('fa')){fsInit();}
  if(keep)window.scrollTo(0,y);
  document.querySelectorAll('img').forEach(i=>i.addEventListener('error',()=>{i.style.visibility='hidden'},{once:true}));
 }
