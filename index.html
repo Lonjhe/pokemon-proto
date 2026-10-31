@@ -1912,7 +1912,7 @@ function begin(cfg){
 }
 function startBoss(){
  const b=bossS(),st=bossStat();if(st.dead||b.tries<=0||!S.box.some(m=>m.team))return;b.tries--;const bo=st.bo;
- begin({mode:'boss',bg:bo.bg,maxTurns:6,foe:fighter(bo.id,bo.lvl,{hp:1e9,dmgMul:.3,sh:!!bo.sh,moves:bo.moves})});
+ begin({mode:'boss',bg:bo.bg,maxTurns:1e9,foe:fighter(bo.id,bo.lvl,{hp:1e9,dmgMul:.3,sh:!!bo.sh,moves:bo.moves})});
 }
 function foeMove(){
  const me=B.team[B.i],F=B.foe,ms=F.moves,ai=B.ai??1,sc=m=>m.p*eff(m.t,me.types)*(F.types.includes(m.t)?1.5:1);
@@ -1997,6 +1997,7 @@ function finish(win){
 function battleView(){
  const f=B.foe,m=B.team[B.i],boss=B.mode==='boss',st=boss?bossStat():null,inn=B.fresh?' in':'';B.fresh=false;
  const fr=boss?st.pct/100:f.hp/f.max,mr=m.hp/m.max;
+ if(m.moves.every(v=>v.pp<=0)&&!m.moves.some(v=>v.n==='Lutte'))m.moves.push({n:'Lutte',t:'Normal',p:40,pp:99,max:99});
  const mvs=m.moves.map((v,k)=>`<a class="btn mvb ${v.pp<=0||B.busy||B.over||B.pick?'off':''}" data-b="mv" data-k="${k}" style="border-color:${TC[v.t]||'#555'}"><b>${v.n}</b><small>${v.t} · Puiss. ${v.p}${v.max<90?` · PP ${v.pp}/${v.max}`:''}</small></a>`).join('');
  const strip=B.team.map((t,k)=>{const r=t.hp/t.max;return `<div class="tm ${k===B.i?'sel':''} ${t.hp<=0?'ko':''} ${B.busy&&!B.pick?'off':''}" data-b="sw" data-k="${k}"><img class="pmi" src="${t.sh?SH(t.id):SP(t.id)}" referrerpolicy="no-referrer" alt=""><b>${t.name}</b><div class="bar"><i style="width:${r*100}%;background:${hpc(r)}"></i></div><small>${t.hp}/${t.max}</small></div>`}).join('');
  const arena=`<div class="arena" id="arena"><div id="stage"><div class="sky"></div><div class="gr"></div><div class="gr2"></div><div class="bgimg" style="background-image:url(${BG_}${B.bg}.png)"></div>${boss?'<div class="aura"></div>':''}
@@ -2010,7 +2011,7 @@ function battleView(){
  if(B.res)ctl=`<div class="panel"><h4 class="px">${B.res.win?'Victoire !':boss?(B.team.every(t=>t.hp<=0)?'Équipe K.O.':'Temps écoulé'):'Défaite...'}</h4>${B.res.lines.map(l=>`<div style="margin:3px 0">${l}</div>`).join('')}<div style="margin-top:10px"><a class="btn y" data-b="leave"><i class="ti ti-check"></i>Continuer</a></div></div>`;
  else if(B.pick)ctl=`<div class="panel" style="border-color:var(--y)"><h4 class="px">Choisis ton prochain Pokémon</h4><div class="tstrip">${strip}</div></div>`;
  else ctl=`<div class="mvg">${mvs}</div><div class="panel"><h4 class="px" style="margin-bottom:6px">Changer de Pokémon <small style="font-family:Nunito;color:var(--m);font-weight:700">· coûte ton tour</small></h4><div class="tstrip">${strip}</div></div><div class="acts" style="grid-template-columns:1fr"><a class="btn ${B.busy?'off':''}" data-b="leave"><i class="ti ti-run"></i>Fuir</a></div>`;
- const head=boss?`<div class="panel" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><b class="px" style="font-size:10px;color:var(--r)">BOSS DE MONDE</b><span class="chip">Tour ${Math.min(B.turn,B.maxTurns)}/${B.maxTurns}</span><span class="chip"><i class="ti ti-swords"></i>Dégâts : <b id="dealt">${fmtN(B.dealt)}</b></span></div>`:`<div class="title"><h3 class="px">${B.title}</h3></div>`;
+ const head=boss?`<div class="panel" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><b class="px" style="font-size:10px;color:var(--r)">BOSS DE MONDE</b><span class="chip">Tour ${B.turn}</span><span class="chip"><i class="ti ti-swords"></i>Dégâts : <b id="dealt">${fmtN(B.dealt)}</b></span></div>`:`<div class="title"><h3 class="px">${B.title}</h3></div>`;
  return `${head}${arena}<div class="dialog" id="bmsg">${B.msg}</div>${ctl}`;
 }
 function combat(){
@@ -2052,7 +2053,7 @@ function boss(){
   <img class="bsp" src="${SP(bo.id)}" style="${SHADE}" referrerpolicy="no-referrer" alt="">
   <div class="bsi"><span class="px">${st.dead?bo.name:'? ? ?'}</span> <span class="chip">${st.dead?'Vaincu':'Niv. ??'}</span></div>
   <div class="bsh"><small>${st.dead?'Le boss est vaincu !':'Vie du boss · toute la communauté'}</small><div class="bar" style="height:14px"><i id="bh" style="width:${st.pct}%;background:var(--r)"></i></div><b id="bhp">${Math.ceil(st.pct)} %</b></div></div>
- <div class="panel" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><div style="flex:1;min-width:170px"><b>Ta contribution : ${fmtN(b.mine)} dégâts</b><div style="color:var(--m);font-size:12px">Un nouveau boss toutes les 2 h. 6 tours par tentative, 3 tentatives par boss. Le classement est révélé à la fin.</div></div><a class="btn" data-b="blots"><i class="ti ti-gift"></i>Lots <span class="ibtn">i</span></a><a class="btn r ${st.dead||b.tries<=0||!hasTeam?'off':''}" data-b="boss"><i class="ti ti-swords"></i>Attaquer · ${b.tries}/3</a></div>`;
+ <div class="panel" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><div style="flex:1;min-width:170px"><b>Ta contribution : ${fmtN(b.mine)} dégâts</b><div style="color:var(--m);font-size:12px">Un nouveau boss toutes les 2 h. Chaque tentative dure jusqu'à la défaite de toute ton équipe. 3 tentatives par boss. Le classement est révélé à la fin.</div></div><a class="btn" data-b="blots"><i class="ti ti-gift"></i>Lots <span class="ibtn">i</span></a><a class="btn r ${st.dead||b.tries<=0||!hasTeam?'off':''}" data-b="boss"><i class="ti ti-swords"></i>Attaquer · ${b.tries}/3</a></div>`;
 }
 async function bossThrow(i){
  const r=(S.bossRecs||[])[0],ball=BK3[i];if(!r||r.phase!=='cap'||r.busy||r.throws>=THROWS)return;
