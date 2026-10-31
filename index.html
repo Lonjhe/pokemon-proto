@@ -103,10 +103,20 @@ input{flex:1;min-width:140px}
 .bsc{position:relative;min-height:clamp(300px,50vh,460px);border:3px solid #0b1030;overflow:hidden;background:#07041c;container-type:inline-size}
 .bsc .bgimg{position:absolute;inset:0;background-size:cover;background-position:center bottom;image-rendering:pixelated;filter:saturate(.5) brightness(.35)}
 .bsc .fog{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 100%,#0b103099,transparent 60%),linear-gradient(#000a,transparent 40%);pointer-events:none}
-.bsp{position:absolute;left:50%;bottom:10%;width:clamp(150px,38cqw,280px);margin-left:calc(clamp(150px,38cqw,280px)/-2);animation:float 2.6s ease-in-out infinite alternate;image-rendering:auto}
+.bsp{position:absolute;left:50%;bottom:26%;width:clamp(90px,22cqw,170px);height:clamp(90px,22cqw,170px);object-fit:contain;object-position:center bottom;margin-left:calc(clamp(90px,22cqw,170px)/-2);animation:float 2.6s ease-in-out infinite alternate;image-rendering:auto}
 .bsi{position:absolute;left:0;right:0;top:0;padding:10px 12px;background:linear-gradient(#0b1030ee,transparent);z-index:2}.bsi .px{font-size:12px;color:#fff}
 .bsh{position:absolute;left:12px;right:12px;bottom:10px;display:flex;flex-direction:column;gap:4px;z-index:2}.bsh small{color:var(--m);font-weight:800}.bsh b{font-size:12px}
 .bcb{position:absolute;left:50%;bottom:-8%;width:36px;height:36px;margin-left:-18px;image-rendering:pixelated;z-index:3}
+.hw-cta{background:linear-gradient(120deg,#ff8a1f,#6a1fb0)!important;color:#fff}.hw-cta .ic{font-size:30px}
+.hw{display:flex;flex-direction:column;gap:10px;background:radial-gradient(circle at 50% 0,#2a1348,#0a0618 75%);border:3px solid #0b1030;box-shadow:inset 0 0 0 2px #3a1f66;padding:12px}
+.hw-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}.hw-c{text-align:right}.hw-c small{color:var(--m);font-weight:800}
+.hw-c .ti-flame{font-size:15px;color:#3a3560}.hw-c .ti-flame.on{color:#ffb020;filter:drop-shadow(0 0 4px #ff8a1f)}
+.hw-g{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;max-width:520px;width:100%;margin:0 auto}
+.rm{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:22px;background:#1a1030;border:3px solid #0b1030;box-shadow:inset 0 0 0 2px #2d1b52;color:#7a6aa8;cursor:default;position:relative;user-select:none}
+.rm.seen{background:#2a1a4a;color:#e8dcff}.rm.dn{opacity:.55}.rm.adj{cursor:pointer;border-color:#ffb020;box-shadow:0 0 10px #ff8a1f88,inset 0 0 0 2px #5a3a12;color:#ffd47a}
+.rm.cur{border-color:#66e07a;background:#1f4a35}.rm.cur img{width:90%;height:90%;object-fit:contain;object-position:center bottom}.rm.bs{color:#ff6b6b}
+.hw-lock{text-align:center;padding:30px 10px;color:var(--m);font-weight:800}.hw-lock i{display:block;font-size:34px;color:var(--y);margin-bottom:6px}
+.eggi.hw1 img{filter:sepia(1) saturate(5) hue-rotate(-12deg) drop-shadow(0 0 6px #ff9a2a)}.eggi.hw2 img{filter:sepia(1) saturate(4) hue-rotate(235deg) drop-shadow(0 0 6px #b06bff)}.eggi.hw3 img{filter:sepia(1) saturate(5) hue-rotate(300deg) drop-shadow(0 0 6px #ff4d6d)}
 .boss-hero{position:relative;min-height:320px;border:2px solid var(--b);overflow:hidden;background:#1a1040}
 .stg img.tsp{width:60px;height:60px;object-fit:contain;image-rendering:pixelated}.stg.lock{opacity:.5}.stg.cur{outline:2px solid var(--y);border-radius:10px}.tpv{display:flex;gap:2px;margin-top:3px}.tpv img{width:30px;height:30px;image-rendering:pixelated}.zh{position:relative;overflow:hidden;border-radius:10px;padding:12px;min-height:60px;margin-bottom:8px;display:flex;flex-direction:column;gap:2px}.zh::after{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#0b1030e8 30%,#0b103040)}.zh>*{z-index:2}.zh .bgimg{z-index:0!important;position:absolute;inset:0;background-size:cover;background-position:center bottom;image-rendering:pixelated}.panel.zh.lock{opacity:.5}
 .ibtn{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#4dd0e1;color:#0b1030;font:900 12px Nunito,sans-serif;cursor:pointer;vertical-align:middle;pointer-events:auto;margin-left:4px;border:2px solid #0b1030}
@@ -575,12 +585,11 @@ const SPS=i=>R+i+'.png',SP=i=>SD+i+'.gif',BK=i=>SD+'back/'+i+'.gif',SH=i=>SD+'sh
 
 /* sprites animés : taille entière (net) calée sur la scène, sinon réduction douce */
 function fitSp(i){
- if(!i.naturalWidth)return;const par=i.offsetParent||i.parentElement,W=par?par.clientWidth:360,H=par?par.clientHeight:300;
+ if(!i.naturalWidth)return;const pm=i.classList.contains('pmi'),par=i.offsetParent||i.parentElement,W=par?par.clientWidth:360,H=par?par.clientHeight:300;
  const f=i.id==='foe'?(i.dataset.boss?.46:.3):i.id==='me'?.36:i.id==='wild'?.22:i.id==='lead'?.2:.0;
- let box=i.classList.contains('pmi')?76:f?W*f:H*.5;box=Math.min(box,i.classList.contains('pmi')?76:H*.62);
- const nat=Math.max(i.naturalWidth,i.naturalHeight),k=Math.min(i.id==='wild'||i.id==='lead'||i.classList.contains('pmi')?2:3,Math.round(box/nat));
- const w=k>=1?i.naturalWidth*k:i.naturalWidth*box/nat;
- i.classList.toggle('sm',k<1);i.style.width=Math.round(w)+'px';i.style.height='auto';i.style.maxWidth='none';
+ let box=pm?Math.min(76,(i.parentElement&&i.parentElement.clientWidth)||76):f?W*f:H*.5;if(!pm)box=Math.min(box,H*.62);
+ const bx=Math.max(24,Math.round(box)),nat=Math.max(i.naturalWidth,i.naturalHeight),gnd=pm||i.id==='me'||i.id==='lead'||i.classList.contains('hm-pk');
+ i.classList.toggle('sm',bx<nat);const st=i.style;st.width=bx+'px';st.height=bx+'px';st.maxWidth='none';st.minHeight='0';st.objectFit='contain';st.objectPosition=gnd?'center bottom':'center';
 }
 document.addEventListener('load',e=>{const t=e.target;if(t&&t.tagName==='IMG'&&(t.classList.contains('sp')||t.classList.contains('hm-pk')||t.classList.contains('pmi'))&&t.src.includes('.gif'))fitSp(t)},true);
 addEventListener('resize',()=>document.querySelectorAll('img.sp,img.hm-pk,img.pmi').forEach(fitSp));
@@ -606,7 +615,7 @@ const bar=(w,c='var(--c)')=>`<div class="bar"><i style="width:${w}%;background:$
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const stats=id=>[['PV',30+(id*7)%60],['Att',35+(id*11)%60],['Déf',30+(id*13)%60],['Vit',30+(id*17)%65]];
-const NAV=[['hub','map-2','Accueil'],['explorer','compass','Explorer'],['pokemon','pokeball','Pokémon'],['elevage','egg','Élevage'],['gacha','gift','Gacha'],['sac','backpack','Sac'],['boutique','shopping-bag','Boutique'],['combat','swords','Combat'],['ligue','trophy','Ligue'],['boss','skull','Boss'],['social','users','Social'],['quetes','list-check','Quêtes'],['evenement','ghost','Événement']];
+const NAV=[['hub','map-2','Accueil'],['explorer','compass','Explorer'],['pokemon','pokeball','Pokémon'],['elevage','egg','Élevage'],['gacha','gift','Gacha'],['manoir','ghost','Halloween'],['sac','backpack','Sac'],['boutique','shopping-bag','Boutique'],['combat','swords','Combat'],['ligue','trophy','Ligue'],['boss','skull','Boss'],['social','users','Social'],['quetes','list-check','Quêtes'],['evenement','ghost','Événement']];
 const IMPL=['hub','explorer','pokemon'];
 const need=()=>S.lvl*60;
 /* --- minuteur de capture : 10 essais max, +1 toutes les CAP_REGEN_MIN min, pleins à chaque nouveau jour --- */
@@ -655,6 +664,7 @@ function hub(){
   <div class="hm-hp">PV ${hpm}/${hpm}<i><b style="width:100%"></b></i></div></div>
  <div class="hm-side">
  <a class="hm-cta" data-go="ligue"><div class="ic"><i class="ti ti-swords"></i></div><div><small>${done?'Ligue terminée':'Continuer l\'aventure'}</small><b>${st.name}</b><span>${ZONES[st.zone].city} · ${wait?'revenir demain':KIND[st.kind]||''}</span></div><i class="ti ti-chevron-right go"></i></a>
+ <a class="hm-cta hw-cta" data-go="manoir"><div class="ic">🎃</div><div><small>Événement Halloween</small><b>Le Manoir hanté</b><span>${hwSum()}</span></div><i class="ti ti-chevron-right go"></i></a>
  <div class="hm-t">
   <div class="hm-tile hm-g" data-go="gacha"><i class="ti ti-gift big"></i><b>Gacha</b><small>${d.gacha?gems()+' gemmes':'1 tirage offert'}</small>${d.gacha?'':'<span class="bd">1</span>'}</div>
   <div class="hm-tile hm-c" data-go="explorer"><i class="ti ti-pokeball big"></i><b>Capturer</b><small>${cs.n}/${CAP_MAX}${cs.n<CAP_MAX?' · '+fmtMS(cs.next):''}</small><div class="hm-pp">${pips}</div></div>
@@ -718,8 +728,8 @@ function explorer(){
  <div style="display:flex;flex-direction:column;gap:10px"><div class="panel"><h4 class="px">Balls <small style="font-family:Nunito;color:var(--m)">taux de capture</small></h4><div class="list" id="balls">${bl}</div></div><div class="panel" id="capd">${capHTML()}</div><div class="panel"><h4 class="px">Zone ${infoBtn}</h4><a class="btn y sm" data-act="zmap" style="margin-bottom:8px"><i class="ti ti-map-2"></i>Carte des lieux</a><div style="color:var(--m)">${ZP[biome[mode]].name} · Niv. ${ZP[biome[mode]].lv[0]}–${ZP[biome[mode]].lv[1]}<br>Touche <b>i</b> pour les taux de rencontre. Shiny : 1/64</div></div></div></div>`}`;
 }
 /* ===== ÉLEVAGE (3 incubateurs) & CAMP D'ENTRAÎNEMENT EV ===== */
-const EGGT={a:{n:'Œuf commun',dur:60000,c:'#f4ecd0',d:'#d8c9a0'},b:{n:'Œuf peu commun',dur:180000,c:'#bfe0f4',d:'#8fbad6'},c:{n:'Œuf rare',dur:300000,c:'#dcc6f0',d:'#b494d4'},l:{n:'Œuf légendaire',dur:480000,c:'#ffe97a',d:'#e0a800',aura:'#ffd24a'},f:{n:'Œuf fabuleux',dur:600000,c:'#ffb0e8',d:'#d060b0',aura:'#ff7ad9'}};
-const EGGPOOL={l:[144,145,146,150],f:[151]};
+const EGGT={a:{n:'Œuf commun',dur:60000,c:'#f4ecd0',d:'#d8c9a0'},b:{n:'Œuf peu commun',dur:180000,c:'#bfe0f4',d:'#8fbad6'},c:{n:'Œuf rare',dur:300000,c:'#dcc6f0',d:'#b494d4'},l:{n:'Œuf légendaire',dur:480000,c:'#ffe97a',d:'#e0a800',aura:'#ffd24a'},f:{n:'Œuf fabuleux',dur:600000,c:'#ffb0e8',d:'#d060b0',aura:'#ff7ad9'},h1:{n:'Œuf hanté',dur:300000,c:'#ffd9a0',d:'#e08a2a',aura:'#ff9a2a'},h2:{n:'Œuf maudit',dur:480000,c:'#d9b8ff',d:'#8a4ad0',aura:'#b06bff'},h3:{n:'Œuf spectral',dur:600000,c:'#ffb0c0',d:'#d04060',aura:'#ff4d6d'}};
+const EGGPOOL={l:[144,145,146,150],f:[151],h1:[92,96,104,109,41],h2:[93,97,105,110,42],h3:[94,106,107,115,131]};
 const eggPool=k=>EGGPOOL[k]||BASEIDS.filter(i=>eggTier(i)===k);
 const EGGIMG=new Image();EGGIMG.crossOrigin='anonymous';let EGGBB=[30,26,36,44];EGGIMG.onload=()=>{try{const c=document.createElement('canvas');c.width=c.height=96;const q=c.getContext('2d');q.drawImage(EGGIMG,0,0);const d=q.getImageData(0,0,96,96).data;let x0=96,y0=96,x1=0,y1=0;for(let y=0;y<96;y++)for(let x=0;x<96;x++){const i=(y*96+x)*4;if(d[i+3]>40&&!(d[i]>245&&d[i+1]>245&&d[i+2]>245)){if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y}}if(x1>x0)EGGBB=[x0,y0,x1-x0+1,y1-y0+1]}catch(e){}};EGGIMG.src=R+'egg.png';
 const BASEIDS=(()=>{const to=new Set();Object.values(EVO).forEach(l=>l.forEach(([t])=>to.add(t)));return SPECIES.map(s=>s[0]).filter(i=>!to.has(i)&&![144,145,146,150,151].includes(i))})();
@@ -872,7 +882,7 @@ function elevageTab(){
  <div class="bz-bar"><span class="chip"><i class="ti ti-egg" style="color:var(--o)"></i>${S.eggs.length} en réserve</span><a class="btn sm" data-go="boutique"><i class="ti ti-shopping-bag"></i>Boutique</a><a class="btn sm" data-act="walk"><i class="ti ti-player-track-next"></i>−1 min (démo)</a></div>${pickModal()}`;
 }
 function keeperHTML(){const m=keeperM(),fx=keeperFx(m);return `<a class="bz-kp" data-act="kopen"><img class="bz-sp" src="${m?(m.sh?SH(m.id):SP(m.id)):SP(113)}" referrerpolicy="no-referrer" alt=""><span class="kl"><i class="ti ti-heart-handshake"></i>${m?BY[m.id][1]+(fx.spd>1?' ×'+fx.spd:''):'Choisir un gardien'}</span></a>`}
-const eggImg=(k,h=44)=>`<span class="eggi ${k==='l'?'leg':k==='f'?'myth':''}"><img src="${R}egg.png" style="height:${h}px" alt=""></span>`;
+const eggImg=(k,h=44)=>`<span class="eggi ${k==='l'?'leg':k==='f'?'myth':k[0]==='h'?'hw'+k[1]:''}"><img src="${R}egg.png" style="height:${h}px" alt=""></span>`;
 function keeperModal(){
  const rows=S.box.map(m=>({m,fx:keeperFx(m)})).sort((a,b)=>b.fx.spd-a.fx.spd||b.fx.inh-a.fx.inh||b.m.lvl-a.m.lvl).slice(0,40).map(({m,fx})=>`<div class="prow ${S.keeper===m.uid?'sel':''}"><img class="pmi" src="${SPS(m.id)}" referrerpolicy="no-referrer" alt=""><div class="grow"><b>${BY[m.id][1]} <small style="display:inline">Niv. ${m.lvl}</small></b><small>${fx.txt}</small></div><a class="btn sm y" data-act="kset" data-v="${m.uid}">${S.keeper===m.uid?'Gardien':'Choisir'}</a></div>`).join('');
  return `<div class="pick-ov" data-act="pclose"><div class="pick-c" data-act="noop"><h4 class="px">Gardien de la couveuse</h4><div class="svnote" style="margin:0">Son talent (selon son type) accélère l'éclosion, et il transmet ses meilleurs IV au bébé (plus avec une amitié élevée).</div><div class="prows">${rows}</div><div class="pbt"><a class="btn" data-act="kset" data-v="">Aucun gardien</a><a class="btn y" data-act="pclose">Fermer</a></div></div></div>`;
@@ -1109,6 +1119,81 @@ function gzFrame(cv,t){
  for(let i=0;i<14;i++){const u=((t/2600+i*.137)%1),sx=cx+Math.sin(i*2.3+t/900)*(amp+8),sy=by-u*hh;PX(x,Math.round(sx),Math.round(sy),2,2,i%2?'#fff':'#9fe8ff')}
  for(let i=0;i<5;i++){const a=t/700+i*1.26,sx=G.mx+Math.cos(a)*50*s,sy=by-70*s+Math.sin(a*1.3)*40*s;PX(x,Math.round(sx),Math.round(sy),2,2,i%2?'#fff':'#ffe97a')}
 }
+
+/* --- ÉVÉNEMENT HALLOWEEN : le manoir hanté --- */
+const HW_MAX=10,HW_REG=30*6e4,HW_W=5,HW_N=20;
+const HWWILD=[92,93,41,42,88,109,96,104,105,24],HWBOSS=[93,94,105,110,42,89];
+const HWSHOP=[['h1',40],['h2',100],['h3',250]];
+const HWTR=[['Médium Morgane','channeler-gen3'],['Pokémaniaque Hector','pokemaniac-gen3'],['Gamin Fantôme','youngster-gen3']];
+function hwS(){
+ const h=S.hw||(S.hw={floor:1,candles:HW_MAX,ct:nowMs(),pk:0,rooms:null,pos:0,key:false,lock:'',msg:''}),t=nowMs();
+ if(h.candles<HW_MAX){const g=Math.floor((t-h.ct)/HW_REG);if(g>0){h.candles=Math.min(HW_MAX,h.candles+g);h.ct=h.candles>=HW_MAX?t:h.ct+g*HW_REG}}else h.ct=t;
+ return h;
+}
+const hwLocked=h=>h.lock===todayKey();
+function hwSum(){const h=hwS();return hwLocked(h)?`Étage ${h.floor} demain · 🎃 ${h.pk}`:`Étage ${h.floor} · ${h.candles}/${HW_MAX} bougies · 🎃 ${h.pk}`}
+function hwGen(h){
+ const R2=zmRng(h.floor*7919+Math.floor(Date.now()/864e5)),rest=[];
+ const mix=['pump','pump','pump','pump','pump','pump','trap','trap','trap','wild','wild','wild','wild','trainer','trainer','trainer','empty'];
+ for(let i=mix.length-1;i>0;i--){const j=Math.floor(R2()*(i+1));[mix[i],mix[j]]=[mix[j],mix[i]]}
+ const types=['start',...mix];const ki=1+Math.floor(R2()*(types.length-1));types.splice(ki,0,'key');types.push('boss');
+ h.rooms=types.map((t,i)=>({t,seen:i===0,done:i===0}));h.pos=0;h.key=false;h.msg='';
+}
+function hwAdj(a,b){const ra=Math.floor(a/HW_W),ca=a%HW_W,rb=Math.floor(b/HW_W),cb=b%HW_W;return Math.abs(ra-rb)+Math.abs(ca-cb)===1}
+function hwFight(h,i){
+ const r=h.rooms[i],f=h.floor,av=Math.max(3,avgLvl()+f-1),bg=['forest','city','mountain'][i%3];
+ if(r.t==='wild'){const id=pick(HWWILD);begin({mode:'duel',hw:i,bg,foe:fighter(id,av+Math.floor(Math.random()*3)-1),title:'Manoir hanté · Pokémon sauvage',maxTurns:99})}
+ else if(r.t==='trainer'){const tr=pick(HWTR),ft=[0,1,2].slice(0,2+(f>2?1:0)).map(()=>fighter(pick(HWWILD),av));begin({mode:'duel',hw:i,bg,foe:ft[0],fteam:ft,fi:0,fname:tr[0],ai:1,potions:0,title:tr[0]+' · Manoir hanté',maxTurns:99})}
+ else{const id=HWBOSS[(f-1)%HWBOSS.length];begin({mode:'duel',hw:i,bg:'city',foe:fighter(id,av+f+2,{hp:hpMax(id,av+f+2)*2}),title:'Gardien de l\'étage '+f,ai:1,maxTurns:99})}
+}
+function hwMove(i){
+ const h=hwS();if(hwLocked(h)||!h.rooms||i===h.pos||!hwAdj(h.pos,i))return;const r=h.rooms[i];
+ if(r.t==='boss'&&!h.key){h.msg='La porte du gardien est verrouillée : trouve la clé de l\'étage !';save();render(true);return}
+ if(h.candles<=0){h.msg=`Plus de bougie ! Prochaine dans ${fmtMS(Math.max(0,h.ct+HW_REG-nowMs()))}.`;save();render(true);return}
+ if(!S.box.some(m=>m.team)&&['wild','trainer','boss'].includes(r.t)&&!r.done){h.msg='Il te faut un Pokémon dans ton équipe.';render(true);return}
+ if(h.candles===HW_MAX)h.ct=nowMs();h.candles--;h.pos=i;const first=!r.seen;r.seen=true;
+ if(r.t==='pump'&&!r.done){const n=4+h.floor*2+Math.floor(Math.random()*5);h.pk+=n;r.done=true;h.msg=`🎃 Tu trouves ${n} citrouilles !`}
+ else if(r.t==='trap'&&!r.done){const n=1+Math.floor(Math.random()*2);h.candles=Math.max(0,h.candles-n);r.done=true;h.msg=`Piège ! Un courant d'air éteint ${n} bougie${n>1?'s':''}.`}
+ else if(r.t==='key'&&!r.done){h.key=true;r.done=true;h.msg='🗝️ Tu trouves la clé de l\'étage !'}
+ else if(['wild','trainer','boss'].includes(r.t)&&!r.done){save();hwFight(h,i);return}
+ else h.msg=first?'La pièce est vide.':'Tu reviens dans une pièce déjà explorée.';
+ save();render(true);
+}
+function hwFinish(win,lines){
+ const h=hwS(),r=h.rooms&&h.rooms[B.hw];if(!r)return;
+ if(!win){lines.push('Défaite… La pièce reste hantée : reviens la défier (1 bougie).');h.msg='Tu as dû fuir la pièce.';return}
+ r.done=true;
+ if(r.t==='boss'){const n=40+h.floor*15;h.pk+=n;lines.push(`Gardien vaincu ! +${n} 🎃`,`Étage ${h.floor} terminé. L'étage suivant s'ouvre demain.`);h.floor++;h.lock=todayKey();h.rooms=null;h.key=false;h.msg=''}
+ else{const n=r.t==='trainer'?12+h.floor*3:6+h.floor*2;h.pk+=n;lines.push(`+${n} 🎃 citrouilles`);h.msg=`Victoire ! +${n} 🎃`}
+}
+function hwInfo(k){
+ modalOv(`<h4 class="px">${EGGT[k].n}</h4><div class="svnote" style="margin:0">Espèces possibles :</div><div class="prows">${EGGPOOL[k].map(id=>`<div class="prow"><img class="pmi" src="${SP(id)}" referrerpolicy="no-referrer" alt=""><div class="grow"><b>${BY[id][1]}</b></div></div>`).join('')}</div><div class="pbt"><a class="btn y" data-m="x">Fermer</a></div>`);
+}
+function hwBuy(k){
+ const h=hwS(),c=HWSHOP.find(x=>x[0]===k)[1];
+ if(h.pk<c){h.msg=`Il te faut ${c} 🎃 pour cet œuf.`;save();render(true);return}
+ h.pk-=c;breed();S.eggs.push({k,id:pickEgg(k)});h.msg=`${EGGT[k].n} acheté ! Il t'attend dans la réserve (Élevage).`;save();render(true);
+}
+function hwPips(h){return Array.from({length:HW_MAX},(_,i)=>`<i class="ti ti-flame ${i<h.candles?'on':''}"></i>`).join('')}
+function manoirView(){
+ if(B&&B.hw!=null)return battleView();
+ const h=hwS(),lock=hwLocked(h);if(!lock&&!h.rooms)hwGen(h);
+ const icn={start:'home',pump:'',trap:'alert-triangle',wild:'ghost',trainer:'user',key:'key',boss:'skull',empty:'door'};
+ const grid=lock?'':h.rooms.map((r,i)=>{
+  const adj=hwAdj(h.pos,i),cur=i===h.pos,cls=['rm',r.seen?'seen':'dark',adj?'adj':'',cur?'cur':'',r.done&&r.seen?'dn':'',r.t==='boss'?'bs':''].join(' ');
+  let ico=r.seen||r.t==='boss'?(r.t==='pump'?'🎃':r.t==='boss'&&!h.key&&!r.seen?'<i class="ti ti-lock"></i>':`<i class="ti ti-${icn[r.t]}"></i>`):'?';
+  if(cur)ico='<img class="pmi" src="'+SP(partner().id)+'" referrerpolicy="no-referrer" alt="">';
+  return `<a class="${cls}" data-hw="mv" data-k="${i}">${ico}</a>`}).join('');
+ const shop=HWSHOP.map(([k,c])=>`<div class="li"><div class="ico">${eggImg(k,36)}</div><div class="grow"><b>${EGGT[k].n}</b> <span class="ibtn" data-hw="info" data-k="${k}">i</span><div style="font-size:12px;color:var(--m)">Éclosion ${Math.round(EGGT[k].dur/60000)} min · espèces exclusives</div></div><a class="btn y ${h.pk<c?'off':''}" data-hw="buy" data-k="${k}">🎃 ${c}</a></div>`).join('');
+ return `<div class="title"><h3 class="px">Manoir hanté</h3><span class="chip">🎃 <b id="hwpk">${h.pk}</b></span></div>
+ <div class="hw"><div class="hw-top"><div><b class="px" style="font-size:11px">Étage ${h.floor}</b><div style="font-size:12px;color:var(--m)">${lock?'Étage terminé aujourd\'hui. Reviens demain !':h.key?'🗝️ Clé trouvée : le gardien t\'attend':'Trouve la clé, puis affronte le gardien'}</div></div><div class="hw-c"><div id="hwp">${hwPips(h)}</div><small><span id="hwn">${h.candles}/${HW_MAX}</span> bougies${h.candles<HW_MAX?` · +1 dans <b id="hwx">${fmtMS(Math.max(0,h.ct+HW_REG-nowMs()))}</b>`:''}</small></div></div>
+ ${lock?'<div class="hw-lock"><i class="ti ti-lock"></i>Un étage par jour</div>':`<div class="hw-g">${grid}</div>`}
+ <div class="dialog" id="hwm">${h.msg||(lock?'Dépense tes citrouilles à la boutique de l\'événement.':'Touche une pièce voisine : chaque déplacement consomme une bougie.')}</div></div>
+ <div class="panel"><h4 class="px">Boutique de l'événement</h4><div class="list">${shop}</div></div>`;
+}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-hw]');if(!t)return;const a=t.dataset.hw,k=t.dataset.k;
+ if(a==='mv')hwMove(+k);else if(a==='info')hwInfo(k);else if(a==='buy')hwBuy(k)});
+setInterval(()=>{if(route!=='manoir'||B)return;const h=hwS(),f=(i,v)=>{const e=$(i);if(e)e.textContent=v};f('#hwn',h.candles+'/'+HW_MAX);f('#hwx',fmtMS(Math.max(0,h.ct+HW_REG-nowMs())));const p=$('#hwp');if(p)p.innerHTML=hwPips(h)},1000);
 function teamAsk(uid){
  const m=S.box.find(x=>x.uid===uid),team=S.box.filter(x=>x.team);
  const o=modalOv(`<h4 class="px">Équipe complète</h4><div class="svnote" style="margin:0">Ajouter ${BY[m.id][1]} (Niv. ${m.lvl}) : quel Pokémon remplacer ?</div><div class="prows">${team.map(t=>`<div class="prow" data-m="rep" data-v="${t.uid}" style="cursor:pointer"><img class="pmi" src="${SPS(t.id)}" referrerpolicy="no-referrer" alt=""><div class="grow"><b>${BY[t.id][1]}</b><small>Niv. ${t.lvl}</small></div><span class="btn sm y">Remplacer</span></div>`).join('')}</div><div class="pbt"><a class="btn" data-m="x">Annuler</a></div>`);
@@ -1207,7 +1292,7 @@ function intro(){
 }
 function render(keep){
  if(!S.name||!S.box.length){intro();return}
- const c=route==='hub'?hub():route==='explorer'?explorer():route==='pokemon'?pokemon():route==='combat'?combat():route==='boss'?boss():route==='ligue'?ligue():route==='boutique'?boutique():route==='sac'?sac():route==='elevage'?elevageView():route==='gacha'?gachaView():stub();
+ const c=route==='hub'?hub():route==='explorer'?explorer():route==='pokemon'?pokemon():route==='combat'?combat():route==='boss'?boss():route==='ligue'?ligue():route==='boutique'?boutique():route==='sac'?sac():route==='elevage'?elevageView():route==='gacha'?gachaView():route==='manoir'?manoirView():stub();
  const y=window.scrollY;
  $('#app').innerHTML=shell(c);capTick();drawZone();zScroll();if(document.getElementById('bzc')||document.getElementById('czc')||document.getElementById('gzc'))bzStart();if(document.getElementById('fa')){fsInit();}
  if(keep)window.scrollTo(0,y);
@@ -1986,7 +2071,8 @@ async function swTo(k){
 }
 function finish(win){
  B.over=true;B.busy=false;const lines=[];
- if(B.adv!=null)advFinish(win,lines);
+ if(B.hw!=null)hwFinish(win,lines);
+ else if(B.adv!=null)advFinish(win,lines);
  else if(B.mode==='duel'){const c=win?60+B.foe.lvl*5:10,x=win?30+B.foe.lvl*4:5;S.coins+=c;S.xp+=x;while(S.xp>=need()){S.xp-=need();S.lvl++}lines.push(`+${fmtN(c)} pièces · +${x} XP`)}
  else{const b=bossS(),c=Math.round(B.dealt/30);S.coins+=c;S.xp+=20;lines.push(`${fmtN(B.dealt)} dégâts infligés au boss`,`+${fmtN(c)} pièces`);
   if(bossStat().dead)lines.push('Le boss est vaincu ! Ouvre l\'onglet Boss pour le récap et tes lots.')}
