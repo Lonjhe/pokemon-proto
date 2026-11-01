@@ -597,7 +597,7 @@ input{flex:1;min-width:140px}
 .stb{display:inline-block;margin-left:6px;padding:1px 5px;font-size:9px;font-weight:900;color:#fff;border:2px solid #1a1030;vertical-align:middle}
 .stb.psn{background:#8e44ad}.stb.slp{background:#5a6ab8}.stb.par{background:#c9a000;color:#1a1030}.stb.brn{background:#e0502a}.stb.frz{background:#3fb8d8;color:#1a1030}
 .te select{width:100%;margin-top:4px}
-.gi{height:1.15em;width:auto;max-width:none;image-rendering:pixelated;vertical-align:-.22em;flex:none}.rail a .gi,.tabs a .gi{height:26px}.tabs a.go .gi{height:32px}.pl-t .gi{height:30px;width:auto}.hud .gi{height:20px}.eggi .gi{display:none}
+.gi{height:1.15em;width:auto;max-width:none;image-rendering:pixelated;vertical-align:-.22em;flex:none}.rail a .gi{height:30px}.tabs a .gi{height:34px}.tabs a.go .gi{height:38px}.tabs a{gap:3px}.pl-t .gi{height:30px;width:auto}.hud .gi{height:20px}.eggi .gi{display:none}
 </style>
 </head>
 <body>
@@ -675,7 +675,7 @@ setInterval(capTick,1000);
 
 function shell(c){
  const rail=NAV.map(([k,i,l])=>`<a data-go="${k}" class="${k===route?'on':''}"><i class="ti ti-${i}"></i>${l}</a>`).join('');
- const TB=[['plus','menu-2','Plus'],['sac','backpack','Sac'],['hub','map-2','Accueil'],['explorer','compass','Explorer'],['combat','swords','Combat']],tabs=TB.map(([k,i,l])=>`<a data-go="${k}" class="${k===route||(k==='plus'&&!TB.some(t=>t[0]===route))?'on':''} ${k==='hub'?'go':''}"><i class="ti ti-${i}"></i>${k==='hub'?'':l}</a>`).join('');
+ const TB=[['explorer','compass','Explorer'],['sac','backpack','Sac'],['hub','map-2','Accueil'],['combat','swords','Combat'],['plus','menu-2','Plus']],tabs=TB.map(([k,i,l])=>`<a data-go="${k}" class="${k===route||(k==='plus'&&!TB.some(t=>t[0]===route))?'on':''} ${k==='hub'?'go':''}"><i class="ti ti-${i}"></i>${k==='hub'?'':l}</a>`).join('');
  return `<div class="hud"><div class="av"><i class="ti ti-user"></i></div><b class="name">${esc(S.name||"")}</b><span class="lv px">Niv.${S.lvl}</span><div class="bar"><i style="width:${Math.min(100,S.xp/need()*100)}%;background:var(--c)"></i></div><span class="chip"><i class="ti ti-coin" style="color:var(--y)"></i>${S.coins}</span><span class="chip" title="Gemmes" data-go="gacha"><i class="ti ti-diamond" style="color:#ff7ad9"></i>${gems()}</span><span class="chip opt" title="Poké Balls"><i class="ti ti-circle-dot" style="color:var(--r)"></i>${S.balls.poke}</span></div><div class="main"><nav class="rail">${rail}</nav><div class="content">${c}</div></div><nav class="tabs">${tabs}</nav>`;
 }
 function card(m,o={}){const s=BY[m.id],c=TC[s[2][0]]||'#8a8a7a';
@@ -696,13 +696,18 @@ function pxi(n){
  else if(n==='gift'){r(2,6,12,9,k);r(3,7,10,7,'#e0407a');r(3,7,10,1,'#ff7ab0');r(7,6,2,9,'#ffcb05');r(1,4,14,3,k);r(2,5,12,1,'#ff7ab0');r(2,6,12,1,'#e0407a');r(7,4,2,3,'#ffcb05');r(4,1,4,4,k);r(5,2,2,2,'#ffcb05');r(8,1,4,4,k);r(9,2,2,2,'#ffcb05')}
  else if(n==='pumpkin'){r(7,0,2,3,'#3a8a2a');r(2,3,12,11,k);r(1,5,14,7,k);r(3,4,10,9,'#f08a2a');r(2,6,12,5,'#f08a2a');r(3,4,10,1,'#ffb24a');r(6,4,1,9,'#c0561f');r(9,4,1,9,'#c0561f');r(4,7,2,2,k);r(10,7,2,2,k);r(5,11,6,1,k);r(6,12,1,1,k);r(9,12,1,1,k);r(5,7,1,1,'#ffe97a');r(11,7,1,1,'#ffe97a')}
  else if(n==='sword'){for(let i=0;i<10;i++){r(3+i,10-i,4,4,k)}for(let i=0;i<10;i++){r(4+i,11-i,2,2,i<2?'#fff':'#dfe8ff')}r(1,9,7,3,k);r(2,10,5,1,'#c98a00');r(0,12,4,4,k);r(1,13,2,2,'#7a4a1a');r(11,1,4,4,k);r(12,2,2,2,'#fff')}
+ else if(n==='house'){r(7,0,2,1,k);for(let y=1;y<=7;y++){r(8-y-1,y,2*y+2,1,k)}for(let y=1;y<=6;y++){r(8-y,y+1-1+1,2*y,1,'#e0503c')}r(10,1,3,4,k);r(11,2,1,2,'#8a3a2a');r(3,7,10,8,k);r(4,8,8,6,'#f4e4a8');r(7,10,2,5,k);r(7,10,2,4,'#7a4a1a');r(5,9,2,2,'#3fa8dc');r(10,9,2,2,'#3fa8dc')}
+ else if(n==='bag'){r(6,0,4,4,k);r(7,1,2,2,'#c0561f');r(3,3,10,12,k);r(4,4,8,10,'#e0803a');r(4,4,8,3,'#c0561f');r(4,4,8,1,'#f0a860');r(7,6,2,2,'#ffcb05');r(5,9,6,4,k);r(6,10,4,2,'#c0561f');r(1,8,2,5,k);r(2,9,1,3,'#7a3a1a');r(13,8,2,5,k);r(13,9,1,3,'#7a3a1a')}
+ else if(n==='swords'){for(let i=0;i<11;i++){r(2+i,2+i,4,4,k);r(12-i,2+i,4,4,k)}for(let i=0;i<11;i++){r(3+i,3+i,2,2,i<2?'#fff':'#dfe8ff');r(13-i,3+i,2,2,i<2?'#fff':'#dfe8ff')}r(11,11,5,5,k);r(12,12,3,3,'#c98a00');r(0,11,5,5,k);r(1,12,3,3,'#c98a00')}
+ else if(n==='map'){r(0,2,16,12,k);r(1,3,14,10,'#f4e4a8');r(1,3,5,10,'#8fd25a');r(11,3,4,10,'#3fa8dc');r(6,3,1,10,'#9a8a50');r(10,3,1,10,'#9a8a50');r(2,5,2,2,'#4a9a3a');r(3,9,3,2,'#4a9a3a');r(12,5,2,2,'#7fd0f4');r(7,9,1,1,'#e03a3a');r(8,8,1,1,'#e03a3a');r(9,7,1,1,'#e03a3a');r(7,6,3,1,'#e03a3a');r(8,5,1,3,'#e03a3a')}
+ else if(n==='menu'){r(1,1,6,6,k);r(2,2,4,4,'#ffcb05');r(9,1,6,6,k);r(10,2,4,4,'#3fa8dc');r(1,9,6,6,k);r(2,10,4,4,'#e0503c');r(9,9,6,6,k);r(10,10,4,4,'#66bb6a');r(2,2,4,1,'#fff3b0');r(10,2,4,1,'#9fd8ff');r(2,10,4,1,'#ff9a8a');r(10,10,4,1,'#b8f0b0')}
  else if(n==='compass'){r(2,2,12,12,k);r(3,3,10,10,'#3fa8dc');r(4,4,8,8,'#f4f4ff');r(7,4,2,4,'#e03a3a');r(7,8,2,4,'#3a4a80');r(7,7,2,2,k)}
  PXI[n]=c.toDataURL();return PXI[n];
 }
 
 /* --- icônes du jeu réel : sprites d'objets PokeAPI à la place des pictos génériques --- */
 const IT=n=>R.replace('pokemon/','items/')+n+'.png';
-const ICOMAP={'map-2':'town-map','map-pin':'town-map',compass:'bicycle',pokeball:'poke-ball','circle-dot':'poke-ball',egg:'mystery-egg',gift:'premier-ball',backpack:'berry-pouch','shopping-bag':'amulet-coin',swords:'tm-normal',sword:'tm-normal',trophy:'px:trophy',skull:'px:skull',users:'poke-doll','list-check':'coin-case','menu-2':'escape-rope',coin:'amulet-coin',diamond:'prism-scale',candy:'rare-candy',flask:'potion',tent:'exp-share',campfire:'fire-stone',fish:'old-rod',heart:'soothe-bell',box:'lucky-egg',star:'wishing-piece','star-filled':'wishing-piece',package:'berry-pouch',book:'town-map','test-pipe':'potion'};
+const ICOMAP={'map-2':'px:house','map-pin':'town-map',compass:'px:map',pokeball:'poke-ball','circle-dot':'poke-ball',egg:'mystery-egg',gift:'premier-ball',backpack:'px:bag','shopping-bag':'amulet-coin',swords:'px:swords',sword:'px:swords',trophy:'px:trophy',skull:'px:skull',users:'poke-doll','list-check':'coin-case','menu-2':'px:menu',coin:'amulet-coin',diamond:'prism-scale',candy:'rare-candy',flask:'potion',tent:'exp-share',campfire:'fire-stone',fish:'old-rod',heart:'soothe-bell',box:'lucky-egg',star:'wishing-piece','star-filled':'wishing-piece',package:'berry-pouch',book:'town-map','test-pipe':'potion'};
 const ITEMICO={bonbon:'rare-candy',bonbonm:'exp-candy-m',bonbonxl:'exp-candy-xl',restes:'leftovers',orbe:'life-orb',sitrus:'sitrus-berry',ceinture:'focus-sash',vit0:'hp-up',vit1:'protein',vit2:'iron',vit3:'calcium',vit4:'zinc',vit5:'carbos',capargent:'bottle-cap',capor:'gold-bottle-cap',capoeuf:'ability-capsule',captal:'ability-capsule',baie:'oran-berry',dodo:'poke-doll',appat:'lucky-egg'};
 function gameIcons(root){
  (root.querySelectorAll?root.querySelectorAll('i.ti'):[]).forEach(i=>{
@@ -757,7 +762,7 @@ const BIOMES={herbe:[['meadow','Prairie'],['forest','Forêt'],['mountain','Monta
 const TR='https://play.pokemonshowdown.com/sprites/trainers/ethan.png';
 const ITEMS={baie:['Baie Framby','apple','Calme le Pokémon · capture ×1,3'],dodo:['Poudre Dodo','zzz','Endort le Pokémon · capture ×1,5'],appat:['Appât Parfumé','wind','Ignore le malus de niveau · ×1,2']};
 const itm=()=>{const it=S.items||(S.items={baie:5,dodo:3,appat:2});if(!it.v2){it.v2=1;Object.assign(it,{bonbon:5,bonbonm:3,bonbonxl:1,capargent:2,capor:1,captal:2,capoeuf:2,restes:1,orbe:1,sitrus:2,ceinture:1,pfeu:1,peau:1,pfoudre:1,plune:1,pfeuille:1})}return it};
-const actsHTML=()=>`<a class="btn y" data-act="throw"><i class="ti ti-circle-dot"></i>Lancer</a><a class="btn" data-act="nextball"><i class="ti ti-refresh"></i>Ball</a><a class="btn" data-act="weaken"><i class="ti ti-swords"></i>Attaquer</a><a class="btn" data-act="items"><i class="ti ti-flask"></i>Objet</a><a class="btn" data-act="flee"><i class="ti ti-run"></i>Fuir</a>`;
+const actsHTML=()=>`<a class="btn y" data-act="throw"><i class="ti ti-circle-dot"></i>Lancer</a><a class="btn" data-act="weaken"><i class="ti ti-swords"></i>Attaquer</a><a class="btn" data-act="items"><i class="ti ti-flask"></i>Objet</a><a class="btn" data-act="flee"><i class="ti ti-run"></i>Fuir</a>`;
 const chipsHTML=()=>[E.sleep&&'Endormi',E.bonus>1&&'Calmé',E.nopen&&'Attiré',E.hp<100&&'Affaibli'].filter(Boolean).map(x=>`<span>${x}</span>`).join('');
 const zback=()=>`<div class="title"><a class="btn sm" data-act="zmap"><i class="ti ti-map-2"></i>Carte</a><h3 class="px">${mode==='camp'?'Camp':ZP[biome[mode]].name}</h3><span class="chip" id="capt"></span></div>`;
 function explorer(){
@@ -777,7 +782,7 @@ function explorer(){
  <div class="tag" style="left:3%;top:5%"><span class="px" style="font-size:10px">${E.sh?'<i class="ti ti-sparkles"></i> ':''}${s[1]}</span> ${infoBtn}<div style="font-size:12px">Niv. ${E.lvl} · ${s[2].join(' / ')}</div><div class="bar"><i id="wildHp" style="width:${E.hp}%;background:${hpc(E.hp/100)}"></i></div><div class="chips" id="wst">${chipsHTML()}</div></div>
  <canvas id="fxc"></canvas><div id="fx"></div></div>
  <div class="dialog" id="msg">${E.msg}</div>
- <div class="acts" id="acts" style="grid-template-columns:repeat(5,1fr)">${actsHTML()}</div></div>
+ <div class="acts" id="acts" style="grid-template-columns:repeat(4,1fr)">${actsHTML()}</div></div>
  <div style="display:flex;flex-direction:column;gap:10px"><div class="panel"><h4 class="px">Balls <small style="font-family:Nunito;color:var(--m)">taux de capture</small></h4><div class="list" id="balls">${bl}</div></div></div></div>`}`;
 }
 /* ===== ÉLEVAGE (3 incubateurs) & CAMP D'ENTRAÎNEMENT EV ===== */
@@ -1447,7 +1452,7 @@ document.addEventListener('click',e=>{
  const a=t.dataset.act,m=S.box.find(x=>x.uid===t.dataset.uid);
  if(breedAct(a,t)){}
  else if(a==='throw')throwBall();
- else if(a==='flee'){if(busy)return;E=null;render()}
+ else if(a==='flee'){if(busy)return;fsStop();mapView=true;mapSel=null;E=null;render()}
  else if(a==='next'){E=null;render()}
  else if(a==='nextball'){const k=Object.keys(BALLS),i=(k.indexOf(E.ball)+1)%k.length;E.ball=k[i];setBallUI()}
  else if(a==='close'){P.sel=null;P.confirm=null;P.slot=null;P.flash=null;render(true)}
