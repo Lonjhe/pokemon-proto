@@ -14,7 +14,7 @@ html,body{margin:0;height:100%;background:#060919;color:var(--t);font:14px/1.4 '
 .shell{container-type:inline-size;min-height:100vh;background:var(--bg)}
 .app{display:flex;flex-direction:column;min-height:100vh;max-width:1180px;margin:0 auto;border-inline:2px solid var(--b)}
 .hud{display:flex;align-items:center;gap:10px;padding:8px 14px;background:var(--p);border-bottom:2px solid var(--b);position:sticky;top:0;z-index:5}
-.av{width:34px;height:34px;background:var(--y);border:2px solid #0b1030;display:grid;place-items:center;color:#0b1030;font-size:18px;flex:none}
+.av img{width:100%;height:100%;object-fit:contain;object-position:center bottom;image-rendering:pixelated}.av{overflow:hidden;width:34px;height:34px;background:var(--y);border:2px solid #0b1030;display:grid;place-items:center;color:#0b1030;font-size:18px;flex:none}
 .lv{font-size:10px;color:var(--y)}
 .bar{height:9px;background:#080c26;border:1px solid var(--b);flex:1;min-width:40px}
 .bar>i{display:block;height:100%;transition:width .5s}
@@ -116,7 +116,7 @@ input{flex:1;min-width:140px}
 .hw-r .zl{font-size:clamp(6px,1.9cqw,9px)!important;margin:0}
 .hw-r.cur .hw-me{width:90%;height:56%;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 3px 0 #0006)}
 .hw .bz-b{font-family:'Press Start 2P',monospace;font-size:clamp(7px,2cqw,9px);line-height:1.5}
-.hw-cd .ti-flame{font-size:12px;color:#3a3560}.hw-cd .ti-flame.on{color:#ffb020;filter:drop-shadow(0 0 3px #ff8a1f)}.hw-cd small{color:var(--m);font-weight:800}
+.cdl{height:22px;width:auto;margin:0 -1px}.cdl:not(.on){filter:grayscale(1) brightness(.35) opacity(.7)}.hw-cd .ti-flame{font-size:12px;color:#3a3560}.hw-cd .ti-flame.on{color:#ffb020;filter:drop-shadow(0 0 3px #ff8a1f)}.hw-cd small{color:var(--m);font-weight:800}
 .eggi.hw1 img{filter:sepia(1) saturate(5) hue-rotate(-12deg) drop-shadow(0 0 6px #ff9a2a)}.eggi.hw2 img{filter:sepia(1) saturate(4) hue-rotate(235deg) drop-shadow(0 0 6px #b06bff)}.eggi.hw4 img{filter:grayscale(1) brightness(.55) contrast(1.3) drop-shadow(0 0 8px #7a5aff)}.eggi.hw3 img{filter:sepia(1) saturate(5) hue-rotate(300deg) drop-shadow(0 0 6px #ff4d6d)}
 .boss-hero{position:relative;min-height:320px;border:2px solid var(--b);overflow:hidden;background:#1a1040}
 .stg img.tsp{width:60px;height:60px;object-fit:contain;image-rendering:pixelated}.stg.lock{opacity:.5}.stg.cur{outline:2px solid var(--y);border-radius:10px}.tpv{display:flex;gap:2px;margin-top:3px}.tpv img{width:30px;height:30px;image-rendering:pixelated}.zh{position:relative;overflow:hidden;border-radius:10px;padding:12px;min-height:60px;margin-bottom:8px;display:flex;flex-direction:column;gap:2px}.zh::after{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#0b1030e8 30%,#0b103040)}.zh>*{z-index:2}.zh .bgimg{z-index:0!important;position:absolute;inset:0;background-size:cover;background-position:center bottom;image-rendering:pixelated}.panel.zh.lock{opacity:.5}
@@ -580,7 +580,7 @@ input{flex:1;min-width:140px}
 .hm-sc{height:clamp(380px,calc(100dvh - 135px),760px)!important}
 .hm-icons{position:absolute;left:10px;top:10px;display:flex;flex-direction:column;gap:8px;z-index:6}
 .hm-ic{position:relative;width:48px;height:48px;background:#0b1030dd;border:3px solid #1a1030;box-shadow:0 3px 0 #1a1030,inset 0 0 0 2px #3a4a96;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.hm-ic img{width:30px;height:30px;image-rendering:pixelated}.hm-ic span{display:none;position:absolute;left:54px;top:50%;transform:translateY(-50%);background:#0b1030;border:2px solid var(--b);padding:2px 8px;font-size:11px;font-weight:900;white-space:nowrap;color:#fff}
+.hm-ic img{width:34px;height:34px;object-fit:contain;image-rendering:auto}.hm-ic span{display:none;position:absolute;left:54px;top:50%;transform:translateY(-50%);background:#0b1030;border:2px solid var(--b);padding:2px 8px;font-size:11px;font-weight:900;white-space:nowrap;color:#fff}
 @media(hover:hover){.hm-ic:hover span{display:block}}.hm-ic:active{transform:translateY(2px)}
 .hm-ic .bd{position:absolute;right:-7px;top:-8px;background:var(--r);color:#fff;border-radius:9px;padding:0 6px;font-size:11px;font-weight:900;border:2px solid #1a1030}
 .hm-pk{cursor:pointer}
@@ -676,7 +676,7 @@ setInterval(capTick,1000);
 function shell(c){
  const rail=NAV.map(([k,i,l])=>`<a data-go="${k}" class="${k===route?'on':''}"><i class="ti ti-${i}"></i>${l}</a>`).join('');
  const TB=[['explorer','compass','Explorer'],['sac','backpack','Sac'],['hub','map-2','Accueil'],['combat','swords','Combat'],['plus','menu-2','Plus']],tabs=TB.map(([k,i,l])=>`<a data-go="${k}" class="${k===route||(k==='plus'&&!TB.some(t=>t[0]===route))?'on':''} ${k==='hub'?'go':''}"><i class="ti ti-${i}"></i>${k==='hub'?'':l}</a>`).join('');
- return `<div class="hud"><div class="av"><i class="ti ti-user"></i></div><b class="name">${esc(S.name||"")}</b><span class="lv px">Niv.${S.lvl}</span><div class="bar"><i style="width:${Math.min(100,S.xp/need()*100)}%;background:var(--c)"></i></div><span class="chip"><i class="ti ti-coin" style="color:var(--y)"></i>${S.coins}</span><span class="chip" title="Gemmes" data-go="gacha"><i class="ti ti-diamond" style="color:#ff7ad9"></i>${gems()}</span><span class="chip opt" title="Poké Balls"><i class="ti ti-circle-dot" style="color:var(--r)"></i>${S.balls.poke}</span></div><div class="main"><nav class="rail">${rail}</nav><div class="content">${c}</div></div><nav class="tabs">${tabs}</nav>`;
+ return `<div class="hud"><div class="av"><img src="${SPEC.RED}" alt="" referrerpolicy="no-referrer"></div><b class="name">${esc(S.name||"")}</b><span class="lv px">Niv.${S.lvl}</span><div class="bar"><i style="width:${Math.min(100,S.xp/need()*100)}%;background:var(--c)"></i></div><span class="chip"><i class="ti ti-coin" style="color:var(--y)"></i>${S.coins}</span><span class="chip" title="Gemmes" data-go="gacha"><i class="ti ti-diamond" style="color:#ff7ad9"></i>${gems()}</span><span class="chip opt" title="Poké Balls"><i class="ti ti-circle-dot" style="color:var(--r)"></i>${S.balls.poke}</span></div><div class="main"><nav class="rail">${rail}</nav><div class="content">${c}</div></div><nav class="tabs">${tabs}</nav>`;
 }
 function card(m,o={}){const s=BY[m.id],c=TC[s[2][0]]||'#8a8a7a';
  const img=o.anim?`<img class="pmi" src="${m.sh?SH(m.id):SP(m.id)}" referrerpolicy="no-referrer" alt="">`:`<img src="${m.sh?R+'shiny/'+m.id+'.png':SPS(m.id)}" referrerpolicy="no-referrer" alt="">`;
@@ -704,6 +704,7 @@ function pxi(n){
  else if(n==='center'){r(1,2,14,5,k);r(2,3,12,3,'#e0407a');r(2,3,12,1,'#ff8ab8');r(2,7,12,8,k);r(3,7,10,7,'#f4f4ff');r(3,7,10,1,'#cfd2f0');r(6,3,4,3,'#fff');r(7,4,2,1,k);r(6,9,4,5,k);r(7,10,2,4,'#3fa8dc');r(7,10,1,4,'#8fd0ff');r(3,9,2,2,'#3fa8dc');r(11,9,2,2,'#3fa8dc');r(0,14,16,2,k);r(0,14,16,1,'#8a8aa0')}
  else if(n==='chest'){r(1,3,14,5,k);r(2,4,12,3,'#c98a3a');r(2,4,12,1,'#e8b060');r(1,8,14,7,k);r(2,8,12,6,'#a8682a');r(2,8,12,1,'#7a4a1a');r(1,7,14,2,k);r(2,7,12,1,'#ffcb05');r(6,6,4,4,k);r(7,7,2,2,'#ffcb05');r(3,9,1,5,'#7a4a1a');r(12,9,1,5,'#7a4a1a');r(2,11,12,1,'#7a4a1a')}
  else if(n==='coin'){r(4,1,8,14,k);r(1,4,14,8,k);r(2,2,12,12,k);r(3,3,10,10,'#ffcb05');r(3,3,10,1,'#fff3b0');r(6,5,1,6,k);r(6,5,3,1,k);r(8,6,1,2,k);r(6,8,3,1,k);r(5,9,3,1,k)}
+ else if(n==='candle'){r(6,6,4,9,k);r(7,6,2,8,'#f4ecd0');r(7,6,2,1,'#fff');r(5,14,6,2,k);r(6,14,4,1,'#8a7a5a');r(7,3,2,3,k);r(7,4,2,2,'#ff8a1f');r(7,3,1,2,'#ffd24a')}
  else if(n==='compass'){r(2,2,12,12,k);r(3,3,10,10,'#3fa8dc');r(4,4,8,8,'#f4f4ff');r(7,4,2,4,'#e03a3a');r(7,8,2,4,'#3a4a80');r(7,7,2,2,k)}
  PXI[n]=c.toDataURL();return PXI[n];
 }
@@ -712,15 +713,22 @@ function pxi(n){
 const IT=n=>R.replace('pokemon/','items/')+n+'.png';
 /* sprites d'objets Écarlate/Violet (Bulbapedia) */
 const BBP={"Potion":"b/b0","Super Potion":"3/30","Poké Ball":"0/00","Great Ball":"5/54","Ultra Ball":"5/55","Antidote":"4/4d","Burn Heal":"5/53","Ice Heal":"6/67","Awakening":"a/a3","Paralyze Heal":"8/85","Revive":"4/4f","Poké Doll":"c/c8","Escape Rope":"8/84","TM Normal":"a/a5","Sitrus Berry":"e/e0","Oran Berry":"2/2d","Protein":"b/bf","Iron":"a/af","HP Up":"0/0e","Calcium":"b/b7","Zinc":"3/33","Carbos":"3/32","Rare Candy":"d/db","Exp. Candy M":"b/bf","Exp. Candy XL":"9/96","Lucky Egg":"3/3f","Leftovers":"7/7f","Life Orb":"1/1b","Focus Sash":"b/bb","Fire Stone":"b/b4","Water Stone":"b/b7","Thunder Stone":"5/5b","Leaf Stone":"4/4e","Moon Stone":"0/08","Star Piece":"c/c0","Oval Charm":"b/bd","Amulet Coin":"e/e4","Prism Scale":"0/0e","Ability Capsule":"6/63","Bottle Cap":"5/5a","Gold Bottle Cap":"c/c2","X Attack":"8/83","Adventure Guide":"b/b9","Choice Band":"7/7c"};
-const BBFB={'Potion':'potion','Super Potion':'super-potion','Poké Ball':'poke-ball','Great Ball':'great-ball','Ultra Ball':'ultra-ball','Antidote':'antidote','Burn Heal':'burn-heal','Ice Heal':'ice-heal','Awakening':'awakening','Paralyze Heal':'paralyze-heal','Revive':'revive','Poké Doll':'poke-doll','Escape Rope':'escape-rope','TM Normal':'tm-normal','Sitrus Berry':'sitrus-berry','Oran Berry':'oran-berry','Protein':'protein','Iron':'iron','HP Up':'hp-up','Calcium':'calcium','Zinc':'zinc','Carbos':'carbos','Rare Candy':'rare-candy','Exp. Candy M':'exp-candy-m','Exp. Candy XL':'exp-candy-xl','Lucky Egg':'lucky-egg','Leftovers':'leftovers','Life Orb':'life-orb','Focus Sash':'focus-sash','Fire Stone':'fire-stone','Water Stone':'water-stone','Thunder Stone':'thunder-stone','Leaf Stone':'leaf-stone','Moon Stone':'moon-stone','Star Piece':'star-piece','Oval Charm':'oval-charm','Amulet Coin':'amulet-coin','Prism Scale':'prism-scale','Ability Capsule':'ability-capsule','Bottle Cap':'bottle-cap','Gold Bottle Cap':'gold-bottle-cap','X Attack':'x-attack','Adventure Guide':'town-map','Choice Band':'muscle-band',BAG:'berry-pouch',ROTOM:'town-map',DOLLAR:'amulet-coin'};
-const BBU=n=>n==='BAG'?'https://archives.bulbagarden.net/media/upload/7/75/Bag_artwork.png':n==='ROTOM'?'https://archives.bulbagarden.net/media/upload/8/84/Bag_Rotom_Phone_Sprite.png':n==='DOLLAR'?'https://www.pokepedia.fr/images/3/31/Ic%C3%B4ne_Pok%C3%A9_Dollar_EV.png':'https://archives.bulbagarden.net/media/upload/'+BBP[n]+'/Bag_'+n.replace(/ /g,'_').replace(/é/g,'%C3%A9')+'_SV_Sprite.png';
-const ICOMAP={'map-2':'px:center',compass:'bb:Adventure Guide',backpack:'bb:BAG','menu-2':'bb:ROTOM',swords:'bb:Choice Band','attack-x':'bb:X Attack',run:'bb:Escape Rope',pokeball:'bb:Poké Ball','circle-dot':'bb:Poké Ball',egg:'bb:Lucky Egg',gift:'px:gift','shopping-bag':'bb:Potion',trophy:'px:trophy',skull:'px:skull',ghost:'px:pumpkin',users:'bb:Poké Doll','list-check':'bb:Star Piece',coin:'bb:DOLLAR',diamond:'bb:Prism Scale',candy:'bb:Rare Candy',flask:'bb:Potion',tent:'bb:Protein',fish:'bb:Oval Charm',box:'px:chest',star:'bb:Star Piece','star-filled':'bb:Star Piece',package:'bb:Potion',book:'bb:Adventure Guide','map-pin':'bb:Adventure Guide','test-pipe':'bb:Potion'};
-const ITEMICO={bonbon:'Rare Candy',bonbonm:'Exp. Candy M',bonbonxl:'Exp. Candy XL',restes:'Leftovers',orbe:'Life Orb',sitrus:'Sitrus Berry',ceinture:'Focus Sash',vit0:'HP Up',vit1:'Protein',vit2:'Iron',vit3:'Calcium',vit4:'Zinc',vit5:'Carbos',capargent:'Bottle Cap',capor:'Gold Bottle Cap',capoeuf:'Ability Capsule',captal:'Ability Capsule',baie:'Oran Berry',dodo:'Poké Doll',appat:'Lucky Egg'};
+const BBFB={ROD1:'old-rod',ROD2:'good-rod',ROD3:'super-rod',PUNCH:'muscle-band',ARMOR:'focus-sash',MASK:'x-attack',DICE:'lucky-egg',LIGHTBALL:'light-ball',RAZZ:'razz-berry',SILVER:'silver-powder',HONEY:'honey','Potion':'potion','Super Potion':'super-potion','Poké Ball':'poke-ball','Great Ball':'great-ball','Ultra Ball':'ultra-ball','Antidote':'antidote','Burn Heal':'burn-heal','Ice Heal':'ice-heal','Awakening':'awakening','Paralyze Heal':'paralyze-heal','Revive':'revive','Poké Doll':'poke-doll','Escape Rope':'escape-rope','TM Normal':'tm-normal','Sitrus Berry':'sitrus-berry','Oran Berry':'oran-berry','Protein':'protein','Iron':'iron','HP Up':'hp-up','Calcium':'calcium','Zinc':'zinc','Carbos':'carbos','Rare Candy':'rare-candy','Exp. Candy M':'exp-candy-m','Exp. Candy XL':'exp-candy-xl','Lucky Egg':'lucky-egg','Leftovers':'leftovers','Life Orb':'life-orb','Focus Sash':'focus-sash','Fire Stone':'fire-stone','Water Stone':'water-stone','Thunder Stone':'thunder-stone','Leaf Stone':'leaf-stone','Moon Stone':'moon-stone','Star Piece':'star-piece','Oval Charm':'oval-charm','Amulet Coin':'amulet-coin','Prism Scale':'prism-scale','Ability Capsule':'ability-capsule','Bottle Cap':'bottle-cap','Gold Bottle Cap':'gold-bottle-cap','X Attack':'x-attack','Adventure Guide':'town-map','Choice Band':'muscle-band',BAG:'berry-pouch',ROTOM:'town-map',DOLLAR:'amulet-coin'};
+const UB='https://archives.bulbagarden.net/media/upload/';
+const SPEC={BAG:UB+'7/75/Bag_artwork.png',ROTOM:UB+'8/84/Bag_Rotom_Phone_Sprite.png',DOLLAR:'https://www.pokepedia.fr/images/3/31/Ic%C3%B4ne_Pok%C3%A9_Dollar_EV.png',
+LANTERN:'https://static.vecteezy.com/system/resources/previews/056/281/323/non_2x/3d-render-of-a-rustic-hanging-lantern-with-a-lit-candle-inside-ideal-for-game-assets-or-fantasy-illustrations-free-png.png',
+WEEDLE:R+'other/official-artwork/13.png',EGG:R+'egg.png',ROD1:UB+'9/9c/Bag_Old_Rod_BDSP_Sprite.png',ROD2:UB+'4/42/Bag_Good_Rod_BDSP_Sprite.png',ROD3:UB+'9/94/Bag_Super_Rod_BDSP_Sprite.png',
+PUNCH:UB+'0/0f/Bag_Punching_Glove_SV_Sprite.png',ARMOR:UB+'1/19/Bag_Malicious_Armor_SV_Sprite.png',MASK:UB+'3/3a/Bag_Cornerstone_Mask_SV_Sprite.png',DICE:UB+'3/3d/Bag_Loaded_Dice_SV_Sprite.png',
+LIGHTBALL:UB+'5/56/Bag_Light_Ball_SV_Sprite.png',RAZZ:UB+'d/d4/Bag_Razz_Berry_SV_Sprite.png',SILVER:UB+'9/94/Bag_Silver_Powder_SV_Sprite.png',HONEY:UB+'2/22/Bag_Honey_SV_Sprite.png',RED:'https://play.pokemonshowdown.com/sprites/trainers/red.png'};
+const BBU=n=>SPEC[n]||(BBP[n]?UB+BBP[n]+'/Bag_'+n.replace(/ /g,'_').replace(/é/g,'%C3%A9')+'_SV_Sprite.png':null);
+const xn=n=>'x-'+n.replace(/ /g,'_');
+const ICOMAP={'map-2':'px:center',compass:'bb:Adventure Guide',backpack:'bb:BAG','menu-2':'bb:ROTOM',swords:'bb:Choice Band','attack-x':'bb:X Attack',run:'bb:Escape Rope',pokeball:'bb:Poké Ball','circle-dot':'bb:Poké Ball',egg:'bb:EGG',gift:'bb:DICE',rod1:'bb:ROD1',rod2:'bb:ROD2',rod3:'bb:ROD3','shopping-bag':'bb:Potion',trophy:'bb:PUNCH',skull:'bb:MASK',ghost:'bb:ARMOR',users:'bb:Poké Doll','list-check':'bb:Star Piece',coin:'bb:DOLLAR',diamond:'bb:Prism Scale',candy:'bb:Rare Candy',flask:'bb:Potion',tent:'bb:Protein',fish:'bb:Oval Charm',box:'px:chest',star:'bb:Star Piece','star-filled':'bb:Star Piece',package:'bb:Potion',book:'bb:Adventure Guide','map-pin':'bb:Adventure Guide','test-pipe':'bb:Potion'};
+const ITEMICO={leaf:'Leaf Stone',ver:'WEEDLE',leurre:'LIGHTBALL',pfeu:'Fire Stone',peau:'Water Stone',pfoudre:'Thunder Stone',plune:'Moon Stone',pfeuille:'Leaf Stone',bonbon:'Rare Candy',bonbonm:'Exp. Candy M',bonbonxl:'Exp. Candy XL',restes:'Leftovers',orbe:'Life Orb',sitrus:'Sitrus Berry',ceinture:'Focus Sash',vit0:'HP Up',vit1:'Protein',vit2:'Iron',vit3:'Calcium',vit4:'Zinc',vit5:'Carbos',capargent:'Bottle Cap',capor:'Gold Bottle Cap',capoeuf:'Ability Capsule',captal:'Ability Capsule',baie:'RAZZ',dodo:'SILVER',appat:'HONEY'};
 function gameIcons(root){
  (root.querySelectorAll?root.querySelectorAll('i.ti'):[]).forEach(i=>{
   const c=[...i.classList].find(x=>x.startsWith('ti-')&&x!=='ti');if(!c)return;const k=c.slice(3);let src=null;
-  let bb=false;if(k.startsWith('x-')){const nm=decodeURIComponent(k.slice(2));src=BBP[nm]?(bb=true,BBU(nm)):IT(k.slice(2))}else{const m=ICOMAP[k];if(!m)return;if(m.startsWith('px:'))src=pxi(m.slice(3));else if(m.startsWith('bb:')){bb=true;src=BBU(m.slice(3))}else src=IT(m)}
-  const im=document.createElement('img');im.className='gi '+(bb?'bb ':'')+[...i.classList].filter(x=>x!=='ti'&&!x.startsWith('ti-')).join(' ');im.src=src;im.alt='';im.referrerPolicy='no-referrer';const bn=bb?(k.startsWith('x-')?decodeURIComponent(k.slice(2)):ICOMAP[k].slice(3)):null;im.onerror=()=>{if(bn&&!im.dataset.fb&&BBFB[bn]){im.dataset.fb=1;im.src=IT(BBFB[bn]);im.classList.remove('bb')}else if(k==='coin'){im.src=pxi('coin');im.classList.remove('bb')}else im.style.visibility='hidden'};
+  let bb=false;if(k.startsWith('x-')){const nm=k.slice(2).replace(/_/g,' ');const u=BBU(nm);src=u?(bb=true,u):IT(k.slice(2))}else{const m=ICOMAP[k];if(!m)return;if(m.startsWith('px:'))src=pxi(m.slice(3));else if(m.startsWith('bb:')){bb=true;src=BBU(m.slice(3))}else src=IT(m)}
+  const im=document.createElement('img');im.className='gi '+(bb?'bb ':'')+[...i.classList].filter(x=>x!=='ti'&&!x.startsWith('ti-')).join(' ');im.src=src;im.alt='';im.referrerPolicy='no-referrer';const bn=bb?(k.startsWith('x-')?k.slice(2).replace(/_/g,' '):ICOMAP[k].slice(3)):null;im.onerror=()=>{if(bn==='LANTERN'){im.src=pxi('candle');im.classList.remove('bb')}else if(bn&&!im.dataset.fb&&BBFB[bn]){im.dataset.fb=1;im.src=IT(BBFB[bn]);im.classList.remove('bb')}else if(k==='coin'){im.src=pxi('coin');im.classList.remove('bb')}else im.style.visibility='hidden'};
   const st=i.getAttribute('style');if(st&&/margin|position|top|left|right|bottom/.test(st))im.setAttribute('style',st.replace(/color:[^;]+;?/,''));
   i.replaceWith(im)});
 }
@@ -728,11 +736,11 @@ new MutationObserver(ms=>{for(const m of ms)m.addedNodes.forEach(n=>{if(n.nodeTy
 function hub(){
  const A=advS(),st=ADV[Math.min(A.step,ADV.length-1)],d=dayS(),bs=bossStat(),p=partner(),ps=BY[p.id]||BY[25];
  const bgs=ZONES[st.zone].bg,done=A.step>=ADV.length,hpm=Math.round(50+p.lvl*3.4),h=hwS();
- const ic=(go,img,lab,bd)=>`<a class="hm-ic" data-go="${go}" title="${lab}"><img src="${pxi(img)}" alt=""><span>${lab}</span>${bd?`<b class="bd">${bd}</b>`:''}</a>`;
+ const ic=(go,img,lab,bd)=>`<a class="hm-ic" data-go="${go}" title="${lab}"><img class="bb" src="${SPEC[img]}" alt="" referrerpolicy="no-referrer"><span>${lab}</span>${bd?`<b class="bd">${bd}</b>`:''}</a>`;
  return `<div class="hm">
  ${S.fnote?(()=>{const n=S.fnote;S.fnote=null;return `<div class="hm-note"><i class="ti ti-heart-filled"></i>${n}</div>`})():''}
  <div class="hm-sc"><div class="bgimg" style="background-image:url(${BG_}${bgs}.png)"></div><div class="hm-cl"></div><div class="hm-cl b"></div>
-  <div class="hm-icons">${ic('ligue','sword',done?'Ligue':'Aventure','')}${ic('manoir','pumpkin','Événement',hwLocked(h)?'':h.candles)}${ic('boss','skull','Boss',(S.bossRecs||[]).length?'!':'')}${ic('gacha','gift','Gacha',d.gacha?'':'1')}</div>
+  <div class="hm-icons">${ic('ligue','PUNCH',done?'Ligue':'Aventure','')}${ic('manoir','ARMOR','Événement',hwLocked(h)?'':h.candles)}${ic('boss','MASK','Boss',(S.bossRecs||[]).length?'!':'')}${ic('gacha','DICE','Gacha',d.gacha?'':'1')}</div>
   <div class="hm-bub" id="hmb">${HM_LINES[0]}</div>
   <img class="hm-pk" id="hmpk" data-act="hmhop" src="${p.sh?SH(p.id):SP(p.id)}" referrerpolicy="no-referrer" alt="">
   <a class="hm-chg" data-act="pickp"><i class="ti ti-refresh"></i>Changer</a>
@@ -778,7 +786,7 @@ function explorer(){
  if(mode==='peche'&&!E)return `${zback()}${fishView()}`;
  if(!E)newEnc();
  const s=BY[E.id];
- const bl=Object.entries(BALLS).map(([k,b])=>`<div class="li pick ${E.ball===k?'sel':''}" data-ball="${k}"><div class="ico"><img src="${BI(k)}" width="30" height="30" style="image-rendering:pixelated" alt=""></div><div class="grow"><b>${b.n}</b></div><span class="cap" style="font-weight:900;color:${capCol(capRate(k))}">${pctTxt(capRate(k))}</span><span class="chip">×${S.balls[k]}</span></div>`).join('');
+ const bl=Object.entries(BALLS).map(([k,b])=>`<div class="li pick ${E.ball===k?'sel':''}" data-ball="${k}"><div class="ico"><img src="${BI(k)}" width="30" height="30" alt=""></div><div class="grow"><b>${b.n}</b></div><span class="cap" style="font-weight:900;color:${capCol(capRate(k))}">${pctTxt(capRate(k))}</span><span class="chip">×${S.balls[k]}</span></div>`).join('');
  return `${zback()}
  ${mode==='camp'?camp():`<div class="cols"><div style="display:flex;flex-direction:column;gap:10px">
  <div class="arena ${mode==='peche'?'water':''}" id="arena"><div id="stage"><div class="sky"></div><div class="gr"></div><div class="gr2"></div><div class="bgimg" style="background-image:url(${BG}${bgOf(biome[mode])}.png)"></div>
@@ -1082,7 +1090,7 @@ GZF.forEach((f,i)=>gw(.3,'ur',{k:'feat',i}));
 GZW=GZE.reduce((a,e)=>a+e.w,0);
 }
 const ITN=k=>CANDY[k]?CANDY[k].n:CAPS[k]?CAPS[k].n:HELD[k]?HELD[k].n:(VIT.find(x=>x[0]===k)||[])[1]||(Object.entries(STONE).find(([n,v])=>v===k)||[k])[0];
-const ITI=k=>ITEMICO[k]?'x-'+ITEMICO[k]:(()=>{const st=Object.entries(STONE).find(([n,v])=>v===k);return st?'x-'+({'Pierre Feu':'Fire Stone','Pierre Eau':'Water Stone','Pierre Foudre':'Thunder Stone','Pierre Feuille':'Leaf Stone','Pierre Lune':'Moon Stone'}[st[0]]||'Moon Stone'):CANDY[k]?'candy':CAPS[k]?CAPS[k].ic:HELD[k]?HELD[k].ic:(VIT.find(x=>x[0]===k)||[])[2]||'diamond'})();
+const ITI=k=>ITEMICO[k]?xn(ITEMICO[k]):CANDY[k]?'candy':CAPS[k]?CAPS[k].ic:HELD[k]?HELD[k].ic:(VIT.find(x=>x[0]===k)||[])[2]||'diamond';
 const gzPick=()=>{gzInit();let r=Math.random()*GZW;for(const e of GZE){r-=e.w;if(r<=0)return e}return GZE[0]};
 const LEGS=[144,145,146,150,151];
 function gzDo(e){
@@ -1242,7 +1250,7 @@ function hwBuy(k){
  else{h.pk-=c;breed();S.eggs.push({k,id:pickEgg(k)});note=`${EGGT[k].n} acheté ! Il t'attend dans la réserve (Élevage).`;save()}
  const o=document.querySelector('.pick-ov');if(o)o.remove();render(true);hwShop(note);
 }
-function hwPips(h){return Array.from({length:HW_MAX},(_,i)=>`<i class="ti ti-flame ${i<h.candles?'on':''}"></i>`).join('')}
+function hwPips(h){return Array.from({length:HW_MAX},(_,i)=>`<img class="cdl ${i<h.candles?'on':''}" src="${SPEC.LANTERN}" alt="" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src=pxi('candle')">`).join('')}
 let HWBG=null;
 function hwBG(){
  if(HWBG)return HWBG;const {W,H}=G,m=G.hw,cv=document.createElement('canvas');cv.width=W;cv.height=H;const cx=cv.getContext('2d'),img=cx.createImageData(W,H),D=img.data;
@@ -1324,7 +1332,7 @@ function hwShop(note){
 function manoirView(){
  if(B&&B.hw!=null)return battleView();
  const h=hwS(),lock=hwLocked(h);if(!lock&&!h.rooms)hwGen(h);
- const icn={start:'home',trap:'alert-triangle',wild:'ghost',trainer:'user',key:'key',boss:'skull',empty:'door'};
+ const icn={start:'home',trap:'alert-triangle',wild:'ghost-2',trainer:'user',key:'key',boss:'skull',empty:'door'};
  const LBL={start:'Entrée',pump:'Citrouilles',trap:'Piège',wild:'Sauvage',trainer:'Dresseur',key:'Clé',boss:'Gardien',empty:'Vide'};
  const spots=lock?'':h.rooms.map((r,i)=>{
   const cur=i===h.pos,adj=hwAdj(h.pos,i),known=r.seen||r.t==='boss';
@@ -2294,7 +2302,7 @@ function combat(){
  const opp=LOBBY.map((o,k)=>`<div class="panel opp" style="background-image:linear-gradient(90deg,#0b1030f2 40%,#0b103055),url(${BG_}${o.bg}.png)"><img src="${SP(o.id)}" width="84" height="84" style="image-rendering:pixelated" referrerpolicy="no-referrer" alt=""><div class="grow"><b>${o.name}</b><div style="color:var(--m);font-size:12px">${o.zone} · ${BY[o.id][1]} Niv. ${o.lvl}</div><div style="font-size:12px"><i class="ti ti-coin" style="color:var(--y)"></i> ${60+o.lvl*5} · +${30+o.lvl*4} XP · <i class="ti ti-arrow-up" style="color:var(--g)"></i> Niv. équipe</div></div><a class="btn y ${off}" data-b="duel" data-k="${k}"><i class="ti ti-swords"></i>Défier</a></div>`).join('');
  return `<div class="title"><h3 class="px">Combat</h3></div>
  <a class="panel cb-team" data-act="teamedit"><div class="cbi"><i class="ti ti-users"></i></div><div class="grow"><b>Équipe et équipement</b><small>${t.length}/6 Pokémon · objets tenus</small></div><i class="ti ti-chevron-right"></i></a>
- <div class="cb-tiles"><a class="cb-big lg" data-go="ligue"><img src="${pxi('trophy')}" alt=""><b class="px">Ligue</b><small>${done?'Terminée':st.name}</small></a><a class="cb-big bs" data-go="boss"><img src="${pxi('skull')}" alt=""><b class="px">Boss</b><small>${(S.bossRecs||[]).length?'Récap disponible':fmtT(bs.left).replace(/ \d+s$/,'')}</small></a></div>
+ <div class="cb-tiles"><a class="cb-big lg" data-go="ligue"><img src="${SPEC.PUNCH}" alt="" style="image-rendering:auto" referrerpolicy="no-referrer"><b class="px">Ligue</b><small>${done?'Terminée':st.name}</small></a><a class="cb-big bs" data-go="boss"><img src="${SPEC.MASK}" alt="" style="image-rendering:auto" referrerpolicy="no-referrer"><b class="px">Boss</b><small>${(S.bossRecs||[]).length?'Récap disponible':fmtT(bs.left).replace(/ \d+s$/,'')}</small></a></div>
  <h4 class="px" style="font-size:11px;margin:4px 0">3 défis d'entraînement</h4><div class="list">${opp}</div>`;
 }
 function bossLots(){
@@ -2305,7 +2313,7 @@ function bossRecapView(r){
  const bo=bossOf(r.slot),img=`<img class="bsp" id="bcimg" src="${bo.sh?SH(bo.id):SP(bo.id)}" referrerpolicy="no-referrer" alt="">`,sc=(txt)=>`<div class="bsc" id="bcs"><div class="bgimg" style="background-image:url(${BG_}${bo.bg}.png)"></div><div class="aura"></div>${img}<img id="bcb" class="bcb" alt="" style="display:none"><div class="bsi"><span class="px">${bo.name}${bo.sh?' ✦':''}</span> <span class="chip">${txt}</span></div></div>`;
  const head=`<div class="title"><h3 class="px">Boss de monde</h3></div>`;
  if(r.phase==='cap'){
-  const left=THROWS-r.throws,balls=BK3.map((k,i)=>`<a class="btn ${(S.balls[k]||0)<=0||r.busy?'off':''}" data-b="bthrow" data-k="${i}"><img src="${BI(k)}" width="22" height="22" style="image-rendering:pixelated" alt="">${BALLS[k].n} · ${S.balls[k]||0}<small>${BCAP[k]*100} %</small></a>`).join('');
+  const left=THROWS-r.throws,balls=BK3.map((k,i)=>`<a class="btn ${(S.balls[k]||0)<=0||r.busy?'off':''}" data-b="bthrow" data-k="${i}"><img src="${BI(k)}" width="22" height="22" alt="">${BALLS[k].n} · ${S.balls[k]||0}<small>${BCAP[k]*100} %</small></a>`).join('');
   return `${head}${sc('Capture')}<div class="panel"><h4 class="px">Une chance de capture !</h4><div id="bcm" style="margin:6px 0">${r.msg||`${bo.name} est à ta portée ! Lancers restants : <b>${left}/${THROWS}</b>.`}</div><div class="mvg">${balls}</div></div>`;
  }
  if(r.phase==='won')return `${head}${sc('Capturé !')}<div class="panel"><h4 class="px">${bo.name}${bo.sh?' ✦':''} capturé !</h4><div>Il rejoint ta boîte (Niv. 50).</div><div style="margin-top:10px"><a class="btn y" data-b="bend"><i class="ti ti-check"></i>Continuer</a></div></div>`;
@@ -2917,10 +2925,10 @@ document.addEventListener('keyup',e=>{if(e.code==='Space'&&fsPtr.get('kS')==='C'
 /* ===== SAC : équipement de pêche, balls, objets ===== */
 function sac(){
  const o=S.rod||0,eq=rodLv(),bait=(S.eq&&S.eq.bait)||'none',it=itm();
- const rods=[1,2,3].map(lv=>{const own=o>=lv,on=own&&eq===lv;return `<div class="li pick ${on?'sel':''} ${own?'':'dim'}" ${own?`data-act="eq" data-k="rod" data-v="${lv}"`:''}><div class="ico"><i class="ti ti-fish"></i></div><div class="grow"><b>${ROD[lv].n}</b><div style="color:var(--m);font-size:12px">${own?(on?'Équipée':'Toucher pour équiper'):'À acheter à la boutique'}</div></div>${on?'<i class="ti ti-check" style="color:var(--g);font-size:20px"></i>':''}</div>`}).join('');
+ const rods=[1,2,3].map(lv=>{const own=o>=lv,on=own&&eq===lv;return `<div class="li pick ${on?'sel':''} ${own?'':'dim'}" ${own?`data-act="eq" data-k="rod" data-v="${lv}"`:''}><div class="ico"><i class="ti ti-rod${lv}"></i></div><div class="grow"><b>${ROD[lv].n}</b><div style="color:var(--m);font-size:12px">${own?(on?'Équipée':'Toucher pour équiper'):'À acheter à la boutique'}</div></div>${on?'<i class="ti ti-check" style="color:var(--g);font-size:20px"></i>':''}</div>`}).join('');
  const bl=[['none','Aucun appât','Pêche normale',null],...Object.entries(BAIT).map(([k,b])=>[k,b.n,b.d,it[k]||0])].map(([k,n,d,c])=>{const own=c===null||c>0,on=bait===k||(k==='none'&&(bait==='none'||!(it[bait]>0)));return `<div class="li pick ${on?'sel':''} ${own?'':'dim'}" ${own?`data-act="eq" data-k="bait" data-v="${k}"`:''}><div class="ico"><i class="ti ti-${k==='none'?'ban':BAIT[k].ic}"></i></div><div class="grow"><b>${n}</b><div style="color:var(--m);font-size:12px">${d}</div></div>${c===null?'':`<span class="chip">×${c}</span>`}${on?'<i class="ti ti-check" style="color:var(--g);font-size:20px"></i>':''}</div>`}).join('');
- const balls=Object.entries(BALLS).map(([k,b])=>`<div class="li"><div class="ico"><img src="${BI(k)}" width="30" height="30" style="image-rendering:pixelated" alt=""></div><div class="grow"><b>${b.n}</b></div><span class="chip">×${S.balls[k]||0}</span></div>`).join('');
- const objs=[['baie','Baie','apple'],['dodo','Dodo','moon'],['appat','Appât','bone'],...Object.entries(CANDY).map(([k,c])=>[k,c.n,'candy']),...Object.entries(CAPS).map(([k,c])=>[k,c.n,c.ic]),...VIT,...Object.entries(HELD).map(([k,h])=>[k,h.n,h.ic]),...Object.entries(STONE).map(([n,k])=>[k,n,'diamond'])].map(([k,n,ic])=>`<div class="li"><div class="ico"><i class="ti ti-${ic}"></i></div><div class="grow"><b>${n}</b></div><span class="chip">×${it[k]||0}</span></div>`).join('');
+ const balls=Object.entries(BALLS).map(([k,b])=>`<div class="li"><div class="ico"><img src="${BI(k)}" width="30" height="30" alt=""></div><div class="grow"><b>${b.n}</b></div><span class="chip">×${S.balls[k]||0}</span></div>`).join('');
+ const objs=[['baie','Baie',xn(ITEMICO.baie)],['dodo','Dodo',xn(ITEMICO.dodo)],['appat','Appât',xn(ITEMICO.appat)],...Object.entries(CANDY).map(([k,c])=>[k,c.n,'candy']),...Object.entries(CAPS).map(([k,c])=>[k,c.n,c.ic]),...VIT,...Object.entries(HELD).map(([k,h])=>[k,h.n,h.ic]),...Object.entries(STONE).map(([n,k])=>[k,n,'diamond'])].map(([k,n,ic])=>`<div class="li"><div class="ico"><i class="ti ti-${ic}"></i></div><div class="grow"><b>${n}</b></div><span class="chip">×${it[k]||0}</span></div>`).join('');
  return `<div class="title"><h3 class="px">Sac</h3><a class="btn sm" data-go="boutique"><i class="ti ti-shopping-bag"></i>Boutique</a></div>
  <div class="cols eq"><div style="display:flex;flex-direction:column;gap:10px"><div class="panel"><h4 class="px">Canne équipée</h4><div class="list">${rods}</div></div><div class="panel"><h4 class="px">Appât équipé</h4><div class="list">${bl}</div></div></div>
  <div style="display:flex;flex-direction:column;gap:10px"><div class="panel"><h4 class="px">Balls</h4><div class="list">${balls}</div></div><div class="panel"><h4 class="px">Objets</h4><div class="list">${objs}</div></div></div></div>`;
@@ -2968,7 +2976,7 @@ function boutique(){
  const row=x=>{let st='',dis=false,lbl=`<i class="ti ti-coin"></i>${fmtN(x.p)}`;
   if(x.ty==='rod'){if(rod>=x.lv){st='Possédée';dis=true}else if(rod<x.lv-1){st='Achète d\'abord la '+ROD[x.lv-1].n;dis=true}}
   if(!dis&&S.coins<x.p)dis=true;
-  const ic=x.ty==='ball'?`<img src="${BI(x.b)}" width="30" height="30" style="image-rendering:pixelated" alt="">`:`<i class="ti ti-${x.ic}"></i>`;
+  const ic=x.ty==='ball'?`<img src="${BI(x.b)}" width="30" height="30" alt="">`:`<i class="ti ti-${x.ic}"></i>`;
   return `<div class="li"><div class="ico">${ic}</div><div class="grow"><b>${x.t}</b><div style="color:var(--m);font-size:12px">${st||x.d}</div></div><a class="btn sm ${dis?'off':'y'}" data-act="buy" data-v="${x.k}">${st&&x.ty==='rod'&&rod>=x.lv?'<i class="ti ti-check"></i>':lbl}</a></div>`};
  return `<div class="title"><h3 class="px">Boutique</h3><span class="chip"><i class="ti ti-coin" style="color:var(--y)"></i>${fmtN(S.coins)}</span></div>
  <div class="cols eq">${groups.map(g=>`<div class="panel"><h4 class="px">${g}</h4><div class="list">${SHOP.filter(x=>x.g===g).map(row).join('')}</div></div>`).join('')}</div>`;
@@ -3077,6 +3085,13 @@ document.addEventListener('click',e=>{
  else if(a==='items')itemsMenu();else if(a==='item')useItem(t.dataset.k);
  else if(a==='back'){if(!busy){actsSet(actsHTML());msg(E.msg)}}
 });
+
+SHOP.forEach(x=>{if(x.ty==='egg')x.ic='x-EGG';else if(x.ty==='rod')x.ic='rod'+x.lv;else if(x.ty==='item'&&ITEMICO[x.i])x.ic=xn(ITEMICO[x.i])});
+Object.entries(BAIT).forEach(([k,b])=>{if(ITEMICO[k])b.ic=xn(ITEMICO[k])});
+Object.entries(CAPS).forEach(([k,c])=>{if(ITEMICO[k])c.ic=xn(ITEMICO[k])});
+Object.entries(HELD).forEach(([k,h])=>{if(ITEMICO[k])h.ic=xn(ITEMICO[k])});
+VIT.forEach(v=>{if(ITEMICO[v[0]])v[2]=xn(ITEMICO[v[0]])});
+Object.entries(ITEMS).forEach(([k,v])=>{if(ITEMICO[k])v[1]=xn(ITEMICO[k])});
 
 breed();render();
 </script>
