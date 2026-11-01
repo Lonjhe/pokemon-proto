@@ -597,6 +597,7 @@ input{flex:1;min-width:140px}
 .stb{display:inline-block;margin-left:6px;padding:1px 5px;font-size:9px;font-weight:900;color:#fff;border:2px solid #1a1030;vertical-align:middle}
 .stb.psn{background:#8e44ad}.stb.slp{background:#5a6ab8}.stb.par{background:#c9a000;color:#1a1030}.stb.brn{background:#e0502a}.stb.frz{background:#3fb8d8;color:#1a1030}
 .te select{width:100%;margin-top:4px}
+.gi{height:1.15em;width:auto;max-width:none;image-rendering:pixelated;vertical-align:-.22em;flex:none}.rail a .gi,.tabs a .gi{height:26px}.tabs a.go .gi{height:32px}.pl-t .gi{height:30px;width:auto}.hud .gi{height:20px}.eggi .gi{display:none}
 </style>
 </head>
 <body>
@@ -612,10 +613,10 @@ const HTW=Object.fromEntries('1:7,69;2:10,130;3:20,1000;4:6,85;5:11,190;6:17,905
 const sizeIdx=(src,nat)=>{const m=/\/(\d+)\.gif/.exec(src||''),t=m&&HTW[m[1]];return t?Math.max(.38,Math.min(1.3,Math.min(1,.6*Math.sqrt(t[0]/20)+.4*Math.cbrt(t[1]/400))*(.8+.5*Math.min(1,nat/172)))):null};
 function fitSp(i){
  if(!i.naturalWidth)return;const pm=i.classList.contains('pmi'),par=i.offsetParent||i.parentElement,W=par?par.clientWidth:360,H=par?par.clientHeight:300;
- const f=i.id==='foe'?(i.dataset.boss?.46:.3):i.id==='me'?.36:i.id==='wild'?.22:i.id==='lead'?.2:.0;
+ const f=i.id==='foe'?(i.dataset.boss?.46:.3):i.id==='me'?.36:i.id==='wild'?.3:i.id==='lead'?.36:.0;
  let box=pm?Math.min(76,(i.parentElement&&i.parentElement.clientWidth)||76):f?W*f:H*.5;if(!pm)box=Math.min(box,H*.62);
- const bx=Math.max(24,Math.round(box)),nat=Math.max(i.naturalWidth,i.naturalHeight),gnd=pm||i.id==='me'||i.id==='lead'||i.classList.contains('hm-pk');
- i.classList.toggle('sm',bx<nat);const st=i.style;st.transformOrigin=gnd?'center bottom':'center';st.scale=['me','foe','wild','lead'].includes(i.id)?(sizeIdx(i.src,nat)??Math.min(1,Math.max(.38,nat/150))):'';st.width=bx+'px';st.height=bx+'px';st.maxWidth='none';st.minHeight='0';st.objectFit='contain';st.objectPosition=gnd?'center bottom':'center';
+ const bx=Math.max(24,Math.round(box)),nat=Math.max(i.naturalWidth,i.naturalHeight),gnd=pm||i.id==='me'||i.id==='lead'||i.id==='tr'||i.classList.contains('hm-pk');
+ i.classList.toggle('sm',bx<nat);const st=i.style;st.transformOrigin=gnd?'center bottom':'center';st.scale=['me','foe','wild','lead','tr'].includes(i.id)&&i.src.includes('.gif')?(sizeIdx(i.src,nat)??Math.min(1,Math.max(.38,nat/150))):'';st.width=bx+'px';st.height=bx+'px';st.maxWidth='none';st.minHeight='0';st.objectFit='contain';st.objectPosition=gnd?'center bottom':'center';
 }
 document.addEventListener('load',e=>{const t=e.target;if(t&&t.tagName==='IMG'&&(t.classList.contains('sp')||t.classList.contains('hm-pk')||t.classList.contains('pmi'))&&t.src.includes('.gif'))fitSp(t)},true);
 addEventListener('resize',()=>document.querySelectorAll('img.sp,img.hm-pk,img.pmi').forEach(fitSp));
@@ -639,7 +640,7 @@ TC['Ténèbres']='#5a4a6a';
 const WATER=SPECIES.filter(x=>x[2].includes('Eau')).map(x=>x[0]);
 const BALLS={poke:{n:'Poké Ball',m:1,c:'var(--r)',p:100},super:{n:'Super Ball',m:1.5,c:'var(--c)',p:300},hyper:{n:'Hyper Ball',m:2,c:'var(--y)',p:800}};
 const CAP_MAX=10,CAP_REGEN_MIN=15; /* capture : stock max et minutes par recharge (à ajuster) */
-const KEY='proto-pokemon-v1';
+const KEY='proto-pokemon-v1';const SHINY=1/10; /* test : à remettre à 1/64 */
 const fresh=()=>({coins:1200,xp:0,lvl:1,balls:{poke:20,super:4,hyper:1},next:1,box:[],dex:{}});
 function mk(id,lvl,sh=false){const s=BY[id];return{uid:Math.random().toString(36).slice(2,9),id,lvl,sh,fav:false,team:false}}
 let S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!S||!S.box)S=fresh();
@@ -698,6 +699,20 @@ function pxi(n){
  else if(n==='compass'){r(2,2,12,12,k);r(3,3,10,10,'#3fa8dc');r(4,4,8,8,'#f4f4ff');r(7,4,2,4,'#e03a3a');r(7,8,2,4,'#3a4a80');r(7,7,2,2,k)}
  PXI[n]=c.toDataURL();return PXI[n];
 }
+
+/* --- icônes du jeu réel : sprites d'objets PokeAPI à la place des pictos génériques --- */
+const IT=n=>R.replace('pokemon/','items/')+n+'.png';
+const ICOMAP={'map-2':'town-map','map-pin':'town-map',compass:'bicycle',pokeball:'poke-ball','circle-dot':'poke-ball',egg:'mystery-egg',gift:'premier-ball',backpack:'berry-pouch','shopping-bag':'amulet-coin',swords:'tm-normal',sword:'tm-normal',trophy:'px:trophy',skull:'px:skull',users:'poke-doll','list-check':'coin-case','menu-2':'escape-rope',coin:'amulet-coin',diamond:'prism-scale',candy:'rare-candy',flask:'potion',tent:'exp-share',campfire:'fire-stone',fish:'old-rod',heart:'soothe-bell',box:'lucky-egg',star:'wishing-piece','star-filled':'wishing-piece',package:'berry-pouch',book:'town-map','test-pipe':'potion'};
+const ITEMICO={bonbon:'rare-candy',bonbonm:'exp-candy-m',bonbonxl:'exp-candy-xl',restes:'leftovers',orbe:'life-orb',sitrus:'sitrus-berry',ceinture:'focus-sash',vit0:'hp-up',vit1:'protein',vit2:'iron',vit3:'calcium',vit4:'zinc',vit5:'carbos',capargent:'bottle-cap',capor:'gold-bottle-cap',capoeuf:'ability-capsule',captal:'ability-capsule',baie:'oran-berry',dodo:'poke-doll',appat:'lucky-egg'};
+function gameIcons(root){
+ (root.querySelectorAll?root.querySelectorAll('i.ti'):[]).forEach(i=>{
+  const c=[...i.classList].find(x=>x.startsWith('ti-')&&x!=='ti');if(!c)return;const k=c.slice(3);let src=null;
+  if(k.startsWith('x-'))src=IT(k.slice(2));else{const m=ICOMAP[k];if(!m)return;src=m.startsWith('px:')?pxi(m.slice(3)):IT(m)}
+  const im=document.createElement('img');im.className='gi '+[...i.classList].filter(x=>x!=='ti'&&!x.startsWith('ti-')).join(' ');im.src=src;im.alt='';im.referrerPolicy='no-referrer';im.onerror=()=>{im.style.visibility='hidden'};
+  const st=i.getAttribute('style');if(st&&/margin|position|top|left|right|bottom/.test(st))im.setAttribute('style',st.replace(/color:[^;]+;?/,''));
+  i.replaceWith(im)});
+}
+new MutationObserver(ms=>{for(const m of ms)m.addedNodes.forEach(n=>{if(n.nodeType===1){if(n.matches&&n.matches('i.ti'))gameIcons({querySelectorAll:()=>[n]});else gameIcons(n)}})}).observe(document.documentElement,{childList:true,subtree:true});
 function hub(){
  const A=advS(),st=ADV[Math.min(A.step,ADV.length-1)],d=dayS(),bs=bossStat(),p=partner(),ps=BY[p.id]||BY[25];
  const bgs=ZONES[st.zone].bg,done=A.step>=ADV.length,hpm=Math.round(50+p.lvl*3.4),h=hwS();
@@ -717,7 +732,7 @@ function hmOverlay(html){const o=document.createElement('div');o.className='hm-o
 function gachaPull(){
  const d=dayS();if(d.gacha)return;d.gacha=true;
  {const r=Math.random();if(r<.12){const k=r<.04?'f':'l';breed();S.eggs.push({k,id:pickEgg(k)});save();hmOverlay(`<h4 class="px" style="font-size:11px;color:var(--y)">Gacha du jour</h4>${eggImg(k,110)}<div style="font-weight:900;font-size:18px">${EGGT[k].n} !</div><div style="color:var(--m)">À placer dans un incubateur (Élevage).</div>`);return}}
- const ids=SPECIES.map(x=>x[0]),id=wpick(ids),sh=Math.random()<1/32,m=mk(id,3+Math.floor(Math.random()*8),sh);
+ const ids=SPECIES.map(x=>x[0]),id=wpick(ids),sh=Math.random()<SHINY,m=mk(id,3+Math.floor(Math.random()*8),sh);
  S.box.push(m);if(!S.dex[id]||S.dex[id]==='s')S.dex[id]='c';save();
  hmOverlay(`<h4 class="px" style="font-size:11px;color:var(--y)">Gacha du jour</h4><img src="${sh?SH(id):SP(id)}" referrerpolicy="no-referrer" alt=""><div style="font-weight:900;font-size:18px">${BY[id][1]}${sh?' ✦':''}</div><div style="color:var(--m)">Niv. ${m.lvl}${sh?' · Shiny !':''}</div>`);
 }
@@ -732,7 +747,7 @@ function openChest(){
 }
 
 function newEnc(){
- const z=ZP[biome[mode]],id=wpick(zPool(biome[mode],mode)),sh=Math.random()<1/64;
+ const z=ZP[biome[mode]],id=wpick(zPool(biome[mode],mode)),sh=Math.random()<SHINY;
  E={id,lvl:z.lv[0]+Math.floor(Math.random()*(z.lv[1]-z.lv[0]+1)),sh,ball:E&&E.ball||'poke',state:'ready',hp:100,bonus:1,msg:`Un ${BY[id][1]} sauvage apparaît !`};
  if(!S.dex[id]){S.dex[id]='s';save()}
  friendAdd(1);
@@ -755,15 +770,15 @@ function explorer(){
  return `${zback()}
  ${mode==='camp'?camp():`<div class="cols"><div style="display:flex;flex-direction:column;gap:10px">
  <div class="arena ${mode==='peche'?'water':''}" id="arena"><div id="stage"><div class="sky"></div><div class="gr"></div><div class="gr2"></div><div class="bgimg" style="background-image:url(${BG}${bgOf(biome[mode])}.png)"></div>
- <img class="sp in" id="wild" src="${E.sh?SH(E.id):SP(E.id)}" style="right:14%;top:12%;width:clamp(90px,24cqw,170px);${E.sleep?'filter:brightness(.7)':''}" referrerpolicy="no-referrer" alt="">
+ <img class="sp in" id="wild" src="${E.sh?SH(E.id):SP(E.id)}" style="right:12%;top:10%;width:clamp(90px,30cqw,200px);${E.sleep?'filter:brightness(.7)':''}" referrerpolicy="no-referrer" alt="">
  <img class="sp idle" id="tr" src="${TR}" style="left:7%;bottom:5%;width:clamp(110px,26cqw,190px)" referrerpolicy="no-referrer" alt="">
- <img class="sp" id="lead" src="" style="left:30%;bottom:3%;width:clamp(100px,24cqw,180px);display:none" referrerpolicy="no-referrer" alt="">
+ <img class="sp" id="lead" src="" style="left:8%;bottom:4%;width:clamp(110px,36cqw,220px);display:none" referrerpolicy="no-referrer" alt="">
  <div class="ball" id="ball"></div></div><div id="dim"></div>
  <div class="tag" style="left:3%;top:5%"><span class="px" style="font-size:10px">${E.sh?'<i class="ti ti-sparkles"></i> ':''}${s[1]}</span> ${infoBtn}<div style="font-size:12px">Niv. ${E.lvl} · ${s[2].join(' / ')}</div><div class="bar"><i id="wildHp" style="width:${E.hp}%;background:${hpc(E.hp/100)}"></i></div><div class="chips" id="wst">${chipsHTML()}</div></div>
  <canvas id="fxc"></canvas><div id="fx"></div></div>
  <div class="dialog" id="msg">${E.msg}</div>
  <div class="acts" id="acts" style="grid-template-columns:repeat(5,1fr)">${actsHTML()}</div></div>
- <div style="display:flex;flex-direction:column;gap:10px"><div class="panel"><h4 class="px">Balls <small style="font-family:Nunito;color:var(--m)">taux de capture</small></h4><div class="list" id="balls">${bl}</div></div><div class="panel" id="capd">${capHTML()}</div><div class="panel"><h4 class="px">Zone ${infoBtn}</h4><a class="btn y sm" data-act="zmap" style="margin-bottom:8px"><i class="ti ti-map-2"></i>Carte des lieux</a><div style="color:var(--m)">${ZP[biome[mode]].name} · Niv. ${ZP[biome[mode]].lv[0]}–${ZP[biome[mode]].lv[1]}<br>Touche <b>i</b> pour les taux de rencontre. Shiny : 1/64</div></div></div></div>`}`;
+ <div style="display:flex;flex-direction:column;gap:10px"><div class="panel"><h4 class="px">Balls <small style="font-family:Nunito;color:var(--m)">taux de capture</small></h4><div class="list" id="balls">${bl}</div></div></div></div>`}`;
 }
 /* ===== ÉLEVAGE (3 incubateurs) & CAMP D'ENTRAÎNEMENT EV ===== */
 const EGGT={a:{n:'Œuf commun',dur:60000,c:'#f4ecd0',d:'#d8c9a0'},b:{n:'Œuf peu commun',dur:180000,c:'#bfe0f4',d:'#8fbad6'},c:{n:'Œuf rare',dur:300000,c:'#dcc6f0',d:'#b494d4'},l:{n:'Œuf légendaire',dur:480000,c:'#ffe97a',d:'#e0a800',aura:'#ffd24a'},f:{n:'Œuf fabuleux',dur:600000,c:'#ffb0e8',d:'#d060b0',aura:'#ff7ad9'},h1:{n:'Œuf hanté',dur:300000,c:'#ffd9a0',d:'#e08a2a',aura:'#ff9a2a'},h2:{n:'Œuf maudit',dur:480000,c:'#d9b8ff',d:'#8a4ad0',aura:'#b06bff'},h3:{n:'Œuf spectral',dur:600000,c:'#ffb0c0',d:'#d04060',aura:'#ff4d6d'},h4:{n:'Œuf cauchemar',dur:900000,c:'#8a7aa8',d:'#3a2a58',aura:'#7a5aff'}};
@@ -959,7 +974,7 @@ function camp(){
 }
 const elevageView=()=>`<div class="title"><h3 class="px">Élevage &amp; Camp</h3></div>${camp()}`;
 function hatch(i){
- const e=S.inc[i];if(!e||incPct(e)<1)return;const m=mk(e.id,1,Math.random()<1/64);ensure(m);
+ const e=S.inc[i];if(!e||incPct(e)<1)return;const m=mk(e.id,1,Math.random()<SHINY);ensure(m);
  const idx=[0,1,2,3,4,5].sort(()=>Math.random()-.5).slice(0,3);idx.forEach(k=>m.iv[k]=31);m.ev=[0,0,0,0,0,0];
  const kp=keeperM();let inh='';if(kp){const fx=keeperFx(kp),ord=[0,1,2,3,4,5].sort((a,b)=>kp.iv[b]-kp.iv[a]).slice(0,fx.inh);ord.forEach(q=>{m.iv[q]=Math.max(m.iv[q],kp.iv[q])});inh=`${BY[kp.id][1]} (${fx.n}) transmet : ${ord.map(q=>SN[q]+' '+kp.iv[q]).join(', ')}`}
  S.box.push(m);S.dex[e.id]='c';S.inc[i]=null;save();
@@ -1055,7 +1070,7 @@ GZF.forEach((f,i)=>gw(.3,'ur',{k:'feat',i}));
 GZW=GZE.reduce((a,e)=>a+e.w,0);
 }
 const ITN=k=>CANDY[k]?CANDY[k].n:CAPS[k]?CAPS[k].n:HELD[k]?HELD[k].n:(VIT.find(x=>x[0]===k)||[])[1]||(Object.entries(STONE).find(([n,v])=>v===k)||[k])[0];
-const ITI=k=>CANDY[k]?'candy':CAPS[k]?CAPS[k].ic:HELD[k]?HELD[k].ic:(VIT.find(x=>x[0]===k)||[])[2]||'diamond';
+const ITI=k=>ITEMICO[k]?'x-'+ITEMICO[k]:(Object.entries(STONE).find(([n,v])=>v===k)?'x-'+({'Pierre Feu':'fire-stone','Pierre Eau':'water-stone','Pierre Foudre':'thunder-stone','Pierre Feuille':'leaf-stone','Pierre Lune':'moon-stone'}[Object.entries(STONE).find(([n,v])=>v===k)[0]]||'moon-stone'):CANDY[k]?'candy':CAPS[k]?CAPS[k].ic:HELD[k]?HELD[k].ic:(VIT.find(x=>x[0]===k)||[])[2]||'diamond');
 const gzPick=()=>{gzInit();let r=Math.random()*GZW;for(const e of GZE){r-=e.w;if(r<=0)return e}return GZE[0]};
 const LEGS=[144,145,146,150,151];
 function gzDo(e){
@@ -1064,7 +1079,7 @@ function gzDo(e){
  else if(e.k==='item'){it[e.v]=(it[e.v]||0)+(e.q||1);c.n=ITN(e.v)+((e.q||1)>1?' ×'+e.q:'');c.sub='Dans le Sac';c.vis=`<i class="ti ti-${ITI(e.v)}"></i>`}
  else if(e.k==='ball'){S.balls[e.v]=(S.balls[e.v]||0)+e.q;c.n=BALLS[e.v].n+' ×'+e.q;c.sub='Dans le Sac';c.vis=`<img src="${BI(e.v)}" style="width:56px;image-rendering:pixelated" alt="">`}
  else if(e.k==='coin'){S.coins+=e.q;c.n=e.q+' P$';c.sub='Pokédollars';c.vis='<i class="ti ti-coin"></i>'}
- else if(e.k==='mon'){const pool=SPECIES.map(s=>s[0]).filter(i=>!LEGS.includes(i)),id=pool[Math.floor(Math.random()*pool.length)],sh=Math.random()<1/64,m=mk(id,5+Math.floor(Math.random()*11),sh);S.box.push(m);if(!S.dex[id]||S.dex[id]==='s')S.dex[id]='c';c.n=BY[id][1]+(sh?' ✦':'');c.sub='Niv. '+m.lvl+' · dans la boîte';c.vis=`<img class="gcs" src="${sh?SH(id):SP(id)}" referrerpolicy="no-referrer" alt="">`}
+ else if(e.k==='mon'){const pool=SPECIES.map(s=>s[0]).filter(i=>!LEGS.includes(i)),id=pool[Math.floor(Math.random()*pool.length)],sh=Math.random()<SHINY,m=mk(id,5+Math.floor(Math.random()*11),sh);S.box.push(m);if(!S.dex[id]||S.dex[id]==='s')S.dex[id]='c';c.n=BY[id][1]+(sh?' ✦':'');c.sub='Niv. '+m.lvl+' · dans la boîte';c.vis=`<img class="gcs" src="${sh?SH(id):SP(id)}" referrerpolicy="no-referrer" alt="">`}
  else if(e.k==='feat'){const f=GZF[e.i],m=mk(f.id,f.lv,!!f.sh);S.box.push(m);S.dex[f.id]='c';c.n=f.n;c.sub='Pokémon vedette · Niv. '+f.lv;c.vis=`<img class="gcs" src="${f.sh?SH(f.id):SP(f.id)}" referrerpolicy="no-referrer" alt="">`}
  return c;
 }
@@ -2965,7 +2980,7 @@ function openInfo(){
   return `<div class="ir ${id===cur?'cur':''}"><img src="${SPS(id)}" referrerpolicy="no-referrer" alt="" style="${known?'':'filter:brightness(0) invert(.3)'}"><div class="grow"><b>${known?s[1]:'???'}</b> ${known?s[2].map(ty).join(''):''}<div style="font-size:11px;color:var(--m)">Capture : ${['poke','super','hyper'].map(k=>`${BALLS[k].n.split(' ')[0]} ${pctTxt(Math.min(.95,s[3]*BALLS[k].m))}`).join(' · ')}</div></div><div style="text-align:right;min-width:92px"><span class="chip" style="color:${rc};border-color:${rc}">${rl}</span><div style="font-weight:900;margin-top:3px">${(r*100).toFixed(1).replace('.',',')} %</div><div style="font-size:10px;color:${got?'var(--g)':'var(--m)'}">${got?'✓ capturé':known?'vu':'inconnu'}</div></div></div>`}).join('');
  const o=document.createElement('div');o.id='infow';o.className='infow';o.dataset.act='infoclose';
  o.innerHTML=`<div class="infoc" data-dex="1"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><h4 class="px" style="margin:0">Rencontres · ${z.name}</h4><a class="btn sm" data-act="infoclose"><i class="ti ti-x"></i></a></div>
- <div style="font-size:12px;color:var(--m);margin-bottom:8px">Niveaux ${z.lv[0]}–${z.lv[1]} · ${mode==='peche'?'Pêche':'Herbe'} · Chance shiny 1/64 (${(100/64).toFixed(1).replace('.',',')} %)</div><div class="irl">${rows}</div>
+ <div style="font-size:12px;color:var(--m);margin-bottom:8px">Niveaux ${z.lv[0]}–${z.lv[1]} · ${mode==='peche'?'Pêche':'Herbe'} · Chance shiny 1/10 (test) (${(100/64).toFixed(1).replace('.',',')} %)</div><div class="irl">${rows}</div>
  <div style="font-size:11px;color:var(--m);margin-top:8px">Plus un Pokémon est difficile à capturer, plus il apparaît rarement. Les taux de capture ci-dessus sont ceux d'un Pokémon à PV pleins, éveillé, sans objet.</div></div>`;
  document.body.appendChild(o);
 }
@@ -2987,25 +3002,26 @@ document.addEventListener('click',e=>{
 setInterval(()=>{if(route==='boss'&&!B){if(curSlot()!==window.BSL){render();return}const st=bossStat(),f=(i,v)=>{const e=$(i);if(e)e.textContent=v};f('#bt',fmtT(st.left));f('#bhp',Math.ceil(st.pct)+' %');const h=$('#bh');if(h)h.style.width=st.pct+'%'}},1000);
 
 /* --- exploration : attaquer pour affaiblir, objets --- */
-const leadMon=()=>S.box.find(m=>m.team);
+const leadMon=()=>{const p=partner();return p&&p.uid?p:S.box.find(m=>m.team)};
 const actsSet=(h,menu)=>{const a=$('#acts');if(a){a.innerHTML=h;a.classList.toggle('menu',!!menu);a.classList.remove('lock')}};
 const actsLock=on=>{const a=$('#acts');if(a)a.classList.toggle('lock',on)};
 function wildUI(){capUI();const c=$('#wst');if(c)c.innerHTML=chipsHTML();const h=$('#wildHp');if(h){h.style.width=E.hp+'%';h.style.background=hpc(E.hp/100)}}
 function weakMenu(){
  if(busy||!E||E.state!=='ready')return;const m=leadMon();if(!m){msg('Aucun Pokémon dans l\'équipe !');return}
  const f=fighter(m.id,m.lvl,{moves:movesFrom(m)});
- actsSet(f.moves.map((v,k)=>`<a class="btn mvb" data-act="wmove" data-k="${k}" style="border-color:${TC[v.t]||'#555'}"><b>${v.n}</b><small>${v.t} · Puiss. ${v.p}</small></a>`).join('')+`<a class="btn" data-act="back" style="grid-column:1/-1"><i class="ti ti-arrow-back-up"></i>Retour</a>`,true);
+ actsSet(f.moves.map((v,k)=>`<a class="btn mvb" data-act="wmove" data-k="${k}" style="border-color:${TC[v.t]||'#555'}"><b>${v.n}</b><small>${v.t} · ${v.stat?'Statut':'Puiss. '+v.p}</small></a>`).join('')+`<a class="btn" data-act="back" style="grid-column:1/-1"><i class="ti ti-arrow-back-up"></i>Retour</a>`,true);
  msg(`Quelle attaque pour affaiblir ${BY[E.id][1]} ?`);
 }
 async function weakAttack(k){
  if(busy||!E||E.state!=='ready')return;const m=leadMon();if(!m)return;busy=true;actsLock(true);
  const f=fighter(m.id,m.lvl,{moves:movesFrom(m)}),mv=f.moves[k],foe=fighter(E.id,E.lvl),lead=$('#lead'),w=$('#wild'),ar=$('#arena');
- lead.src=m.sh?BKS(m.id):BK(m.id);lead.style.visibility='visible';lead.style.display='block';msg(`Go ${f.name} !`);await sleep(60);await sendOut(lead);
+ const trn=$('#tr');if(trn){trn.style.transition='opacity .25s';trn.style.opacity='0'}
+ lead.src=m.sh?BKS(m.id):BK(m.id);lead.style.visibility='visible';lead.style.display='block';msg(`Go ${f.name} !`);await sleep(120);await sendOut(lead);
  msg(`${f.name} utilise ${mv.n} !`);await castFx(lead,w,mv);
- const r=calc(f,foe,mv),pct=r.d/foe.max*100,was=E.hp;E.hp=Math.max(6,E.hp-pct);
+ const r=mv.stat?{d:0,e:1}:calc(f,foe,mv),pct=r.d/foe.max*100,was=E.hp;E.hp=Math.max(6,E.hp-pct);
  floatTxt(ctr(w,ar),'-'+Math.round(was-E.hp)+'%',r.e>1?'#ffeb3b':'#ff5252',r.e>1?19:15);wildUI();await sleep(500);
  msg(was-pct<6?`${f.name} se retient pour ne pas l'assommer !`:r.e>1?'C\'est super efficace !':r.e<1?'Ce n\'est pas très efficace...':`${foe.name} est affaibli.`);
- await sleep(900);await recall(lead);lead.style.display='none';lead.getAnimations().forEach(a=>a.cancel());
+ await sleep(900);await recall(lead);lead.style.display='none';lead.getAnimations().forEach(a=>a.cancel());if(trn)trn.style.opacity='1';
  msg(`${f.name} revient. Le moment est idéal pour lancer une ball !`);actsSet(actsHTML());busy=false;
 }
 function itemsMenu(){
