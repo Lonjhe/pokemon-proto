@@ -574,6 +574,29 @@ input{flex:1;min-width:140px}
 .gzbt{display:flex;gap:10px}.gzskip{position:absolute;right:14px;top:14px;color:var(--m);font-weight:800;cursor:pointer;border:2px solid var(--b);padding:2px 10px;background:#0b1030}
 .gz .bz-b{top:auto;bottom:8px;left:8px}
 .tm img.pmi,.mon img.pmi{width:auto;height:auto;max-width:100%;image-rendering:auto}.tm .pmi{min-height:48px;object-fit:contain}.mon img.pmi{min-height:60px;object-fit:contain}
+
+/* accueil épuré, menu Plus, combat, statuts */
+.hm{display:block!important;max-width:1060px!important;margin:0 auto}
+.hm-sc{height:clamp(380px,calc(100dvh - 135px),760px)!important}
+.hm-icons{position:absolute;left:10px;top:10px;display:flex;flex-direction:column;gap:8px;z-index:6}
+.hm-ic{position:relative;width:48px;height:48px;background:#0b1030dd;border:3px solid #1a1030;box-shadow:0 3px 0 #1a1030,inset 0 0 0 2px #3a4a96;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.hm-ic img{width:30px;height:30px;image-rendering:pixelated}.hm-ic span{display:none;position:absolute;left:54px;top:50%;transform:translateY(-50%);background:#0b1030;border:2px solid var(--b);padding:2px 8px;font-size:11px;font-weight:900;white-space:nowrap;color:#fff}
+@media(hover:hover){.hm-ic:hover span{display:block}}.hm-ic:active{transform:translateY(2px)}
+.hm-ic .bd{position:absolute;right:-7px;top:-8px;background:var(--r);color:#fff;border-radius:9px;padding:0 6px;font-size:11px;font-weight:900;border:2px solid #1a1030}
+.hm-pk{cursor:pointer}
+.pl-g{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:10px}
+.pl-t{position:relative;display:flex;flex-direction:column;gap:2px;background:var(--p);border:3px solid #0b1030;box-shadow:inset 0 0 0 2px var(--b);padding:12px;cursor:pointer;color:var(--t)}
+.pl-t i{font-size:26px;color:var(--y)}.pl-t b{font-size:14px}.pl-t small{color:var(--m);font-size:12px;font-weight:700}
+.pl-t .bd{position:absolute;right:8px;top:8px;background:var(--r);color:#fff;border-radius:9px;padding:0 7px;font-size:11px;font-weight:900}
+@media(min-width:760px){.pl-g{grid-template-columns:repeat(4,1fr)}}
+.cb-team{display:flex;align-items:center;gap:12px;cursor:pointer;margin-bottom:10px}.cb-team .cbi{width:44px;height:44px;background:#0b1030;border:2px solid var(--y);display:grid;place-items:center;font-size:24px;color:var(--y)}.cb-team small{display:block;color:var(--m);font-weight:700}
+.cb-tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.cb-big{display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 8px;border:3px solid #0b1030;cursor:pointer;color:#fff;text-align:center}
+.cb-big img{width:64px;height:64px;image-rendering:pixelated}.cb-big b{font-size:12px}.cb-big small{font-weight:800;opacity:.85}
+.cb-big.lg{background:linear-gradient(160deg,#ff8a3a,#a8431c);box-shadow:inset 0 0 0 2px #ffb070}.cb-big.bs{background:linear-gradient(160deg,#7e57c2,#2d1566);box-shadow:inset 0 0 0 2px #b388ff}
+.stb{display:inline-block;margin-left:6px;padding:1px 5px;font-size:9px;font-weight:900;color:#fff;border:2px solid #1a1030;vertical-align:middle}
+.stb.psn{background:#8e44ad}.stb.slp{background:#5a6ab8}.stb.par{background:#c9a000;color:#1a1030}.stb.brn{background:#e0502a}.stb.frz{background:#3fb8d8;color:#1a1030}
+.te select{width:100%;margin-top:4px}
 </style>
 </head>
 <body>
@@ -586,13 +609,13 @@ const SPS=i=>R+i+'.png',SP=i=>SD+i+'.gif',BK=i=>SD+'back/'+i+'.gif',SH=i=>SD+'sh
 
 /* sprites animés : taille entière (net) calée sur la scène, sinon réduction douce */
 const HTW=Object.fromEntries('1:7,69;2:10,130;3:20,1000;4:6,85;5:11,190;6:17,905;7:5,90;8:10,225;9:16,855;10:3,29;11:7,99;12:11,320;13:3,32;14:6,100;15:10,295;16:3,18;17:11,300;18:15,395;19:3,35;20:7,185;21:3,20;22:12,380;23:20,69;24:35,650;25:4,60;26:8,300;27:6,120;28:10,295;29:4,70;30:8,200;31:13,600;32:5,90;33:9,195;34:14,620;35:6,75;36:13,400;37:6,99;38:11,199;39:5,55;40:10,120;41:8,75;42:16,550;43:5,54;44:8,86;45:12,186;46:3,54;47:10,295;48:10,300;49:15,125;50:2,8;51:7,333;52:4,42;53:10,320;54:8,196;55:17,766;56:5,280;57:10,320;58:7,190;59:19,1550;60:6,124;61:10,200;62:13,540;63:9,195;64:13,565;65:15,480;66:8,195;67:15,705;68:16,1300;69:7,40;70:10,64;71:17,155;72:9,455;73:16,550;74:4,200;75:10,1050;76:14,3000;77:10,300;78:17,950;79:12,360;80:16,785;81:3,60;82:10,600;83:8,150;84:14,392;85:18,852;86:11,900;87:17,1200;88:9,300;89:12,300;90:3,40;91:15,1325;92:13,1;93:16,1;94:15,405;95:88,2100;96:10,324;97:16,756;98:4,65;99:13,600;100:5,104;101:12,666;102:4,25;103:20,1200;104:4,65;105:10,450;106:15,498;107:14,502;108:12,655;109:6,10;110:12,95;111:10,1150;112:19,1200;113:11,346;114:10,350;115:22,800;116:4,80;117:12,250;118:6,150;119:13,390;120:8,345;121:11,800;122:13,545;123:15,560;124:14,406;125:11,300;126:13,445;127:15,550;128:14,884;129:9,100;130:65,2350;131:25,2200;132:3,40;133:3,65;134:10,290;135:8,245;136:9,250;137:8,365;138:4,75;139:10,350;140:5,115;141:13,405;142:18,590;143:21,4600;144:17,554;145:16,526;146:20,600;147:18,33;148:40,165;149:22,2100;150:20,1220;151:4,40;200:7,10;353:6,23;354:11,125;355:8,150;356:16,306;425:4,12;426:12,150;429:9,44;442:10,1080;477:22,1066;479:3,3;487:45,7500;491:15,505;562:5,15;563:17,765;607:3,31;608:6,130;609:10,343;708:4,70;709:15,710;710:4,50;711:9,125;778:2,7;781:39,2100;802:7,222;854:1,2;855:2,4;864:10,4;897:20,445'.split(';').map(x=>{const[a,b]=x.split(':');return[a,b.split(',').map(Number)]}));
-const sizeIdx=src=>{const m=/\/(\d+)\.gif/.exec(src||''),t=m&&HTW[m[1]];return t?Math.max(.38,Math.min(1,.6*Math.sqrt(t[0]/20)+.4*Math.cbrt(t[1]/400))):null};
+const sizeIdx=(src,nat)=>{const m=/\/(\d+)\.gif/.exec(src||''),t=m&&HTW[m[1]];return t?Math.max(.38,Math.min(1.3,Math.min(1,.6*Math.sqrt(t[0]/20)+.4*Math.cbrt(t[1]/400))*(.8+.5*Math.min(1,nat/172)))):null};
 function fitSp(i){
  if(!i.naturalWidth)return;const pm=i.classList.contains('pmi'),par=i.offsetParent||i.parentElement,W=par?par.clientWidth:360,H=par?par.clientHeight:300;
  const f=i.id==='foe'?(i.dataset.boss?.46:.3):i.id==='me'?.36:i.id==='wild'?.22:i.id==='lead'?.2:.0;
  let box=pm?Math.min(76,(i.parentElement&&i.parentElement.clientWidth)||76):f?W*f:H*.5;if(!pm)box=Math.min(box,H*.62);
  const bx=Math.max(24,Math.round(box)),nat=Math.max(i.naturalWidth,i.naturalHeight),gnd=pm||i.id==='me'||i.id==='lead'||i.classList.contains('hm-pk');
- i.classList.toggle('sm',bx<nat);const st=i.style;st.transformOrigin=gnd?'center bottom':'center';st.scale=['me','foe','wild','lead'].includes(i.id)?(sizeIdx(i.src)??Math.min(1,Math.max(.38,nat/150))):'';st.width=bx+'px';st.height=bx+'px';st.maxWidth='none';st.minHeight='0';st.objectFit='contain';st.objectPosition=gnd?'center bottom':'center';
+ i.classList.toggle('sm',bx<nat);const st=i.style;st.transformOrigin=gnd?'center bottom':'center';st.scale=['me','foe','wild','lead'].includes(i.id)?(sizeIdx(i.src,nat)??Math.min(1,Math.max(.38,nat/150))):'';st.width=bx+'px';st.height=bx+'px';st.maxWidth='none';st.minHeight='0';st.objectFit='contain';st.objectPosition=gnd?'center bottom':'center';
 }
 document.addEventListener('load',e=>{const t=e.target;if(t&&t.tagName==='IMG'&&(t.classList.contains('sp')||t.classList.contains('hm-pk')||t.classList.contains('pmi'))&&t.src.includes('.gif'))fitSp(t)},true);
 addEventListener('resize',()=>document.querySelectorAll('img.sp,img.hm-pk,img.pmi').forEach(fitSp));
@@ -651,7 +674,7 @@ setInterval(capTick,1000);
 
 function shell(c){
  const rail=NAV.map(([k,i,l])=>`<a data-go="${k}" class="${k===route?'on':''}"><i class="ti ti-${i}"></i>${l}</a>`).join('');
- const tabs=[['hub','map-2','Accueil'],['pokemon','pokeball','Pokémon'],['explorer','compass',''],['combat','swords','Combat'],['sac','backpack','Sac'],['plus','menu-2','Plus']].map(([k,i,l])=>`<a data-go="${k==='plus'?'boutique':k}" class="${k===route||(k==='plus'&&!['hub','pokemon','explorer','combat','sac'].includes(route))?'on':''} ${k==='explorer'?'go':''}"><i class="ti ti-${i}"></i>${l}</a>`).join('');
+ const TB=[['plus','menu-2','Plus'],['sac','backpack','Sac'],['hub','map-2','Accueil'],['explorer','compass','Explorer'],['combat','swords','Combat']],tabs=TB.map(([k,i,l])=>`<a data-go="${k}" class="${k===route||(k==='plus'&&!TB.some(t=>t[0]===route))?'on':''} ${k==='hub'?'go':''}"><i class="ti ti-${i}"></i>${k==='hub'?'':l}</a>`).join('');
  return `<div class="hud"><div class="av"><i class="ti ti-user"></i></div><b class="name">${esc(S.name||"")}</b><span class="lv px">Niv.${S.lvl}</span><div class="bar"><i style="width:${Math.min(100,S.xp/need()*100)}%;background:var(--c)"></i></div><span class="chip"><i class="ti ti-coin" style="color:var(--y)"></i>${S.coins}</span><span class="chip" title="Gemmes" data-go="gacha"><i class="ti ti-diamond" style="color:#ff7ad9"></i>${gems()}</span><span class="chip opt" title="Poké Balls"><i class="ti ti-circle-dot" style="color:var(--r)"></i>${S.balls.poke}</span></div><div class="main"><nav class="rail">${rail}</nav><div class="content">${c}</div></div><nav class="tabs">${tabs}</nav>`;
 }
 function card(m,o={}){const s=BY[m.id],c=TC[s[2][0]]||'#8a8a7a';
@@ -661,33 +684,35 @@ function card(m,o={}){const s=BY[m.id],c=TC[s[2][0]]||'#8a8a7a';
 const dayS=()=>{const k=todayKey();if(!S.dy||S.dy.k!==k)S.dy={k,win:0,cap:0,gym:0,gacha:false,chest:false};return S.dy};
 const DAY_QUESTS=[['win','Gagner 1 combat de dresseur',1,50],['cap','Capturer 3 Pokémon',3,120],['gym','Battre un champion d\'arène',1,300]];
 const partner=()=>S.box.find(m=>m.uid===S.partner)||S.box.find(m=>m.team)||S.box[0]||{id:25,lvl:5,sh:false};
-const HM_LINES=['On y va ?','Prêt pour l\'arène !','J\'ai faim…','Un tirage gacha ?','Allons capturer !','Grrraou !'];
+const HM_LINES=['Touche-moi !','On y va ?','Prêt pour l\'arène !','J\'ai faim…','Un tirage gacha ?','Allons capturer !','Grrraou !'];
+
+/* --- icônes pixel art (16×16) --- */
+const PXI={};
+function pxi(n){
+ if(PXI[n])return PXI[n];const c=document.createElement('canvas');c.width=c.height=16;const x=c.getContext('2d'),r=(a,b,w,h,col)=>{x.fillStyle=col;x.fillRect(a,b,w,h)},k='#1a1030';
+ if(n==='trophy'){r(3,1,10,8,k);r(4,2,8,6,'#ffcb05');r(4,2,2,5,'#fff3b0');r(10,3,2,4,'#c98a00');r(5,9,6,2,k);r(6,9,4,1,'#ffcb05');r(1,3,2,5,k);r(2,4,1,3,'#ffcb05');r(13,3,2,5,k);r(13,4,1,3,'#ffcb05');r(7,11,2,2,k);r(7,11,2,1,'#c98a00');r(4,13,8,2,k);r(5,13,6,1,'#ffcb05')}
+ else if(n==='skull'){r(3,1,10,9,k);r(4,2,8,7,'#f4f4ff');r(4,2,8,1,'#fff');r(4,8,8,1,'#cfd2f0');r(5,5,2,3,k);r(9,5,2,3,k);r(5,6,2,2,'#ff2d55');r(9,6,2,2,'#ff2d55');r(7,8,2,1,k);r(4,10,8,4,k);r(5,10,6,3,'#f4f4ff');r(6,10,1,3,k);r(8,10,1,3,k);r(10,10,1,3,k)}
+ else if(n==='gift'){r(2,6,12,9,k);r(3,7,10,7,'#e0407a');r(3,7,10,1,'#ff7ab0');r(7,6,2,9,'#ffcb05');r(1,4,14,3,k);r(2,5,12,1,'#ff7ab0');r(2,6,12,1,'#e0407a');r(7,4,2,3,'#ffcb05');r(4,1,4,4,k);r(5,2,2,2,'#ffcb05');r(8,1,4,4,k);r(9,2,2,2,'#ffcb05')}
+ else if(n==='pumpkin'){r(7,0,2,3,'#3a8a2a');r(2,3,12,11,k);r(1,5,14,7,k);r(3,4,10,9,'#f08a2a');r(2,6,12,5,'#f08a2a');r(3,4,10,1,'#ffb24a');r(6,4,1,9,'#c0561f');r(9,4,1,9,'#c0561f');r(4,7,2,2,k);r(10,7,2,2,k);r(5,11,6,1,k);r(6,12,1,1,k);r(9,12,1,1,k);r(5,7,1,1,'#ffe97a');r(11,7,1,1,'#ffe97a')}
+ else if(n==='sword'){for(let i=0;i<10;i++){r(3+i,10-i,4,4,k)}for(let i=0;i<10;i++){r(4+i,11-i,2,2,i<2?'#fff':'#dfe8ff')}r(1,9,7,3,k);r(2,10,5,1,'#c98a00');r(0,12,4,4,k);r(1,13,2,2,'#7a4a1a');r(11,1,4,4,k);r(12,2,2,2,'#fff')}
+ else if(n==='compass'){r(2,2,12,12,k);r(3,3,10,10,'#3fa8dc');r(4,4,8,8,'#f4f4ff');r(7,4,2,4,'#e03a3a');r(7,8,2,4,'#3a4a80');r(7,7,2,2,k)}
+ PXI[n]=c.toDataURL();return PXI[n];
+}
 function hub(){
- const A=advS(),st=ADV[Math.min(A.step,ADV.length-1)],d=dayS(),cs=capState(),bs=bossStat(),p=partner(),ps=BY[p.id]||BY[25];
- const bgs=ZONES[st.zone].bg,done=A.step>=ADV.length,wait=triedToday(Math.min(A.step,ADV.length-1));
- const qd=DAY_QUESTS.filter(q=>d[q[0]]>=q[2]).length,streak=(S.streak&&S.streak.n)||0;
- const hpm=Math.round(50+p.lvl*3.4),pips=Array.from({length:CAP_MAX},(_,i)=>`<i class="${i<cs.n?'on':''}"></i>`).join('');
+ const A=advS(),st=ADV[Math.min(A.step,ADV.length-1)],d=dayS(),bs=bossStat(),p=partner(),ps=BY[p.id]||BY[25];
+ const bgs=ZONES[st.zone].bg,done=A.step>=ADV.length,hpm=Math.round(50+p.lvl*3.4),h=hwS();
+ const ic=(go,img,lab,bd)=>`<a class="hm-ic" data-go="${go}" title="${lab}"><img src="${pxi(img)}" alt=""><span>${lab}</span>${bd?`<b class="bd">${bd}</b>`:''}</a>`;
  return `<div class="hm">
  ${S.fnote?(()=>{const n=S.fnote;S.fnote=null;return `<div class="hm-note"><i class="ti ti-heart-filled"></i>${n}</div>`})():''}
  <div class="hm-sc"><div class="bgimg" style="background-image:url(${BG_}${bgs}.png)"></div><div class="hm-cl"></div><div class="hm-cl b"></div>
+  <div class="hm-icons">${ic('ligue','sword',done?'Ligue':'Aventure','')}${ic('manoir','pumpkin','Événement',hwLocked(h)?'':h.candles)}${ic('boss','skull','Boss',(S.bossRecs||[]).length?'!':'')}${ic('gacha','gift','Gacha',d.gacha?'':'1')}</div>
   <div class="hm-bub" id="hmb">${HM_LINES[0]}</div>
   <img class="hm-pk" id="hmpk" data-act="hmhop" src="${p.sh?SH(p.id):SP(p.id)}" referrerpolicy="no-referrer" alt="">
   <a class="hm-chg" data-act="pickp"><i class="ti ti-refresh"></i>Changer</a>
   <div class="hm-nm"><b class="px">${ps[1]}</b><small>Niv. ${p.lvl} · Partenaire ${hearts(p)}</small></div>
-  <div class="hm-hp">PV ${hpm}/${hpm}<i><b style="width:100%"></b></i></div></div>
- <div class="hm-side">
- <a class="hm-cta" data-go="ligue"><div class="ic"><i class="ti ti-swords"></i></div><div><small>${done?'Ligue terminée':'Continuer l\'aventure'}</small><b>${st.name}</b><span>${ZONES[st.zone].city} · ${wait?'revenir demain':KIND[st.kind]||''}</span></div><i class="ti ti-chevron-right go"></i></a>
- <a class="hm-cta hw-cta" data-go="manoir"><div class="ic">🎃</div><div><small>Événement Halloween</small><b>Le Manoir hanté</b><span>${hwSum()}</span></div><i class="ti ti-chevron-right go"></i></a>
- <div class="hm-t">
-  <div class="hm-tile hm-g" data-go="gacha"><i class="ti ti-gift big"></i><b>Gacha</b><small>${d.gacha?gems()+' gemmes':'1 tirage offert'}</small>${d.gacha?'':'<span class="bd">1</span>'}</div>
-  <div class="hm-tile hm-c" data-go="explorer"><i class="ti ti-pokeball big"></i><b>Capturer</b><small>${cs.n}/${CAP_MAX}${cs.n<CAP_MAX?' · '+fmtMS(cs.next):''}</small><div class="hm-pp">${pips}</div></div>
-  <div class="hm-tile hm-b" data-go="boss"><img src="${SP(bs.bo.id)}" style="${SHADE}" referrerpolicy="no-referrer" alt=""><b>Boss mondial${(S.bossRecs||[]).length?' · Récap !':''}</b><small>${fmtT(bs.left).replace(/ \d+s$/,'')} · ${Math.round(bs.pct)} %</small><div class="hm-bb"><i style="width:${bs.pct}%"></i></div></div>
- </div>
- <div class="hm-t2"><a data-go="elevage" class="hm-mini"><i class="ti ti-egg"></i><b>Élevage</b><small>${eggsReady()?eggsReady()+' œuf(s) prêt(s)':'3 incubateurs'}</small>${eggsReady()?'<span class="bd">'+eggsReady()+'</span>':''}</a><a data-act="gocamp" class="hm-mini"><i class="ti ti-tent"></i><b>Camp EV</b><small>${campN()}/${CAMP_MAX} au camp</small></a></div>
- <div class="panel hm-ch ${d.chest?'':'rdy'}"><div class="cb"><i class="ti ti-box"></i></div><div style="flex:1;min-width:0"><b>Coffre quotidien</b><small>Série ${streak} jour${streak>1?'s':''} · quêtes ${qd}/${DAY_QUESTS.length}</small><div class="hm-dy">${Array.from({length:7},(_,i)=>`<i class="${i<streak%7||(streak>0&&streak%7===0)?'on':''}"></i>`).join('')}</div></div><a class="btn y sm ${d.chest?'off':''}" data-act="chest">${d.chest?'Ouvert':'Ouvrir'}</a></div>
- </div></div>`;
+  <div class="hm-hp">PV ${hpm}/${hpm}<i><b style="width:100%"></b></i></div></div></div>`;
 }
-document.addEventListener('click',e=>{if(e.target.id==='hmpk'){const el=e.target;el.classList.remove('hop');void el.offsetWidth;el.classList.add('hop');const b=$('#hmb');if(b)b.textContent=HM_LINES[Math.floor(Math.random()*HM_LINES.length)]}});
+document.addEventListener('click',e=>{if(e.target.id==='hmpk'){const el=e.target;el.classList.remove('hop');void el.offsetWidth;el.classList.add('hop');const b=$('#hmb');if(b)b.textContent='C\'est parti !';setTimeout(()=>go('explorer'),420)}});
 function hmOverlay(html){const o=document.createElement('div');o.className='hm-ov';o.innerHTML=`<div class="hm-ovc">${html}<div style="margin-top:12px"><a class="btn y" id="hmok">OK</a></div></div>`;document.body.appendChild(o);o.querySelector('#hmok').onclick=()=>{o.remove();render()}}
 function gachaPull(){
  const d=dayS();if(d.gacha)return;d.gacha=true;
@@ -1387,7 +1412,7 @@ function intro(){
 }
 function render(keep){
  if(!S.name||!S.box.length){intro();return}
- const c=route==='hub'?hub():route==='explorer'?explorer():route==='pokemon'?pokemon():route==='combat'?combat():route==='boss'?boss():route==='ligue'?ligue():route==='boutique'?boutique():route==='sac'?sac():route==='elevage'?elevageView():route==='gacha'?gachaView():route==='manoir'?manoirView():stub();
+ const c=route==='hub'?hub():route==='explorer'?explorer():route==='pokemon'?pokemon():route==='combat'?combat():route==='boss'?boss():route==='ligue'?ligue():route==='boutique'?boutique():route==='sac'?sac():route==='elevage'?elevageView():route==='gacha'?gachaView():route==='manoir'?manoirView():route==='plus'?plusView():stub();
  const y=window.scrollY;
  $('#app').innerHTML=shell(c);capTick();drawZone();zScroll();if(document.getElementById('bzc')||document.getElementById('czc')||document.getElementById('gzc')||document.getElementById('hwc'))bzStart();if(document.getElementById('fa')){fsInit();}
  if(keep)window.scrollTo(0,y);
@@ -1442,6 +1467,7 @@ document.addEventListener('click',e=>{
  else if(a==='so'){P.sort=t.dataset.v;render(true)}
  else if(a==='gacha')gachaPull();
  else if(a==='chest')openChest();
+ else if(a==='teamedit')teamEdit();
  else if(a==='reset'){S=fresh();E=null;P.sel=null;save();render()}
 });
 document.addEventListener('input',e=>{if(e.target.id==='q'){P.q=e.target.value;const p=e.target.selectionStart;render(true);const q=$('#q');q.focus();q.setSelectionRange(p,p)}});
@@ -1463,7 +1489,8 @@ add('im','Électrik',['Sol']);add('im','Sol',['Vol']);add('im','Combat',['Spectr
 const eff=(a,d)=>d.reduce((m,x)=>m*((TE.im[a]||[]).includes(x)?0:(TE.se[a]||[]).includes(x)?2:(TE.nv[a]||[]).includes(x)?.5:1),1);
 const hpMax=(id,l)=>stats(id)[0][1]+l*4+20,atkOf=(id,l)=>stats(id)[1][1]+l*2+10,defOf=(id,l)=>stats(id)[2][1]+l*2+10,spdOf=(id,l)=>stats(id)[3][1]+l;
 function movesOf(id,lvl=30){
- const ms=learnset(id).filter(x=>x[0]<=lvl).slice(-4).map(x=>mvObj(x[1]));
+ const ls=learnset(id).filter(x=>x[0]<=lvl),ms=ls.slice(-4).map(x=>mvObj(x[1]));
+ {const sm=ls.find(x=>STMOVE[x[1]]);if(sm&&!ms.some(m=>m.stat)){if(ms.length>=4)ms[0]=mvObj(sm[1]);else ms.push(mvObj(sm[1]))}}
  if(ms.length<2)ms.push(mvObj('Charge'));
  return ms;
 }
@@ -2095,7 +2122,7 @@ function startBoss(){
  begin({mode:'boss',bg:bo.bg,maxTurns:1e9,foe:fighter(bo.id,bo.lvl,{hp:1e9,dmgMul:.3,sh:!!bo.sh,moves:bo.moves})});
 }
 function foeMove(){
- const me=B.team[B.i],F=B.foe,ms=F.moves,ai=B.ai??1,sc=m=>m.p*eff(m.t,me.types)*(F.types.includes(m.t)?1.5:1);
+ const me=B.team[B.i],F=B.foe,ms=F.moves,ai=B.ai??1,sc=m=>m.stat?(me.st||F.hp/F.max<.35?0:55):m.p*eff(m.t,me.types)*(F.types.includes(m.t)?1.5:1);
  if(ai>=2){
   if(B.potions>0&&F.hp/F.max<.3&&B.lastHeal!==B.turn-1){B.potions--;B.lastHeal=B.turn;return{n:'Potion',heal:1,prio:9}}
   if(B.fteam&&B.lastSw!==B.turn-1){
@@ -2114,15 +2141,28 @@ function setHp(who){
 }
 function lockUI(){document.querySelectorAll('.mvb,[data-b="sw"],[data-b="leave"]').forEach(e=>e.classList.add('off'))}
 async function faint(D){const el=$(D===B.foe?'#foe':'#me');say(`${D.name} est K.O. !`);if(el)await anim(el,[{transform:'none',opacity:1},{transform:'translateY(50px)',opacity:0}],{duration:600});await sleep(300)}
+function stBadge(U){return U.st?`<span class="stb ${U.st}">${STN[U.st]}</span>`:''}
+function setSt(who){const U=who==='me'?B.team[B.i]:B.foe,e=$('#'+who+'St');if(e)e.innerHTML=stBadge(U)}
+async function tryStatus(D,s,who,loud){
+ const imm={psn:['Poison','Acier'],brn:['Feu'],par:['Électrik'],frz:['Glace']}[s]||[];
+ if(D.st||D.types.some(t=>imm.includes(t))){if(loud){say('Mais ça n\'a aucun effet...');await sleep(800)}return false}
+ D.st=s;if(s==='slp')D.sl=2+Math.floor(Math.random()*3);setSt(who);
+ const el=$(who==='me'?'#me':'#foe'),ar=$('#arena');if(el&&ar)floatTxt(ctr(el,ar),STN[s],{psn:'#b36bff',slp:'#9ab0ff',par:'#ffd93a',brn:'#ff7a3a',frz:'#7fe6ff'}[s],17);
+ say(`${D.name} ${STMSG[s]}`);await sleep(900);return true;
+}
 async function act(who,mv){
  const A=who==='me'?B.team[B.i]:B.foe,D=who==='me'?B.foe:B.team[B.i];
  if(A.hp<=0)return false;
  if(mv.sw!=null){say(`${B.fname} rappelle ${A.name} !`);await recall($('#foe'));B.fi=mv.sw;B.foe=B.fteam[mv.sw];B.fresh=true;say(`${B.fname} envoie ${B.foe.name} !`);render(true);await sleep(60);const e=$('#foe');if(e)await sendOut(e);await sleep(250);return true}
  if(mv.heal){say(`${B.fname} utilise une Potion !`);await sleep(500);const h=Math.round(A.max*.4);A.hp=Math.min(A.max,A.hp+h);setHp('foe');const e=$('#foe'),ar=$('#arena');if(e&&ar)floatTxt(ctr(e,ar),'+'+h,'#6bff8a',17);await sleep(900);return true}
+ if(A.st==='slp'){if(--A.sl>0){say(`${A.name} dort profondément…`);await sleep(900);return true}A.st=null;setSt(who);say(`${A.name} se réveille !`);await sleep(700)}
+ if(A.st==='frz'){if(Math.random()<.25){A.st=null;setSt(who);say(`${A.name} n'est plus gelé !`);await sleep(700)}else{say(`${A.name} est gelé : il ne peut pas bouger !`);await sleep(900);return true}}
+ if(A.st==='par'&&Math.random()<.25){say(`${A.name} est paralysé ! Il ne peut pas attaquer !`);await sleep(900);return true}
  say(`${who==='me'?'':'L\'ennemi '}${A.name} utilise ${mv.n} !`);await sleep(300);
  if(mv.acc&&Math.random()>mv.acc){say('Mais l\'attaque échoue !');await sleep(600);return true}
  try{await playFx(who,mv)}catch(e){}
- const r=calc(A,D,mv);
+ if(mv.stat){await tryStatus(D,mv.stat,D===B.foe?'foe':'me',true);return true}
+ const r=calc(A,D,mv);if(A.st==='brn')r.d=Math.max(1,Math.round(r.d*.5));
  if(!r.e){say(`Ça n'affecte pas ${D.name}...`);await sleep(900);return true}
  const boss=B.mode==='boss'&&D===B.foe,raid=r.d*RAID;
  if(boss){bossS().mine+=raid;B.dealt+=raid;save();const d=$('#dealt');if(d)d.textContent=fmtN(B.dealt)}else{let nh=D.hp-r.d;if(D.held==='ceinture'&&!D.cons&&D.hp===D.max&&nh<=0){nh=1;D.cons=1;say(`${D.name} tient bon grâce à sa Ceinture Force !`)}D.hp=Math.max(0,nh)}
@@ -2133,16 +2173,18 @@ async function act(who,mv){
  let t=r.e>1?'C\'est super efficace !':r.e<1?'Ce n\'est pas très efficace...':'';if(r.crit)t=(t?t+' ':'')+'Coup critique !';
  if(t){say(t);await sleep(650)}
  if(!boss&&D.hp<=0){await faint(D);return false}
+ {const sc=SECT[mv.t];if(sc&&mv.p>=40&&D.hp>0&&Math.random()<sc[1])await tryStatus(D,sc[0],D===B.foe?'foe':'me',false)}
  return true;
 }
 async function round(pa){
  const fm=foeMove(),acts=[];if(pa)acts.push(pa);acts.push(['foe',fm]);
- if(pa){const me=B.team[B.i],pp=pa[1].prio||0,fp=fm.prio||0;if(!(pp!==fp?pp>fp:me.spd>=B.foe.spd))acts.reverse()}
+ if(pa){const me=B.team[B.i],pp=pa[1].prio||0,fp=fm.prio||0,sp=u=>u.spd*(u.st==='par'?.5:1);if(!(pp!==fp?pp>fp:sp(me)>=sp(B.foe)))acts.reverse()}
  for(const[w,m]of acts){if(!B||!(await act(w,m)))break}
  if(B)await endRound();
 }
 async function endRound(){
  const me=B.team[B.i];
+ for(const[w,U]of[['me',me],['foe',B.foe]]){if(U.hp>0&&(U.st==='psn'||U.st==='brn')&&!(B.mode==='boss'&&w==='foe')){const d=Math.max(1,Math.round(U.max/(U.st==='psn'?8:16)));U.hp=Math.max(0,U.hp-d);say(`${U.name} souffre ${U.st==='psn'?'du poison':'de sa brûlure'} !`);setHp(w);const el=$(w==='me'?'#me':'#foe'),ar=$('#arena');if(el&&ar)floatTxt(ctr(el,ar),'-'+d,U.st==='psn'?'#b36bff':'#ff7a3a',14);await sleep(800);if(U.hp<=0)await faint(U)}}
  if(B.foe.hp<=0){
   const n=B.fteam?B.fteam.findIndex(f=>f.hp>0):-1;
   if(n>=0){B.fi=n;B.foe=B.fteam[n];B.fresh=true;say(`${B.fname} envoie ${B.foe.name} !`);render(true);await sleep(60);const e=$('#foe');if(e)await sendOut(e);B.turn++;B.busy=false;say(`Que fait ${me.name} ?`);render(true);return}
@@ -2168,7 +2210,7 @@ function finish(win){
  B.over=true;B.busy=false;const lines=[];
  if(B.hw!=null)hwFinish(win,lines);
  else if(B.adv!=null)advFinish(win,lines);
- else if(B.mode==='duel'){const c=win?60+B.foe.lvl*5:10,x=win?30+B.foe.lvl*4:5;S.coins+=c;S.xp+=x;while(S.xp>=need()){S.xp-=need();S.lvl++}lines.push(`+${fmtN(c)} pièces · +${x} XP`)}
+ else if(B.mode==='duel'){const c=win?60+B.foe.lvl*5:10,x=win?30+B.foe.lvl*4:5;S.coins+=c;S.xp+=x;while(S.xp>=need()){S.xp-=need();S.lvl++}lines.push(`+${fmtN(c)} pièces · +${x} XP`);if(win){const up=S.box.filter(m=>m.team&&m.lvl<100&&m.lvl<B.foe.lvl+5);up.forEach(m=>{m.lvl=Math.min(100,m.lvl+(m.lvl<B.foe.lvl?2:1))});if(up.length)lines.push(`Niveau supérieur : ${up.map(m=>BY[m.id][1]+' → '+m.lvl).join(', ')}`)}}
  else{const b=bossS(),c=Math.round(B.dealt/30);S.coins+=c;S.xp+=20;lines.push(`${fmtN(B.dealt)} dégâts infligés au boss`,`+${fmtN(c)} pièces`);
   if(bossStat().dead)lines.push('Le boss est vaincu ! Ouvre l\'onglet Boss pour le récap et tes lots.')}
  B.res={win,lines};say(win?'Victoire !':B.mode==='boss'?'Tentative terminée.':'Défaite...');save();LOBBY=null;render(true);
@@ -2179,14 +2221,14 @@ function battleView(){
  const f=B.foe,m=B.team[B.i],boss=B.mode==='boss',st=boss?bossStat():null,inn=B.fresh?' in':'';B.fresh=false;
  const fr=boss?st.pct/100:f.hp/f.max,mr=m.hp/m.max;
  if(m.moves.every(v=>v.pp<=0)&&!m.moves.some(v=>v.n==='Lutte'))m.moves.push({n:'Lutte',t:'Normal',p:40,pp:99,max:99});
- const mvs=m.moves.map((v,k)=>`<a class="btn mvb ${v.pp<=0||B.busy||B.over||B.pick?'off':''}" data-b="mv" data-k="${k}" style="border-color:${TC[v.t]||'#555'}"><b>${v.n}</b><small>${v.t} · Puiss. ${v.p}${v.max<90?` · PP ${v.pp}/${v.max}`:''}</small></a>`).join('');
+ const mvs=m.moves.map((v,k)=>`<a class="btn mvb ${v.pp<=0||B.busy||B.over||B.pick?'off':''}" data-b="mv" data-k="${k}" style="border-color:${TC[v.t]||'#555'}"><b>${v.n}</b><small>${v.t} · ${v.stat?'Statut · '+STN[v.stat]:'Puiss. '+v.p}${v.max<90?` · PP ${v.pp}/${v.max}`:''}</small></a>`).join('');
  const strip=B.team.map((t,k)=>{const r=t.hp/t.max;return `<div class="tm ${k===B.i?'sel':''} ${t.hp<=0?'ko':''} ${B.busy&&!B.pick?'off':''}" data-b="sw" data-k="${k}"><img class="pmi" src="${t.sh?SH(t.id):SP(t.id)}" referrerpolicy="no-referrer" alt=""><b>${t.name}</b><div class="bar"><i style="width:${r*100}%;background:${hpc(r)}"></i></div><small>${t.hp}/${t.max}</small></div>`}).join('');
  const arena=`<div class="arena" id="arena"><div id="stage"><div class="sky"></div><div class="gr"></div><div class="gr2"></div><div class="bgimg" style="background-image:url(${BG_}${B.bg}.png)"></div>${boss?'<div class="aura"></div>':''}
  <img class="sp${inn}" id="foe" ${boss?'data-boss=1':''} src="${f.sh?SH(f.id):SP(f.id)}" style="right:12%;top:${boss?2:10}%;width:${boss?'clamp(130px,34cqw,250px)':'clamp(90px,24cqw,170px)'}" referrerpolicy="no-referrer" alt="">
  <img class="sp${inn}" id="me" src="${m.sh?BKS(m.id):BK(m.id)}" style="left:8%;bottom:4%;width:clamp(110px,30cqw,220px)" referrerpolicy="no-referrer" alt=""></div>
  <div id="dim"></div>
- <div class="tag" style="left:3%;top:5%"><span class="px" style="font-size:10px">${f.name}</span><div style="font-size:12px">Niv. ${f.lvl}${boss?` · <span id="foeTxt">${fmtN(st.hp)}</span> PV`:''}</div>${B.fteam?`<div style="font-size:11px;color:var(--m)">${B.fname} · ${B.fteam.filter(x=>x.hp>0).length}/${B.fteam.length} Pokémon</div>`:''}<div class="bar"><i id="foeHp" style="width:${fr*100}%;background:${boss?'var(--r)':hpc(fr)}"></i></div></div>
- <div class="tag" style="right:3%;bottom:5%"><span class="px" style="font-size:10px">${m.name}</span><div style="font-size:12px">Niv. ${m.lvl} · <span id="meTxt">${m.hp}/${m.max}</span></div><div class="bar"><i id="meHp" style="width:${mr*100}%;background:${hpc(mr)}"></i></div></div>
+ <div class="tag" style="left:3%;top:5%"><span class="px" style="font-size:10px">${f.name}</span><span id="foeSt">${stBadge(f)}</span><div style="font-size:12px">Niv. ${f.lvl}${boss?` · <span id="foeTxt">${fmtN(st.hp)}</span> PV`:''}</div>${B.fteam?`<div style="font-size:11px;color:var(--m)">${B.fname} · ${B.fteam.filter(x=>x.hp>0).length}/${B.fteam.length} Pokémon</div>`:''}<div class="bar"><i id="foeHp" style="width:${fr*100}%;background:${boss?'var(--r)':hpc(fr)}"></i></div></div>
+ <div class="tag" style="right:3%;bottom:5%"><span class="px" style="font-size:10px">${m.name}</span><span id="meSt">${stBadge(m)}</span><div style="font-size:12px">Niv. ${m.lvl} · <span id="meTxt">${m.hp}/${m.max}</span></div><div class="bar"><i id="meHp" style="width:${mr*100}%;background:${hpc(mr)}"></i></div></div>
  <canvas id="fxc"></canvas><div id="fx"></div></div>`;
  let ctl;
  if(B.res)ctl=`<div class="panel"><h4 class="px">${B.res.win?'Victoire !':boss?(B.team.every(t=>t.hp<=0)?'Équipe K.O.':'Temps écoulé'):'Défaite...'}</h4>${B.res.lines.map(l=>`<div style="margin:3px 0">${l}</div>`).join('')}<div style="margin-top:10px"><a class="btn y" data-b="leave"><i class="ti ti-check"></i>Continuer</a></div></div>`;
@@ -2195,34 +2237,38 @@ function battleView(){
  const head=boss?`<div class="panel" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><b class="px" style="font-size:10px;color:var(--r)">BOSS DE MONDE</b><span class="chip">Tour ${B.turn}</span><span class="chip"><i class="ti ti-swords"></i>Dégâts : <b id="dealt">${fmtN(B.dealt)}</b></span></div>`:`<div class="title"><h3 class="px">${B.title}</h3></div>`;
  return `${head}${arena}<div class="dialog" id="bmsg">${B.msg}</div>${ctl}`;
 }
+function plusView(){
+ const d=dayS(),streak=(S.streak&&S.streak.n)||0,qd=DAY_QUESTS.filter(q=>d[q[0]]>=q[2]).length,cs=capState();
+ const T=(go,img,lab,sub,bd)=>`<a class="pl-t" ${go.startsWith('act:')?`data-act="${go.slice(4)}"`:`data-go="${go}"`}><i class="ti ti-${img}"></i><b>${lab}</b><small>${sub}</small>${bd?`<span class="bd">${bd}</span>`:''}</a>`;
+ return `<div class="title"><h3 class="px">Menu</h3><span class="chip" id="capt"></span></div>
+ <div class="pl-g">${T('pokemon','pokeball','Pokémon','Boîte et fiches')}${T('elevage','egg','Élevage',eggsReady()?eggsReady()+' œuf(s) prêt(s)':'3 incubateurs',eggsReady())}${T('act:gocamp','tent','Camp EV',campN()+'/'+CAMP_MAX+' au camp')}${T('boutique','shopping-bag','Boutique','Objets et Balls')}${T('gacha','gift','Gacha',d.gacha?gems()+' gemmes':'1 tirage offert',d.gacha?'':1)}${T('ligue','trophy','Ligue','Aventure')}${T('boss','skull','Boss','Boss mondial')}${T('manoir','ghost','Halloween',hwSum())}${T('social','users','Social','Amis')}${T('quetes','list-check','Quêtes',qd+'/'+DAY_QUESTS.length+' du jour')}</div>
+ <div class="panel hm-ch ${d.chest?'':'rdy'}"><div class="cb"><i class="ti ti-box"></i></div><div style="flex:1;min-width:0"><b>Coffre quotidien</b><small>Série ${streak} jour${streak>1?'s':''} · quêtes ${qd}/${DAY_QUESTS.length}</small></div><a class="btn y sm ${d.chest?'off':''}" data-act="chest">${d.chest?'Ouvert':'Ouvrir'}</a></div>`;
+}
+function teamEdit(){
+ let o=document.querySelector('.te-ov');if(o)o.remove();o=document.createElement('div');o.className='pick-ov te-ov';document.body.appendChild(o);
+ const draw=()=>{const team=S.box.filter(m=>m.team),it=itm(),rest=S.box.filter(m=>!m.team).sort((a,b)=>b.lvl-a.lvl).slice(0,40),full=team.length>=6;
+  const sel=m=>`<select data-te="hold" data-u="${m.uid}"><option value="">Aucun objet</option>${Object.entries(HELD).map(([k,h])=>(it[k]>0||m.held===k)?`<option value="${k}" ${m.held===k?'selected':''}>${h.n}${m.held===k?'':' ×'+it[k]}</option>`:'').join('')}</select>`;
+  const img=m=>`<img class="pmi" src="${m.sh?SH(m.id):SP(m.id)}" referrerpolicy="no-referrer" alt="">`;
+  o.innerHTML=`<div class="pick-c te"><h4 class="px">Équipe et équipement</h4><div class="svnote" style="margin:0">Équipe ${team.length}/6. Choisis l'objet tenu de chaque Pokémon.</div>
+  <div class="prows">${team.map(m=>`<div class="prow">${img(m)}<div class="grow"><b>${BY[m.id][1]}${m.sh?' ✦':''}</b> <small>Niv. ${m.lvl}</small>${sel(m)}</div><a class="btn sm ${team.length<=1?'off':''}" data-te="out" data-u="${m.uid}">Retirer</a></div>`).join('')}</div>
+  <h4 class="px" style="font-size:10px">Boîte ${full?'(équipe complète : retire un Pokémon)':''}</h4>
+  <div class="prows">${rest.length?rest.map(m=>`<div class="prow">${img(m)}<div class="grow"><b>${BY[m.id][1]}${m.sh?' ✦':''}</b> <small>Niv. ${m.lvl}</small></div><a class="btn sm y ${full?'off':''}" data-te="in" data-u="${m.uid}">Ajouter</a></div>`).join(''):'<div style="color:var(--m)">Aucun autre Pokémon.</div>'}</div>
+  <div class="pbt"><a class="btn y" data-te="close">Fermer</a></div></div>`};
+ o.addEventListener('click',e=>{const t=e.target.closest('[data-te]');if(!t){if(e.target===o){o.remove();render(true)}return}
+  const a=t.dataset.te,m=S.box.find(x=>x.uid===t.dataset.u);if(a==='close'){o.remove();render(true);return}
+  if(a==='out'&&m&&S.box.filter(x=>x.team).length>1){m.team=false;save();draw()}else if(a==='in'&&m&&S.box.filter(x=>x.team).length<6){m.team=true;save();draw()}});
+ o.addEventListener('change',e=>{const t=e.target.closest('select[data-te]');if(!t)return;const m=S.box.find(x=>x.uid===t.dataset.u);if(!m)return;const it=itm();if(m.held)it[m.held]=(it[m.held]||0)+1;const k=t.value;if(k&&(it[k]||0)>0){it[k]--;m.held=k}else m.held=null;save();draw()});
+ draw();
+}
 function combat(){
  if(B&&B.mode==='duel')return battleView();
  if(!LOBBY)lobby();
- const t=S.box.filter(m=>m.team),off=t.length?'':'off';
- const opp=LOBBY.map((o,k)=>`<div class="panel opp" style="background-image:linear-gradient(90deg,#0b1030f2 40%,#0b103055),url(${BG_}${o.bg}.png)"><img src="${SP(o.id)}" width="84" height="84" style="image-rendering:pixelated" referrerpolicy="no-referrer" alt=""><div class="grow"><b>${o.name}</b><div style="color:var(--m);font-size:12px">${o.zone} · ${BY[o.id][1]} Niv. ${o.lvl}</div><div style="font-size:12px"><i class="ti ti-coin" style="color:var(--y)"></i> ${60+o.lvl*5} · +${30+o.lvl*4} XP</div></div><a class="btn y ${off}" data-b="duel" data-k="${k}"><i class="ti ti-swords"></i>Défier</a></div>`).join('');
+ const t=S.box.filter(m=>m.team),off=t.length?'':'off',A=advS(),st=ADV[Math.min(A.step,ADV.length-1)],bs=bossStat(),done=A.step>=ADV.length;
+ const opp=LOBBY.map((o,k)=>`<div class="panel opp" style="background-image:linear-gradient(90deg,#0b1030f2 40%,#0b103055),url(${BG_}${o.bg}.png)"><img src="${SP(o.id)}" width="84" height="84" style="image-rendering:pixelated" referrerpolicy="no-referrer" alt=""><div class="grow"><b>${o.name}</b><div style="color:var(--m);font-size:12px">${o.zone} · ${BY[o.id][1]} Niv. ${o.lvl}</div><div style="font-size:12px"><i class="ti ti-coin" style="color:var(--y)"></i> ${60+o.lvl*5} · +${30+o.lvl*4} XP · <i class="ti ti-arrow-up" style="color:var(--g)"></i> Niv. équipe</div></div><a class="btn y ${off}" data-b="duel" data-k="${k}"><i class="ti ti-swords"></i>Défier</a></div>`).join('');
  return `<div class="title"><h3 class="px">Combat</h3></div>
- <div class="panel"><h4 class="px">Mon équipe (${t.length}/6)</h4>${t.length?`<div class="cards">${t.map(m=>`<div class="mon"><img class="pmi" src="${m.sh?SH(m.id):SP(m.id)}" referrerpolicy="no-referrer" alt=""><b>${BY[m.id][1]}${m.sh?' ✦':''}</b><small>Niv. ${m.lvl}</small></div>`).join('')}</div>`:'<div style="color:var(--m)">Ajoute des Pokémon à l\'équipe dans Mes Pokémon.</div>'}</div>
- <div class="list">${opp}</div>
- <div class="panel" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-color:var(--y)"><i class="ti ti-trophy" style="font-size:30px;color:var(--y)"></i><div class="grow" style="flex:1;min-width:150px"><b>Ligue : progression</b><div style="color:var(--m);font-size:12px">Dresseurs de route, villes, arènes, Conseil des 4.</div></div><a class="btn y" data-go="ligue">Ouvrir</a></div>
- <div class="panel" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-color:var(--r)"><i class="ti ti-skull" style="font-size:30px;color:var(--r)"></i><div class="grow" style="flex:1;min-width:150px"><b>Boss de monde actif</b><div style="color:var(--m);font-size:12px">Toute la communauté attaque le même boss.</div></div><a class="btn r" data-go="boss">Voir le boss</a></div>`;
-}
-function bossLots(){
- const t=BTIER.map(([lo,hi,n,r])=>`<div class="svnote" style="margin:0"><b>${n}</b><br>${r.map(rewTxt).join(' · ')}</div>`).join('');
- modalOv(`<h4 class="px">Lots du boss</h4><div class="svnote" style="margin:0">Les lots sont remis à la fin du chrono (ou à la défaite du boss), selon ton classement parmi tous les dresseurs.</div>${t}<div class="svnote" style="margin:0"><b>Boss vaincu avant la fin</b><br>+ ${rewTxt(BDEAD[0])} pour chaque participant</div><div class="svnote" style="margin:0"><b>Capture</b><br>${Math.round(CHN*100)} % de chance d'obtenir ${THROWS} lancers pour capturer le boss. Réussite selon la Ball : Poké ${BCAP.poke*100} %, Super ${BCAP.super*100} %, Hyper ${BCAP.hyper*100} % par lancer. Sinon, il s'enfuit.</div><div class="pbt"><a class="btn y" data-m="x">Fermer</a></div>`);
-}
-function bossRecapView(r){
- const bo=bossOf(r.slot),img=`<img class="bsp" id="bcimg" src="${bo.sh?SH(bo.id):SP(bo.id)}" referrerpolicy="no-referrer" alt="">`,sc=(txt)=>`<div class="bsc" id="bcs"><div class="bgimg" style="background-image:url(${BG_}${bo.bg}.png)"></div><div class="aura"></div>${img}<img id="bcb" class="bcb" alt="" style="display:none"><div class="bsi"><span class="px">${bo.name}${bo.sh?' ✦':''}</span> <span class="chip">${txt}</span></div></div>`;
- const head=`<div class="title"><h3 class="px">Boss de monde</h3></div>`;
- if(r.phase==='cap'){
-  const left=THROWS-r.throws,balls=BK3.map((k,i)=>`<a class="btn ${(S.balls[k]||0)<=0||r.busy?'off':''}" data-b="bthrow" data-k="${i}"><img src="${BI(k)}" width="22" height="22" style="image-rendering:pixelated" alt="">${BALLS[k].n} · ${S.balls[k]||0}<small>${BCAP[k]*100} %</small></a>`).join('');
-  return `${head}${sc('Capture')}<div class="panel"><h4 class="px">Une chance de capture !</h4><div id="bcm" style="margin:6px 0">${r.msg||`${bo.name} est à ta portée ! Lancers restants : <b>${left}/${THROWS}</b>.`}</div><div class="mvg">${balls}</div></div>`;
- }
- if(r.phase==='won')return `${head}${sc('Capturé !')}<div class="panel"><h4 class="px">${bo.name}${bo.sh?' ✦':''} capturé !</h4><div>Il rejoint ta boîte (Niv. 50).</div><div style="margin-top:10px"><a class="btn y" data-b="bend"><i class="ti ti-check"></i>Continuer</a></div></div>`;
- if(r.phase==='fled')return `${head}${sc('En fuite')}<div class="panel"><h4 class="px">${bo.name} s'est enfui…</h4><div>Plus de lancers. Une prochaine fois !</div><div style="margin-top:10px"><a class="btn y" data-b="bend"><i class="ti ti-check"></i>Continuer</a></div></div>`;
- const rows=r.top.map((x,i)=>`<div class="lb ${x.me?'me':''}"><b>${i+1}</b><span>${esc(x.n)}</span><b>${fmtN(x.d)}</b></div>`).join('')+(r.rank>10?`<div class="lb me"><b>${r.rank}</b><span>${esc(S.name||'Toi')}</span><b>${fmtN(r.mine)}</b></div>`:'');
- return `${head}${sc(r.dead?'Vaincu !':'Temps écoulé')}
- <div class="panel"><h4 class="px">${r.dead?'Boss vaincu !':'Fin du combat'}</h4><div>Ton classement : <b>${r.rank}${r.rank===1?'er':'e'}</b> sur ${r.n} · ${fmtN(r.mine)} dégâts</div></div>
- <div class="cols"><div class="panel"><h4 class="px">Classement</h4>${rows}</div><div class="panel"><h4 class="px">Tes lots</h4><div class="list">${r.rew.map(e=>`<div class="li"><div class="ico"><i class="ti ti-gift" style="color:var(--y)"></i></div><div class="grow"><b>${rewTxt(e)}</b></div></div>`).join('')}</div><div style="margin-top:10px"><a class="btn y" data-b="bclaim"><i class="ti ti-gift"></i>Récupérer mes lots</a></div></div></div>`;
+ <a class="panel cb-team" data-act="teamedit"><div class="cbi"><i class="ti ti-users"></i></div><div class="grow"><b>Équipe et équipement</b><small>${t.length}/6 Pokémon · objets tenus</small></div><i class="ti ti-chevron-right"></i></a>
+ <div class="cb-tiles"><a class="cb-big lg" data-go="ligue"><img src="${pxi('trophy')}" alt=""><b class="px">Ligue</b><small>${done?'Terminée':st.name}</small></a><a class="cb-big bs" data-go="boss"><img src="${pxi('skull')}" alt=""><b class="px">Boss</b><small>${(S.bossRecs||[]).length?'Récap disponible':fmtT(bs.left).replace(/ \d+s$/,'')}</small></a></div>
+ <h4 class="px" style="font-size:11px;margin:4px 0">3 défis d'entraînement</h4><div class="list">${opp}</div>`;
 }
 function boss(){
  if(B&&B.mode==='boss')return battleView();
@@ -2358,13 +2404,18 @@ const MD={
 };
 Object.assign(MD,{'Morsure':['Ténèbres','P',60,1,25,0,'Mord avec des crocs acérés.'],'Tranche-Nuit':['Ténèbres','P',70,1,15,0,'Un coup rapide dans l\'ombre.'],'Vibrobscur':['Ténèbres','S',80,1,15,0,'Une onde de ténèbres.']});
 (()=>{const a=(k,t,l)=>{TE[k][t]=[...new Set([...(TE[k][t]||[]),...l])]};a('se','Ténèbres',['Spectre','Psy']);a('nv','Ténèbres',['Combat','Ténèbres','Fée']);a('im','Psy',['Ténèbres'])})();
+Object.assign(MD,{'Poudre Toxik':['Poison','T',0,.85,35,0,'Empoisonne la cible.'],'Poudre Dodo':['Plante','T',0,.75,15,0,'Endort la cible.'],'Cage-Éclair':['Électrik','T',0,.9,20,0,'Paralyse la cible.'],'Hypnose':['Psy','T',0,.6,20,0,'Endort la cible.'],'Feu Follet':['Feu','T',0,.85,15,0,'Brûle la cible.'],'Léchouille':['Spectre','T',0,1,30,0,'Paralyse la cible.']});
+const STMOVE={'Poudre Toxik':'psn','Poudre Dodo':'slp','Cage-Éclair':'par','Hypnose':'slp','Feu Follet':'brn','Léchouille':'par'};
+const STLEARN={Plante:['Poudre Dodo',10],Poison:['Poudre Toxik',12],Électrik:['Cage-Éclair',8],Psy:['Hypnose',16],Spectre:['Léchouille',10],Feu:['Feu Follet',14]};
+const SECT={Feu:['brn',.1],Électrik:['par',.1],Poison:['psn',.25],Glace:['frz',.08]};
+const STN={psn:'PSN',slp:'DOR',par:'PAR',brn:'BRU',frz:'GEL'},STMSG={psn:'est empoisonné !',slp:'s\'endort !',par:'est paralysé ! Il aura du mal à attaquer.',brn:'est brûlé !',frz:'est gelé !'};
 const MK=Object.keys(MD);
 /*MD-END*/
-const mvObj=n=>{const d=MD[n];return{n,t:d[0],p:d[2],pp:d[4],max:d[4],acc:d[3]<1?d[3]:undefined,prio:d[5]||undefined}};
+const mvObj=n=>{const d=MD[n];return{n,t:d[0],p:d[2],pp:d[4],max:d[4],acc:d[3]<1?d[3]:undefined,prio:d[5]||undefined,stat:STMOVE[n]}};
 /* niveaux d'apprentissage par type : les attaques d'un type triées par puissance */
-const byType=t=>MK.filter(n=>MD[n][0]===t&&!['Coupe','Force'].includes(n)).sort((a,b)=>MD[a][2]-MD[b][2]);
+const byType=t=>MK.filter(n=>MD[n][0]===t&&MD[n][1]!=='T'&&!['Coupe','Force'].includes(n)).sort((a,b)=>MD[a][2]-MD[b][2]);
 function learnset(id){
- const ty=BY[id][2],L=[],lv1=[1,12,26,40],lv2=[8,20,34,44];
+ const ty=BY[id][2],L=[],lv1=[1,12,26,40],lv2=[8,20,34,44];ty.forEach(t=>{if(STLEARN[t])L.push([STLEARN[t][1],STLEARN[t][0]])});
  byType(ty[0]).forEach((n,i)=>L.push([lv1[i]||44,n]));
  if(ty[1])byType(ty[1]).forEach((n,i)=>L.push([lv2[i]||44,n]));
  L.push([1,'Charge'],[6,'Vive-Attaque']);if(ty[0]!=='Normal'&&ty[1]!=='Normal')L.push([30,'Plaquage']);
@@ -2391,7 +2442,7 @@ function stat6(m){
   if(i===0)return core+m.lvl+10;let v=core+5;if(n[1]===i)v=Math.floor(v*1.1);if(n[2]===i)v=Math.floor(v*.9);return v});
 }
 const ivRate=m=>{const s=m.iv.reduce((a,b)=>a+b,0);return[s,s>=150?'Exceptionnel':s>=125?'Remarquable':s>=95?'Bon':s>=60?'Moyen':'Faible']};
-const movesFrom=m=>(ensure(m),m.moves.map(mvObj));
+const movesFrom=m=>{ensure(m);const sm=learnset(m.id).find(x=>STMOVE[x[1]]&&x[0]<=m.lvl);if(sm&&!m.moves.some(n=>STMOVE[n])){if(m.moves.length>=4)m.moves[0]=sm[1];else m.moves.push(sm[1])}return m.moves.map(mvObj)};
 const statMul=m=>{ensure(m);const iv=m.iv.reduce((a,b)=>a+b,0)/186,ev=m.ev.reduce((a,b)=>a+b,0)/510;return .95+iv*.1+ev*.1};
 function radarSVG(m){
  ensure(m);const C=130,R=88,pt=(i,k)=>{const a=-Math.PI/2+i*Math.PI/3;return[C+Math.cos(a)*R*k,C+Math.sin(a)*R*k]};
