@@ -606,13 +606,14 @@ input{flex:1;min-width:140px}
 .hm-nm{bottom:40px!important}.hm-nm .hearts{font-size:22px;letter-spacing:1px}.hm-nm small{display:flex;align-items:center;gap:6px;font-size:13px!important}
 .hm-hp{bottom:44px!important}
 .hm-chest{position:absolute;right:12px;bottom:118px;width:52px;height:52px;z-index:5;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.hm-chest img{width:44px;height:44px;image-rendering:pixelated;filter:drop-shadow(0 3px 0 #0006)}.hm-chest:not(.rdy) img{filter:grayscale(.7) brightness(.7)}
+.hm-chest{width:84px;height:84px;right:6px}.hm-chest img{width:80px;height:80px;object-fit:contain;image-rendering:auto;filter:drop-shadow(0 4px 3px #0008)}
 .hm-chest.rdy img{animation:zbob 1.1s ease-in-out infinite}.hm-chest .bd{position:absolute;right:-2px;top:-4px;background:var(--r);color:#fff;border-radius:9px;padding:0 6px;font-size:11px;font-weight:900;border:2px solid #1a1030}.hm-chest .bd:empty{display:none}
 .hm-tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;flex:none}
 .hm-tiles .cb-big{flex-direction:row;justify-content:flex-start;text-align:left;padding:8px 10px;gap:10px;min-height:68px}
 .hm-tiles .cb-big img{width:52px;height:52px}.hm-tiles .cb-big b{font-size:11px;display:block}.hm-tiles .cb-big small{display:block;font-size:11px;margin-top:3px}
 .cb-big{min-height:150px;justify-content:center}.cb-big img{width:72px!important;height:72px!important;object-fit:contain;image-rendering:auto!important}
 .cb-tiles{align-items:stretch}.cb-big{box-sizing:border-box;height:100%}.cb-big.cbb img{transform:scale(1.22)}.hm-tiles .cb-big.cbb img{transform:scale(1.2)}
+.hm-ch .cb img{width:100%;height:100%;object-fit:contain;image-rendering:auto;display:block}
 </style>
 </head>
 <body>
@@ -758,7 +759,7 @@ function hub(){
  <div class="hm-sc"><div class="bgimg" style="background-image:url(${BG_}${bgs}.png)"></div><div class="hm-cl"></div><div class="hm-cl b"></div>
   <div class="hm-icons">${ic('manoir','ARMOR','Événement',hwLocked(h)?'':h.candles)}${ic('gacha','DICE','Gacha',d.gacha?'':'1')}</div>
   <img class="hm-pk" id="hmpk" data-act="hmhop" src="${p.sh?SH(p.id):SP(p.id)}" referrerpolicy="no-referrer" alt="">
-  <a class="hm-chest ${d.chest?'':'rdy'}" data-act="chest" title="Coffre quotidien"><img src="${pxi('chest')}" alt=""><b class="bd">${d.chest?'':'!'}</b></a>
+  <a class="hm-chest ${d.chest?'':'rdy'}" data-act="chest" title="Coffre quotidien"><img src="${d.chest?'img/chestO.png':'img/chest.png'}" alt=""><b class="bd">${d.chest?'':'!'}</b></a>
   <a class="hm-chg" data-act="pickp"><i class="ti ti-refresh"></i>Changer</a>
   <div class="hm-nm"><b class="px">${ps[1]}</b><small>Niv. ${p.lvl} · ${hearts(p)}</small></div>
   <div class="hm-hp">PV ${hpm}/${hpm}<i><b style="width:100%"></b></i></div></div>
@@ -2294,7 +2295,7 @@ function plusView(){
  const T=(go,img,lab,sub,bd)=>`<a class="pl-t" ${go.startsWith('act:')?`data-act="${go.slice(4)}"`:`data-go="${go}"`}><i class="ti ti-${img}"></i><b>${lab}</b><small>${sub}</small>${bd?`<span class="bd">${bd}</span>`:''}</a>`;
  return `<div class="title"><h3 class="px">Menu</h3><span class="chip" id="capt"></span></div>
  <div class="pl-g">${T('pokemon','pokeball','Pokémon','Boîte et fiches')}${T('elevage','egg','Élevage',eggsReady()?eggsReady()+' œuf(s) prêt(s)':'3 incubateurs',eggsReady())}${T('act:gocamp','tent','Camp EV',campN()+'/'+CAMP_MAX+' au camp')}${T('boutique','shopping-bag','Boutique','Objets et Balls')}${T('gacha','gift','Gacha',d.gacha?gems()+' gemmes':'1 tirage offert',d.gacha?'':1)}${T('ligue','trophy','Ligue','Aventure')}${T('boss','skull','Boss','Boss mondial')}${T('manoir','ghost','Halloween',hwSum())}${T('social','users','Social','Amis')}${T('quetes','list-check','Quêtes',qd+'/'+DAY_QUESTS.length+' du jour')}</div>
- <div class="panel hm-ch ${d.chest?'':'rdy'}"><div class="cb"><i class="ti ti-box"></i></div><div style="flex:1;min-width:0"><b>Coffre quotidien</b><small>Série ${streak} jour${streak>1?'s':''} · quêtes ${qd}/${DAY_QUESTS.length}</small></div><a class="btn y sm ${d.chest?'off':''}" data-act="chest">${d.chest?'Ouvert':'Ouvrir'}</a></div>`;
+ <div class="panel hm-ch ${d.chest?'':'rdy'}"><div class="cb"><img src="${d.chest?'img/chestO.png':'img/chest.png'}" alt=""></div><div style="flex:1;min-width:0"><b>Coffre quotidien</b><small>Série ${streak} jour${streak>1?'s':''} · quêtes ${qd}/${DAY_QUESTS.length}</small></div><a class="btn y sm ${d.chest?'off':''}" data-act="chest">${d.chest?'Ouvert':'Ouvrir'}</a></div>`;
 }
 function teamEdit(){
  let o=document.querySelector('.te-ov');if(o)o.remove();o=document.createElement('div');o.className='pick-ov te-ov';document.body.appendChild(o);
