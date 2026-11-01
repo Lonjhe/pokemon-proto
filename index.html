@@ -597,7 +597,7 @@ input{flex:1;min-width:140px}
 .stb{display:inline-block;margin-left:6px;padding:1px 5px;font-size:9px;font-weight:900;color:#fff;border:2px solid #1a1030;vertical-align:middle}
 .stb.psn{background:#8e44ad}.stb.slp{background:#5a6ab8}.stb.par{background:#c9a000;color:#1a1030}.stb.brn{background:#e0502a}.stb.frz{background:#3fb8d8;color:#1a1030}
 .te select{width:100%;margin-top:4px}
-.gi{height:1.15em;width:auto;max-width:none;image-rendering:pixelated;vertical-align:-.22em;flex:none}.rail a .gi{height:30px}.tabs a .gi{height:34px}.tabs a.go .gi{height:38px}.tabs a{gap:3px}.pl-t .gi{height:30px;width:auto}.hud .gi{height:20px}.eggi .gi{display:none}
+.gi.bb{image-rendering:auto}.gi{height:1.15em;width:auto;max-width:none;image-rendering:pixelated;vertical-align:-.22em;flex:none}.rail a .gi{height:30px}.tabs a .gi{height:34px}.tabs a.go .gi{height:38px}.tabs a{gap:3px}.pl-t .gi{height:30px;width:auto}.hud .gi{height:20px}.eggi .gi{display:none}
 </style>
 </head>
 <body>
@@ -605,7 +605,7 @@ input{flex:1;min-width:140px}
 <script>
 const R='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
 const SD=R+'other/showdown/';
-const BALLIMG={poke:'poke-ball',super:'great-ball',hyper:'ultra-ball'},BI=k=>R.replace('pokemon/','items/')+BALLIMG[k]+'.png';
+const BALLIMG={poke:'poke-ball',super:'great-ball',hyper:'ultra-ball'},BI=k=>({poke:'https://archives.bulbagarden.net/media/upload/0/00/Bag_Pok%C3%A9_Ball_SV_Sprite.png',super:'https://archives.bulbagarden.net/media/upload/5/54/Bag_Great_Ball_SV_Sprite.png',hyper:'https://archives.bulbagarden.net/media/upload/5/55/Bag_Ultra_Ball_SV_Sprite.png'})[k];
 const SPS=i=>R+i+'.png',SP=i=>SD+i+'.gif',BK=i=>SD+'back/'+i+'.gif',SH=i=>SD+'shiny/'+i+'.gif',BKS=i=>SD+'back/shiny/'+i+'.gif',AR=i=>R+'other/official-artwork/'+i+'.png',ARS=i=>R+'other/official-artwork/shiny/'+i+'.png';
 
 /* sprites animés : taille entière (net) calée sur la scène, sinon réduction douce */
@@ -701,19 +701,25 @@ function pxi(n){
  else if(n==='swords'){for(let i=0;i<11;i++){r(2+i,2+i,4,4,k);r(12-i,2+i,4,4,k)}for(let i=0;i<11;i++){r(3+i,3+i,2,2,i<2?'#fff':'#dfe8ff');r(13-i,3+i,2,2,i<2?'#fff':'#dfe8ff')}r(11,11,5,5,k);r(12,12,3,3,'#c98a00');r(0,11,5,5,k);r(1,12,3,3,'#c98a00')}
  else if(n==='map'){r(0,2,16,12,k);r(1,3,14,10,'#f4e4a8');r(1,3,5,10,'#8fd25a');r(11,3,4,10,'#3fa8dc');r(6,3,1,10,'#9a8a50');r(10,3,1,10,'#9a8a50');r(2,5,2,2,'#4a9a3a');r(3,9,3,2,'#4a9a3a');r(12,5,2,2,'#7fd0f4');r(7,9,1,1,'#e03a3a');r(8,8,1,1,'#e03a3a');r(9,7,1,1,'#e03a3a');r(7,6,3,1,'#e03a3a');r(8,5,1,3,'#e03a3a')}
  else if(n==='menu'){r(1,1,6,6,k);r(2,2,4,4,'#ffcb05');r(9,1,6,6,k);r(10,2,4,4,'#3fa8dc');r(1,9,6,6,k);r(2,10,4,4,'#e0503c');r(9,9,6,6,k);r(10,10,4,4,'#66bb6a');r(2,2,4,1,'#fff3b0');r(10,2,4,1,'#9fd8ff');r(2,10,4,1,'#ff9a8a');r(10,10,4,1,'#b8f0b0')}
+ else if(n==='center'){r(1,2,14,5,k);r(2,3,12,3,'#e0407a');r(2,3,12,1,'#ff8ab8');r(2,7,12,8,k);r(3,7,10,7,'#f4f4ff');r(3,7,10,1,'#cfd2f0');r(6,3,4,3,'#fff');r(7,4,2,1,k);r(6,9,4,5,k);r(7,10,2,4,'#3fa8dc');r(7,10,1,4,'#8fd0ff');r(3,9,2,2,'#3fa8dc');r(11,9,2,2,'#3fa8dc');r(0,14,16,2,k);r(0,14,16,1,'#8a8aa0')}
+ else if(n==='chest'){r(1,3,14,5,k);r(2,4,12,3,'#c98a3a');r(2,4,12,1,'#e8b060');r(1,8,14,7,k);r(2,8,12,6,'#a8682a');r(2,8,12,1,'#7a4a1a');r(1,7,14,2,k);r(2,7,12,1,'#ffcb05');r(6,6,4,4,k);r(7,7,2,2,'#ffcb05');r(3,9,1,5,'#7a4a1a');r(12,9,1,5,'#7a4a1a');r(2,11,12,1,'#7a4a1a')}
+ else if(n==='coin'){r(4,1,8,14,k);r(1,4,14,8,k);r(2,2,12,12,k);r(3,3,10,10,'#ffcb05');r(3,3,10,1,'#fff3b0');r(6,5,1,6,k);r(6,5,3,1,k);r(8,6,1,2,k);r(6,8,3,1,k);r(5,9,3,1,k)}
  else if(n==='compass'){r(2,2,12,12,k);r(3,3,10,10,'#3fa8dc');r(4,4,8,8,'#f4f4ff');r(7,4,2,4,'#e03a3a');r(7,8,2,4,'#3a4a80');r(7,7,2,2,k)}
  PXI[n]=c.toDataURL();return PXI[n];
 }
 
 /* --- icônes du jeu réel : sprites d'objets PokeAPI à la place des pictos génériques --- */
 const IT=n=>R.replace('pokemon/','items/')+n+'.png';
-const ICOMAP={'map-2':'px:house','map-pin':'town-map',compass:'px:map',pokeball:'poke-ball','circle-dot':'poke-ball',egg:'mystery-egg',gift:'premier-ball',backpack:'px:bag','shopping-bag':'amulet-coin',swords:'px:swords',sword:'px:swords',trophy:'px:trophy',skull:'px:skull',users:'poke-doll','list-check':'coin-case','menu-2':'px:menu',coin:'amulet-coin',diamond:'prism-scale',candy:'rare-candy',flask:'potion',tent:'exp-share',campfire:'fire-stone',fish:'old-rod',heart:'soothe-bell',box:'lucky-egg',star:'wishing-piece','star-filled':'wishing-piece',package:'berry-pouch',book:'town-map','test-pipe':'potion'};
-const ITEMICO={bonbon:'rare-candy',bonbonm:'exp-candy-m',bonbonxl:'exp-candy-xl',restes:'leftovers',orbe:'life-orb',sitrus:'sitrus-berry',ceinture:'focus-sash',vit0:'hp-up',vit1:'protein',vit2:'iron',vit3:'calcium',vit4:'zinc',vit5:'carbos',capargent:'bottle-cap',capor:'gold-bottle-cap',capoeuf:'ability-capsule',captal:'ability-capsule',baie:'oran-berry',dodo:'poke-doll',appat:'lucky-egg'};
+/* sprites d'objets Écarlate/Violet (Bulbapedia) */
+const BBP={"Potion":"b/b0","Super Potion":"3/30","Poké Ball":"0/00","Great Ball":"5/54","Ultra Ball":"5/55","Antidote":"4/4d","Burn Heal":"5/53","Ice Heal":"6/67","Awakening":"a/a3","Paralyze Heal":"8/85","Revive":"4/4f","Poké Doll":"c/c8","Escape Rope":"8/84","TM Normal":"a/a5","Sitrus Berry":"e/e0","Oran Berry":"2/2d","Protein":"b/bf","Iron":"a/af","HP Up":"0/0e","Calcium":"b/b7","Zinc":"3/33","Carbos":"3/32","Rare Candy":"d/db","Exp. Candy M":"b/bf","Exp. Candy XL":"9/96","Lucky Egg":"3/3f","Leftovers":"7/7f","Life Orb":"1/1b","Focus Sash":"b/bb","Fire Stone":"b/b4","Water Stone":"b/b7","Thunder Stone":"5/5b","Leaf Stone":"4/4e","Moon Stone":"0/08","Star Piece":"c/c0","Oval Charm":"b/bd","Amulet Coin":"e/e4","Prism Scale":"0/0e","Ability Capsule":"6/63","Bottle Cap":"5/5a","Gold Bottle Cap":"c/c2","X Attack":"8/83","Adventure Guide":"b/b9","Choice Band":"7/7c"};
+const BBU=n=>n==='BAG'?'https://archives.bulbagarden.net/media/upload/7/75/Bag_artwork.png':n==='ROTOM'?'https://archives.bulbagarden.net/media/upload/8/84/Bag_Rotom_Phone_Sprite.png':n==='DOLLAR'?'https://www.pokepedia.fr/images/3/31/Ic%C3%B4ne_Pok%C3%A9_Dollar_EV.png':'https://archives.bulbagarden.net/media/upload/'+BBP[n]+'/Bag_'+n.replace(/ /g,'_').replace(/é/g,'%C3%A9')+'_SV_Sprite.png';
+const ICOMAP={'map-2':'px:center',compass:'bb:Adventure Guide',backpack:'bb:BAG','menu-2':'bb:ROTOM',swords:'bb:Choice Band','attack-x':'bb:X Attack',run:'bb:Escape Rope',pokeball:'bb:Poké Ball','circle-dot':'bb:Poké Ball',egg:'bb:Lucky Egg',gift:'px:gift','shopping-bag':'bb:Potion',trophy:'px:trophy',skull:'px:skull',ghost:'px:pumpkin',users:'bb:Poké Doll','list-check':'bb:Star Piece',coin:'bb:DOLLAR',diamond:'bb:Prism Scale',candy:'bb:Rare Candy',flask:'bb:Potion',tent:'bb:Protein',fish:'bb:Oval Charm',box:'px:chest',star:'bb:Star Piece','star-filled':'bb:Star Piece',package:'bb:Potion',book:'bb:Adventure Guide','map-pin':'bb:Adventure Guide','test-pipe':'bb:Potion'};
+const ITEMICO={bonbon:'Rare Candy',bonbonm:'Exp. Candy M',bonbonxl:'Exp. Candy XL',restes:'Leftovers',orbe:'Life Orb',sitrus:'Sitrus Berry',ceinture:'Focus Sash',vit0:'HP Up',vit1:'Protein',vit2:'Iron',vit3:'Calcium',vit4:'Zinc',vit5:'Carbos',capargent:'Bottle Cap',capor:'Gold Bottle Cap',capoeuf:'Ability Capsule',captal:'Ability Capsule',baie:'Oran Berry',dodo:'Poké Doll',appat:'Lucky Egg'};
 function gameIcons(root){
  (root.querySelectorAll?root.querySelectorAll('i.ti'):[]).forEach(i=>{
   const c=[...i.classList].find(x=>x.startsWith('ti-')&&x!=='ti');if(!c)return;const k=c.slice(3);let src=null;
-  if(k.startsWith('x-'))src=IT(k.slice(2));else{const m=ICOMAP[k];if(!m)return;src=m.startsWith('px:')?pxi(m.slice(3)):IT(m)}
-  const im=document.createElement('img');im.className='gi '+[...i.classList].filter(x=>x!=='ti'&&!x.startsWith('ti-')).join(' ');im.src=src;im.alt='';im.referrerPolicy='no-referrer';im.onerror=()=>{im.style.visibility='hidden'};
+  let bb=false;if(k.startsWith('x-')){const nm=decodeURIComponent(k.slice(2));src=BBP[nm]?(bb=true,BBU(nm)):IT(k.slice(2))}else{const m=ICOMAP[k];if(!m)return;if(m.startsWith('px:'))src=pxi(m.slice(3));else if(m.startsWith('bb:')){bb=true;src=BBU(m.slice(3))}else src=IT(m)}
+  const im=document.createElement('img');im.className='gi '+(bb?'bb ':'')+[...i.classList].filter(x=>x!=='ti'&&!x.startsWith('ti-')).join(' ');im.src=src;im.alt='';im.referrerPolicy='no-referrer';im.onerror=()=>{if(k==='coin'){im.src=pxi('coin');im.classList.remove('bb')}else im.style.visibility='hidden'};
   const st=i.getAttribute('style');if(st&&/margin|position|top|left|right|bottom/.test(st))im.setAttribute('style',st.replace(/color:[^;]+;?/,''));
   i.replaceWith(im)});
 }
@@ -762,7 +768,7 @@ const BIOMES={herbe:[['meadow','Prairie'],['forest','Forêt'],['mountain','Monta
 const TR='https://play.pokemonshowdown.com/sprites/trainers/ethan.png';
 const ITEMS={baie:['Baie Framby','apple','Calme le Pokémon · capture ×1,3'],dodo:['Poudre Dodo','zzz','Endort le Pokémon · capture ×1,5'],appat:['Appât Parfumé','wind','Ignore le malus de niveau · ×1,2']};
 const itm=()=>{const it=S.items||(S.items={baie:5,dodo:3,appat:2});if(!it.v2){it.v2=1;Object.assign(it,{bonbon:5,bonbonm:3,bonbonxl:1,capargent:2,capor:1,captal:2,capoeuf:2,restes:1,orbe:1,sitrus:2,ceinture:1,pfeu:1,peau:1,pfoudre:1,plune:1,pfeuille:1})}return it};
-const actsHTML=()=>`<a class="btn y" data-act="throw"><i class="ti ti-circle-dot"></i>Lancer</a><a class="btn" data-act="weaken"><i class="ti ti-swords"></i>Attaquer</a><a class="btn" data-act="items"><i class="ti ti-flask"></i>Objet</a><a class="btn" data-act="flee"><i class="ti ti-run"></i>Fuir</a>`;
+const actsHTML=()=>`<a class="btn y" data-act="throw"><i class="ti ti-circle-dot"></i>Lancer</a><a class="btn" data-act="weaken"><i class="ti ti-attack-x"></i>Attaquer</a><a class="btn" data-act="items"><i class="ti ti-flask"></i>Objet</a><a class="btn" data-act="flee"><i class="ti ti-run"></i>Fuir</a>`;
 const chipsHTML=()=>[E.sleep&&'Endormi',E.bonus>1&&'Calmé',E.nopen&&'Attiré',E.hp<100&&'Affaibli'].filter(Boolean).map(x=>`<span>${x}</span>`).join('');
 const zback=()=>`<div class="title"><a class="btn sm" data-act="zmap"><i class="ti ti-map-2"></i>Carte</a><h3 class="px">${mode==='camp'?'Camp':ZP[biome[mode]].name}</h3><span class="chip" id="capt"></span></div>`;
 function explorer(){
@@ -1075,7 +1081,7 @@ GZF.forEach((f,i)=>gw(.3,'ur',{k:'feat',i}));
 GZW=GZE.reduce((a,e)=>a+e.w,0);
 }
 const ITN=k=>CANDY[k]?CANDY[k].n:CAPS[k]?CAPS[k].n:HELD[k]?HELD[k].n:(VIT.find(x=>x[0]===k)||[])[1]||(Object.entries(STONE).find(([n,v])=>v===k)||[k])[0];
-const ITI=k=>ITEMICO[k]?'x-'+ITEMICO[k]:(Object.entries(STONE).find(([n,v])=>v===k)?'x-'+({'Pierre Feu':'fire-stone','Pierre Eau':'water-stone','Pierre Foudre':'thunder-stone','Pierre Feuille':'leaf-stone','Pierre Lune':'moon-stone'}[Object.entries(STONE).find(([n,v])=>v===k)[0]]||'moon-stone'):CANDY[k]?'candy':CAPS[k]?CAPS[k].ic:HELD[k]?HELD[k].ic:(VIT.find(x=>x[0]===k)||[])[2]||'diamond');
+const ITI=k=>ITEMICO[k]?'x-'+ITEMICO[k]:(()=>{const st=Object.entries(STONE).find(([n,v])=>v===k);return st?'x-'+({'Pierre Feu':'Fire Stone','Pierre Eau':'Water Stone','Pierre Foudre':'Thunder Stone','Pierre Feuille':'Leaf Stone','Pierre Lune':'Moon Stone'}[st[0]]||'Moon Stone'):CANDY[k]?'candy':CAPS[k]?CAPS[k].ic:HELD[k]?HELD[k].ic:(VIT.find(x=>x[0]===k)||[])[2]||'diamond'})();
 const gzPick=()=>{gzInit();let r=Math.random()*GZW;for(const e of GZE){r-=e.w;if(r<=0)return e}return GZE[0]};
 const LEGS=[144,145,146,150,151];
 function gzDo(e){
