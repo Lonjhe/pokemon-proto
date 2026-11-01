@@ -610,6 +610,13 @@ input{flex:1;min-width:140px}
 .cb-big{min-height:150px;justify-content:center}.cb-big img{width:72px!important;height:72px!important;object-fit:contain;image-rendering:auto!important}
 .cb-tiles{align-items:stretch}.cb-big{box-sizing:border-box;height:100%}.cb-big.cbb img{transform:scale(1.22)}.hm-tiles .cb-big.cbb img{transform:scale(1.2)}
 .hm-ch .cb img{width:100%;height:100%;object-fit:contain;image-rendering:auto;display:block}
+*{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}input,textarea,select{-webkit-user-select:text;user-select:text}
+/* icônes plus grandes + fond coloré (boutique, sac, pêche) */
+.li .ico{width:54px;height:54px;border:3px solid #1a1030;box-shadow:inset 0 0 0 2px #ffffff26,0 3px 0 #1a1030;background:linear-gradient(160deg,#ff8a3a,#a8431c)}
+.li:nth-child(3n+2) .ico{background:linear-gradient(160deg,#7e57c2,#2d1566)}.li:nth-child(3n) .ico{background:linear-gradient(160deg,#3fa8dc,#1b4f7a)}
+.li .ico .gi{height:42px;width:auto;max-width:46px;image-rendering:auto}.li .ico img:not(.gi){width:42px;height:42px;object-fit:contain}
+.li.dim .ico,.li.off .ico{filter:saturate(.45) brightness(.8)}
+.fplate i.ti,.fplate .gi{height:46px;width:auto}
 
 body{margin:0;background:var(--bg);color:var(--t);font-family:Nunito,sans-serif}
 .wrap{max-width:1180px;margin:0 auto;padding:12px}

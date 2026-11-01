@@ -614,6 +614,13 @@ input{flex:1;min-width:140px}
 .cb-big{min-height:150px;justify-content:center}.cb-big img{width:72px!important;height:72px!important;object-fit:contain;image-rendering:auto!important}
 .cb-tiles{align-items:stretch}.cb-big{box-sizing:border-box;height:100%}.cb-big.cbb img{transform:scale(1.22)}.hm-tiles .cb-big.cbb img{transform:scale(1.2)}
 .hm-ch .cb img{width:100%;height:100%;object-fit:contain;image-rendering:auto;display:block}
+*{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}input,textarea,select{-webkit-user-select:text;user-select:text}
+/* icônes plus grandes + fond coloré (boutique, sac, pêche) */
+.li .ico{width:54px;height:54px;border:3px solid #1a1030;box-shadow:inset 0 0 0 2px #ffffff26,0 3px 0 #1a1030;background:linear-gradient(160deg,#ff8a3a,#a8431c)}
+.li:nth-child(3n+2) .ico{background:linear-gradient(160deg,#7e57c2,#2d1566)}.li:nth-child(3n) .ico{background:linear-gradient(160deg,#3fa8dc,#1b4f7a)}
+.li .ico .gi{height:42px;width:auto;max-width:46px;image-rendering:auto}.li .ico img:not(.gi){width:42px;height:42px;object-fit:contain}
+.li.dim .ico,.li.off .ico{filter:saturate(.45) brightness(.8)}
+.fplate i.ti,.fplate .gi{height:46px;width:auto}
 </style>
 </head>
 <body>
@@ -722,6 +729,7 @@ function pxi(n){
  else if(n==='chest'){r(1,3,14,5,k);r(2,4,12,3,'#c98a3a');r(2,4,12,1,'#e8b060');r(1,8,14,7,k);r(2,8,12,6,'#a8682a');r(2,8,12,1,'#7a4a1a');r(1,7,14,2,k);r(2,7,12,1,'#ffcb05');r(6,6,4,4,k);r(7,7,2,2,'#ffcb05');r(3,9,1,5,'#7a4a1a');r(12,9,1,5,'#7a4a1a');r(2,11,12,1,'#7a4a1a')}
  else if(n==='coin'){r(4,1,8,14,k);r(1,4,14,8,k);r(2,2,12,12,k);r(3,3,10,10,'#ffcb05');r(3,3,10,1,'#fff3b0');r(6,5,1,6,k);r(6,5,3,1,k);r(8,6,1,2,k);r(6,8,3,1,k);r(5,9,3,1,k)}
  else if(n==='candle'){r(6,6,4,9,k);r(7,6,2,8,'#f4ecd0');r(7,6,2,1,'#fff');r(5,14,6,2,k);r(6,14,4,1,'#8a7a5a');r(7,3,2,3,k);r(7,4,2,2,'#ff8a1f');r(7,3,1,2,'#ffd24a')}
+ else if(n==='boot'){r(4,2,6,9,k);r(5,2,4,8,'#8a5a2a');r(5,2,4,2,'#a8703a');r(4,10,11,5,k);r(5,10,9,4,'#6a4220');r(5,10,9,1,'#8a5a2a');r(13,12,2,2,'#4a2c14');r(6,4,2,1,'#c9a06a');r(6,6,2,1,'#c9a06a')}
  else if(n==='compass'){r(2,2,12,12,k);r(3,3,10,10,'#3fa8dc');r(4,4,8,8,'#f4f4ff');r(7,4,2,4,'#e03a3a');r(7,8,2,4,'#3a4a80');r(7,7,2,2,k)}
  PXI[n]=c.toDataURL();return PXI[n];
 }
@@ -739,8 +747,8 @@ PUNCH:UB+'0/0f/Bag_Punching_Glove_SV_Sprite.png',ARMOR:UB+'1/19/Bag_Malicious_Ar
 LIGHTBALL:UB+'5/56/Bag_Light_Ball_SV_Sprite.png',RAZZ:UB+'d/d4/Bag_Razz_Berry_SV_Sprite.png',SILVER:UB+'9/94/Bag_Silver_Powder_SV_Sprite.png',HONEY:UB+'2/22/Bag_Honey_SV_Sprite.png',RED:'https://play.pokemonshowdown.com/sprites/trainers/red.png'};
 const BBU=n=>SPEC[n]||(BBP[n]?UB+BBP[n]+'/Bag_'+n.replace(/ /g,'_').replace(/é/g,'%C3%A9')+'_SV_Sprite.png':null);
 const xn=n=>'x-'+n.replace(/ /g,'_');
-const ICOMAP={'map-2':'px:center',compass:'bb:Adventure Guide',backpack:'bb:BAG','menu-2':'bb:ROTOM',swords:'bb:Choice Band','attack-x':'bb:X Attack',run:'bb:Escape Rope',pokeball:'bb:Poké Ball','circle-dot':'bb:Poké Ball',egg:'bb:EGG',gift:'bb:DICE',rod1:'bb:ROD1',rod2:'bb:ROD2',rod3:'bb:ROD3','shopping-bag':'bb:Potion',trophy:'bb:PUNCH',skull:'bb:MASK',ghost:'bb:ARMOR',users:'bb:Poké Doll','list-check':'bb:Star Piece',coin:'bb:DOLLAR',diamond:'bb:Prism Scale',candy:'bb:Rare Candy',flask:'bb:Potion',tent:'bb:Protein',fish:'bb:Oval Charm',box:'px:chest',star:'bb:Star Piece','star-filled':'bb:Star Piece',package:'bb:Potion',book:'bb:Adventure Guide','map-pin':'bb:Adventure Guide','test-pipe':'bb:Potion'};
-const ITEMICO={leaf:'Leaf Stone',ver:'WEEDLE',leurre:'LIGHTBALL',pfeu:'Fire Stone',peau:'Water Stone',pfoudre:'Thunder Stone',plune:'Moon Stone',pfeuille:'Leaf Stone',bonbon:'Rare Candy',bonbonm:'Exp. Candy M',bonbonxl:'Exp. Candy XL',restes:'Leftovers',orbe:'Life Orb',sitrus:'Sitrus Berry',ceinture:'Focus Sash',vit0:'HP Up',vit1:'Protein',vit2:'Iron',vit3:'Calcium',vit4:'Zinc',vit5:'Carbos',capargent:'Bottle Cap',capor:'Gold Bottle Cap',capoeuf:'Ability Capsule',captal:'Ability Capsule',baie:'RAZZ',dodo:'SILVER',appat:'HONEY'};
+const ICOMAP={'boot-item':'px:boot','map-2':'px:center',compass:'bb:Adventure Guide',backpack:'bb:BAG','menu-2':'bb:ROTOM',swords:'bb:Choice Band','attack-x':'bb:X Attack',run:'bb:Escape Rope',pokeball:'bb:Poké Ball','circle-dot':'bb:Poké Ball',egg:'bb:EGG',gift:'bb:DICE',rod1:'bb:ROD1',rod2:'bb:ROD2',rod3:'bb:ROD3','shopping-bag':'bb:Potion',trophy:'bb:PUNCH',skull:'bb:MASK',ghost:'bb:ARMOR',users:'bb:Poké Doll','list-check':'bb:Star Piece',coin:'bb:DOLLAR',diamond:'bb:Prism Scale',candy:'bb:Rare Candy',flask:'bb:Potion',tent:'bb:Protein',fish:'bb:ROD2',box:'px:chest',star:'bb:Star Piece','star-filled':'bb:Star Piece',package:'bb:Potion',book:'bb:Adventure Guide','map-pin':'bb:Adventure Guide','test-pipe':'bb:Potion'};
+const ITEMICO={botte:'px:boot',leaf:'Leaf Stone',ver:'WEEDLE',leurre:'LIGHTBALL',pfeu:'Fire Stone',peau:'Water Stone',pfoudre:'Thunder Stone',plune:'Moon Stone',pfeuille:'Leaf Stone',bonbon:'Rare Candy',bonbonm:'Exp. Candy M',bonbonxl:'Exp. Candy XL',restes:'Leftovers',orbe:'Life Orb',sitrus:'Sitrus Berry',ceinture:'Focus Sash',vit0:'HP Up',vit1:'Protein',vit2:'Iron',vit3:'Calcium',vit4:'Zinc',vit5:'Carbos',capargent:'Bottle Cap',capor:'Gold Bottle Cap',capoeuf:'Ability Capsule',captal:'Ability Capsule',baie:'RAZZ',dodo:'SILVER',appat:'HONEY'};
 function gameIcons(root){
  (root.querySelectorAll?root.querySelectorAll('i.ti'):[]).forEach(i=>{
   const c=[...i.classList].find(x=>x.startsWith('ti-')&&x!=='ti');if(!c)return;const k=c.slice(3);let src=null;
@@ -2770,7 +2778,7 @@ const BAIT={ver:{n:'Ver',d:'Les Pokémon mordent plus vite',ic:'bug'},leurre:{n:
 const rar=id=>{const t=fishTier(id);return[TIERN[t],['#66bb6a','#4dd0e1','#ff9800','#ef5350'][t]]};
 const TIERN=['Commun','Peu commun','Rare','Très rare'];
 let FS={ph:'idle',reel:false,dir:null};
-function fsStop(){clearTimeout(FS.to);clearTimeout(FS.to2);cancelAnimationFrame(FS.raf);cancelAnimationFrame(FS.lraf);FS={ph:'idle',reel:false,dir:null}}
+function fsStop(){FS.lo=FS.hi=null;clearTimeout(FS.to);clearTimeout(FS.to2);cancelAnimationFrame(FS.raf);cancelAnimationFrame(FS.lraf);FS={ph:'idle',reel:false,dir:null}}
 const fsMsg=t=>{const e=$('#fmsg');if(e)e.textContent=t};
 /* décor pixel : ciel, mer, plage au premier plan (même palette que les décors Showdown) */
 const FSP={river:{sky:['#9ad8c8','#c4ecd8'],w:['#5cc0a0','#46ae90','#3a9a82','#2e8672'],foam:'#d8f6e6',land:['#e8d79a','#d8c27c','#c4aa64']},
@@ -2815,7 +2823,7 @@ const fsPol=(a,r)=>[120+r*Math.cos(a*Math.PI/180),118-r*Math.sin(a*Math.PI/180)]
 const fsArc=(a0,a1,r)=>{const[x0,y0]=fsPol(a0,r),[x1,y1]=fsPol(a1,r);return `M${x0.toFixed(1)},${y0.toFixed(1)} A${r},${r} 0 0 1 ${x1.toFixed(1)},${y1.toFixed(1)}`};
 const fsAng=t=>125-70*t;
 function fsGauge(kind){
- const g=(a,b)=>fsArc(fsAng(a),fsAng(b),104),rod=(rodLv()||1),lo=.36-.015*rod,hi=.66+.015*rod;
+ const g=(a,b)=>fsArc(fsAng(a),fsAng(b),104),rod=(rodLv()||1),lo=FS.lo!=null?FS.lo:.36-.015*rod,hi=FS.hi!=null?FS.hi:.66+.015*rod;
  const mid=kind==='power'?`<path d="${g(.72,.93)}" class="gs"/><path d="${g(.93,1)}" class="gd"/>`:`<path d="${g(lo,hi)}" class="gs"/><path d="${g(.9,1)}" class="gd"/>`;
  return `<svg class="fgauge" viewBox="0 0 240 70"><path d="${g(-.02,1.02)}" class="gb"/>${mid}<circle id="fnd" r="9" cx="0" cy="0"/></svg>`;
 }
@@ -2823,7 +2831,7 @@ function fsUI(){
  const u=$('#fui');if(!u)return;const ph=FS.ph,reel=ph==='reel',chg=ph==='charge';
  let plate,att='';
  if(ph==='idle'||chg){att='id="fcharge"';plate=chg?'<i class="ti ti-arrow-big-up-lines"></i><small>Relâche !</small>':'<i class="ti ti-fish"></i><small>Maintiens</small>'}
- else if(ph==='cast'||ph==='wait'){att='data-act="ffer"';plate='<i class="ti ti-hourglass"></i><small>Patiente</small>'}
+ else if(ph==='cast'||ph==='wait'){att='';plate='<i class="ti ti-hourglass"></i><small>Patiente</small>'}
  else if(ph==='bite'){att='data-act="ffer"';plate='<b class="bang">!</b><small>FERRER</small>'}
  else plate='<b id="fdt">0.0</b><small>m</small>';
  u.innerHTML=`${reel?fsGauge('tens'):chg?fsGauge('power'):''}
@@ -2881,15 +2889,14 @@ function fsPick(){
 }
 const FS_WIN=[0,450,540,640];
 function fsBite(){
- if(FS.ph!=='wait')return;FS.ph='bite';FS.pick=fsPick();$('#fb').classList.add('dip');fsUI();fsMsg('Ça mord ! Ferre !');try{navigator.vibrate&&navigator.vibrate([30,40,30])}catch(e){}
+ if(FS.ph!=='wait')return;FS.ph='bite';FS.pick=fsPick();FS.boot=Math.random()<.07;$('#fb').classList.add('dip');fsUI();fsMsg('Ça mord ! Ferre !');try{navigator.vibrate&&navigator.vibrate([30,40,30])}catch(e){}
  FS.to=setTimeout(()=>{if(FS.ph!=='bite')return;fsFail('Trop tard… le Pokémon s\'est enfui.')},Math.max(300,FS_WIN[(rodLv()||1)]-45*fishTier(FS.pick)));
 }
 function fsFail(t){const b=$('#fb');cancelAnimationFrame(FS.lraf);clearTimeout(FS.to);clearTimeout(FS.to2);cancelAnimationFrame(FS.raf);FS.ph='idle';FS.reel=false;FS.dir=null;if(b){b.style.display='none';b.className='fb'}fsUI();fsMsg(t);const p=$('#flp');if(p)p.setAttribute('d','')}
 function fsStrike(){
- if(FS.ph==='wait'||FS.ph==='cast'){fsFail('Trop tôt ! Tu as fait fuir le Pokémon.');return}
  if(FS.ph!=='bite')return;
  clearTimeout(FS.to);const id=FS.pick,tx=FS.tx,ty=FS.ty;
- const T=fishTier(id);Object.assign(FS,{ph:'reel',id,tier:T,t:.3,d0:[4,6,8.5,11][T],dist:[4,6,8.5,11][T]*.85,pull:{ph:'none'},pt:1.2,last:0,reel:false,dir:null,tx,ty});
+ const T=FS.boot?0:fishTier(id);{const rod=(rodLv()||1),half=(.15+.015*rod)*(1-.14*T);FS.lo=.51-half;FS.hi=.51+half}Object.assign(FS,{ph:'reel',id,tier:T,t:.3,d0:[4,6,8.5,11][T],dist:[4,6,8.5,11][T]*.85,pull:{ph:'none'},pt:1.2,last:0,reel:false,dir:null,tx,ty});
  {const bb=$('#fb');bb.classList.remove('dip','float');bb.classList.add('rl');bb.style.transition='none';FS.bx=parseFloat(bb.style.left)||FS.tx;FS.by=parseFloat(bb.style.top)||FS.ty}
  fsUI();fsMsg(['Une petite prise…','Ça tire !','Il a l\'air costaud !','Une énorme prise ! Accroche-toi !'][T]+' Tapote le cadran pour garder la tension dans le vert.');
  FS.raf=requestAnimationFrame(fsReel);
@@ -2900,7 +2907,7 @@ function fsReel(ts){
  if(P.ph==='none'){FS.pt-=dt;if(FS.pt<=0)FS.pull={ph:'warn',d:['L','R','U','D'][Math.floor(Math.random()*4)],t:.5-.05*T}}
  else if(P.ph==='warn'){P.t-=dt;if(P.t<=0){FS.pull={ph:'pull',d:P.d,t:.9+Math.random()*.7};fsMsg('Il tire ! Maintiens la flèche indiquée.')}}
  else{P.t-=dt;if(P.t<=0){FS.pull={ph:'none'};FS.pt=(1+Math.random()*1.2)*(2.2-.4*T)/1.4;fsMsg('Il se calme, remonte !')}}
- const pulling=FS.pull.ph==='pull',counter=pulling&&FS.dir===FS.pull.d,lo=.36-.015*rod,hi=.66+.015*rod,inZ=FS.t>=lo&&FS.t<=hi,str=[.45,.55,.68,.82][T];
+ const pulling=FS.pull.ph==='pull',counter=pulling&&FS.dir===FS.pull.d,lo=FS.lo,hi=FS.hi,inZ=FS.t>=lo&&FS.t<=hi,str=[.45,.55,.68,.82][T];
  if(FS.reel){FS.t+=.95*dt;FS.dist-=(inZ?1.9+.15*rod:FS.t<lo?.5:.9)*dt*(pulling&&!counter?.3:1)}else{FS.t-=1.0*dt;FS.dist+=.1*dt}
  if(pulling){if(counter)FS.t-=.35*dt;else{FS.t+=str*dt;FS.dist+=.55*dt}}
  FS.t=Math.max(0,FS.t);
@@ -2913,7 +2920,7 @@ function fsReel(ts){
  if(b){const off={L:[-9,0],R:[9,0],U:[0,-5],D:[0,5]}[FS.pull.d]||[0,0],k=pulling?1:FS.pull.ph==='warn'?.4:0,sw=Math.sin(ts/420)*(5+T*1.5)+Math.sin(ts/170)*1.2;
   let bx=FS.tx-prog*(FS.tx-52)+off[0]*k+sw,by=FS.ty+prog*(55-FS.ty)+off[1]*k+Math.sin(ts/260)*.8;
   bx=Math.max(22,Math.min(92,bx));by=Math.max(24,Math.min(60,by));FS.bx=FS.bx==null?bx:FS.bx+(bx-FS.bx)*Math.min(1,dt*7);FS.by=FS.by==null?by:FS.by+(by-FS.by)*Math.min(1,dt*7);b.style.left=FS.bx.toFixed(2)+'%';b.style.top=FS.by.toFixed(2)+'%'}
- if(FS.t>=1){fsFail('La ligne a cassé ! Le Pokémon s\'échappe…');return}
+ if(FS.t>=1||(!FS.boot&&Math.random()<(.02+.02*T)*dt)){fsFail('La ligne a cassé ! Le Pokémon s\'échappe…');return}
  if(FS.dist>=FS.d0+2.5){fsFail('Le Pokémon est reparti au large…');return}
  if(FS.dist<=0){fsHooked();return}
  FS.raf=requestAnimationFrame(fsReel);
@@ -2923,10 +2930,13 @@ function fsHooked(){
  const a=$('#fa'),b=$('#fb');if(!a||!b){fsFinish(id);return}
  const br=b.getBoundingClientRect(),ar=a.getBoundingClientRect(),x=(br.left+br.width/2-ar.left)/ar.width*100,y=(br.top+br.height/2-ar.top)/ar.height*100;
  const rip=$('#frip');rip.style.left=x+'%';rip.style.top=y+'%';rip.classList.remove('go');void rip.offsetWidth;rip.classList.add('go');
- const j=document.createElement('img');j.className='fjump';j.src=SP(id);j.referrerPolicy='no-referrer';j.style.left=x+'%';j.style.top=y+'%';j.onload=()=>{const k=Math.max(2,Math.round(120/Math.max(j.naturalWidth,j.naturalHeight)));j.style.width=j.naturalWidth*k+'px'};a.appendChild(j);
- b.classList.add('pop');fsMsg(`Un ${BY[id][1]} saute hors de l'eau !`);
+ const j=document.createElement('img');j.className='fjump';j.src=FS.boot?pxi('boot'):SP(id);j.referrerPolicy='no-referrer';j.style.left=x+'%';j.style.top=y+'%';j.onload=()=>{const k=Math.max(2,Math.round(120/Math.max(j.naturalWidth,j.naturalHeight)));j.style.width=j.naturalWidth*k+'px'};if(FS.boot){j.style.width='96px';j.style.imageRendering='pixelated'};a.appendChild(j);
+ b.classList.add('pop');fsMsg(FS.boot?'Quelque chose de lourd remonte…':`Un ${BY[id][1]} saute hors de l'eau !`);
  setTimeout(()=>{const f=document.createElement('div');f.className='ftrn';f.innerHTML='<i class="fl"></i>'+Array.from({length:8},(_,k)=>`<i class="br ${k%2?'r':'l'}" style="top:${k*12.5}%;animation-delay:${(.25+k*.04).toFixed(2)}s"></i>`).join('');a.appendChild(f)},600);
- setTimeout(()=>fsFinish(id),1300);
+ setTimeout(()=>FS.boot?fsBoot():fsFinish(id),1300);
+}
+function fsBoot(){
+ const it=itm();it.botte=(it.botte||0)+1;save();FS.boot=false;document.querySelectorAll('#fa .fjump,#fa .ftrn').forEach(e=>e.remove());const b=$('#fb');if(b){b.style.display='none';b.className='fb'}const p=$('#flp');if(p)p.setAttribute('d','');FS.ph='idle';fsUI();fsMsg('Une Vieille Botte ! Pas de Pokémon cette fois… (×'+it.botte+' dans le Sac)');
 }
 function fsFinish(id){FS.ph='idle';newEnc();E.id=id;E.msg=`Un ${BY[id][1]} sauvage est remonté ! (${TIERN[fishTier(id)]})`;if(!S.dex[id])S.dex[id]='s';save();render()}
 const fsPtr=new Map();
@@ -2946,7 +2956,7 @@ function sac(){
  const rods=[1,2,3].map(lv=>{const own=o>=lv,on=own&&eq===lv;return `<div class="li pick ${on?'sel':''} ${own?'':'dim'}" ${own?`data-act="eq" data-k="rod" data-v="${lv}"`:''}><div class="ico"><i class="ti ti-rod${lv}"></i></div><div class="grow"><b>${ROD[lv].n}</b><div style="color:var(--m);font-size:12px">${own?(on?'Équipée':'Toucher pour équiper'):'À acheter à la boutique'}</div></div>${on?'<i class="ti ti-check" style="color:var(--g);font-size:20px"></i>':''}</div>`}).join('');
  const bl=[['none','Aucun appât','Pêche normale',null],...Object.entries(BAIT).map(([k,b])=>[k,b.n,b.d,it[k]||0])].map(([k,n,d,c])=>{const own=c===null||c>0,on=bait===k||(k==='none'&&(bait==='none'||!(it[bait]>0)));return `<div class="li pick ${on?'sel':''} ${own?'':'dim'}" ${own?`data-act="eq" data-k="bait" data-v="${k}"`:''}><div class="ico"><i class="ti ti-${k==='none'?'ban':BAIT[k].ic}"></i></div><div class="grow"><b>${n}</b><div style="color:var(--m);font-size:12px">${d}</div></div>${c===null?'':`<span class="chip">×${c}</span>`}${on?'<i class="ti ti-check" style="color:var(--g);font-size:20px"></i>':''}</div>`}).join('');
  const balls=Object.entries(BALLS).map(([k,b])=>`<div class="li"><div class="ico"><img src="${BI(k)}" width="30" height="30" alt=""></div><div class="grow"><b>${b.n}</b></div><span class="chip">×${S.balls[k]||0}</span></div>`).join('');
- const objs=[['baie','Baie',xn(ITEMICO.baie)],['dodo','Dodo',xn(ITEMICO.dodo)],['appat','Appât',xn(ITEMICO.appat)],...Object.entries(CANDY).map(([k,c])=>[k,c.n,xn(ITEMICO[k])]),...Object.entries(CAPS).map(([k,c])=>[k,c.n,c.ic]),...VIT,...Object.entries(HELD).map(([k,h])=>[k,h.n,h.ic]),...Object.entries(STONE).map(([n,k])=>[k,n,xn(ITEMICO[k])])].map(([k,n,ic])=>`<div class="li"><div class="ico"><i class="ti ti-${ic}"></i></div><div class="grow"><b>${n}</b></div><span class="chip">×${it[k]||0}</span></div>`).join('');
+ const objs=[...(((it.botte||0)>0)?[['botte','Vieille Botte','boot-item']]:[]),['baie','Baie',xn(ITEMICO.baie)],['dodo','Dodo',xn(ITEMICO.dodo)],['appat','Appât',xn(ITEMICO.appat)],...Object.entries(CANDY).map(([k,c])=>[k,c.n,xn(ITEMICO[k])]),...Object.entries(CAPS).map(([k,c])=>[k,c.n,c.ic]),...VIT,...Object.entries(HELD).map(([k,h])=>[k,h.n,h.ic]),...Object.entries(STONE).map(([n,k])=>[k,n,xn(ITEMICO[k])])].map(([k,n,ic])=>`<div class="li"><div class="ico"><i class="ti ti-${ic}"></i></div><div class="grow"><b>${n}</b></div><span class="chip">×${it[k]||0}</span></div>`).join('');
  return `<div class="title"><h3 class="px">Sac</h3><a class="btn sm" data-go="boutique"><i class="ti ti-shopping-bag"></i>Boutique</a></div>
  <div class="cols eq"><div style="display:flex;flex-direction:column;gap:10px"><div class="panel"><h4 class="px">Canne équipée</h4><div class="list">${rods}</div></div><div class="panel"><h4 class="px">Appât équipé</h4><div class="list">${bl}</div></div></div>
  <div style="display:flex;flex-direction:column;gap:10px"><div class="panel"><h4 class="px">Balls</h4><div class="list">${balls}</div></div><div class="panel"><h4 class="px">Objets</h4><div class="list">${objs}</div></div></div></div>`;
