@@ -630,6 +630,12 @@ input{flex:1;min-width:140px}
 .fdial.cast .fplate,.fdial.wait .fplate,.fdial.bite .fplate{background:#9aa3b5!important;box-shadow:inset 0 -6px 0 #6c7487,0 4px 0 #0b1030!important;color:#0b1030!important;animation:none!important}
 .fdial.bite .fplate b,.fdial.bite .fplate small{color:#0b1030!important}
 .tabs a.go .gi{height:auto;width:42px;max-width:42px;vertical-align:0;filter:drop-shadow(0 2px 0 #0004)}
+.hud{z-index:70!important}.hud-coin{cursor:pointer}.hud .av,.hud .name,.hud .lv,.hud .bar{cursor:pointer}
+.pinfo{position:absolute;left:10px;top:calc(100% + 6px);z-index:30;width:min(310px,calc(100vw - 20px));background:var(--p);border:2px solid var(--b);box-shadow:0 6px 0 #0006;padding:10px;display:flex;flex-direction:column;gap:6px;font-size:12px}
+.pinfo .pih{display:flex;justify-content:space-between;align-items:center;font-size:14px}
+.pinfo .pir{display:flex;justify-content:space-between;gap:8px;border-top:1px solid var(--b);padding-top:5px}.pinfo .pir span{color:var(--m)}.pinfo .pir b{text-align:right}.pinfo small{color:var(--m);font-weight:600}
+.pl-sv{display:flex;align-items:center;gap:8px;margin-top:10px}.pl-sv small{display:block;color:var(--m)}
+.io-ov textarea{background:#080c26;color:var(--t);border:2px solid var(--b);padding:8px;user-select:text;-webkit-user-select:text;word-break:break-all}
 </style>
 </head>
 <body>
@@ -716,7 +722,7 @@ setInterval(capTick,1000);
 function shell(c){
  const rail=NAV.map(([k,i,l])=>`<a data-go="${k}" class="${k===route?'on':''}"><i class="ti ti-${i}"></i>${l}</a>`).join('');
  const TB=[['explorer','compass','Explorer'],['sac','backpack','Sac'],['hub','pkc','Accueil'],['combat','swords','Combat'],['plus','menu-2','Plus']],tabs=TB.map(([k,i,l])=>`<a data-go="${k}" class="${k===route||(k==='plus'&&!TB.some(t=>t[0]===route))?'on':''} ${k==='hub'?'go':''}"><i class="ti ti-${i}"></i>${k==='hub'?'':l}</a>`).join('');
- return `<div class="hud"><div class="av"><img src="${SPEC.RED}" alt="" referrerpolicy="no-referrer"></div><b class="name">${esc(S.name||"")}</b><span class="lv px">Niv.${S.lvl}</span><div class="bar"><i style="width:${Math.min(100,S.xp/need()*100)}%;background:var(--c)"></i></div><span class="chip"><i class="ti ti-coin" style="color:var(--y)"></i>${S.coins}</span><span class="chip" title="Gemmes" data-go="gacha"><i class="ti ti-diamond" style="color:#ff7ad9"></i>${gems()}</span><span class="chip opt" title="Poké Balls"><i class="ti ti-circle-dot" style="color:var(--r)"></i>${S.balls.poke}</span></div><div class="main"><nav class="rail">${rail}</nav><div class="content">${c}</div></div><nav class="tabs">${tabs}</nav>`;
+ return `<div class="hud"><div class="av" data-act="pinfo"><img src="${SPEC.RED}" alt="" referrerpolicy="no-referrer"></div><b class="name" data-act="pinfo">${esc(S.name||"")}</b><span class="lv px" data-act="pinfo">Niv.${S.lvl}</span><div class="bar" data-act="pinfo"><i style="width:${Math.min(100,S.xp/need()*100)}%;background:var(--c)"></i></div><span class="chip hud-coin" title="Boutique" data-go="boutique"><i class="ti ti-coin" style="color:var(--y)"></i>${S.coins}</span><span class="chip" title="Gemmes" data-go="gacha"><i class="ti ti-diamond" style="color:#ff7ad9"></i>${gems()}</span><span class="chip opt" title="Poké Balls"><i class="ti ti-circle-dot" style="color:var(--r)"></i>${S.balls.poke}</span>${PINFO?pinfoHTML():''}</div><div class="main"><nav class="rail">${rail}</nav><div class="content">${c}</div></div><nav class="tabs">${tabs}</nav>`;
 }
 function card(m,o={}){const s=BY[m.id],c=TC[s[2][0]]||'#8a8a7a';
  const img=o.anim?`<img class="pmi" src="${m.sh?SH(m.id):SP(m.id)}" referrerpolicy="no-referrer" alt="">`:`<img src="${m.sh?R+'shiny/'+m.id+'.png':SPS(m.id)}" referrerpolicy="no-referrer" alt="">`;
@@ -1535,6 +1541,7 @@ document.addEventListener('click',e=>{
  else if(a==='pickp'){P.tab='box';P.sort='lvl';go('pokemon')}
  else if(a==='partner'){S.partner=t.dataset.uid;P.flash='Nouveau partenaire d\'exploration !';save();render(true)}
  else if(a==='candy'){if(m)candy(m,t.dataset.k)}
+ else if(a==='sexp')saveIO('exp');else if(a==='simp')saveIO('imp');else if(a==='pinfo'){PINFO=!PINFO;render(true)}
  else if(a==='xpcandy'){const it=itm();if((it.bonbonxp||0)>0){it.bonbonxp--;const n=500;S.xp+=n;while(S.lvl<100&&S.xp>=need()){S.xp-=need();S.lvl++}save();render(true)}}
  else if(a==='cap'){if(m)useCap(m,t.dataset.k)}
  else if(a==='hold'){if(m)holdItem(m,t.dataset.k)}
@@ -2315,12 +2322,43 @@ function battleView(){
  const head=boss?`<div class="panel" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><b class="px" style="font-size:10px;color:var(--r)">BOSS DE MONDE</b><span class="chip">Tour ${B.turn}</span><span class="chip"><i class="ti ti-swords"></i>Dégâts : <b id="dealt">${fmtN(B.dealt)}</b></span></div>`:`<div class="title"><h3 class="px">${B.title}</h3></div>`;
  return `${head}${arena}<div class="dialog" id="bmsg">${B.msg}</div>${ctl}`;
 }
+let PINFO=false;
+function pinfoHTML(){
+ const d=dayS(),nb=((S.adv&&S.adv.badges)||[]).length,n=need(),left=Math.max(0,n-S.xp),it=itm(),rm=restOn()?Math.ceil((S.rest-Date.now())/6e4):0;
+ const row=(l,v)=>`<div class="pir"><span>${l}</span><b>${v}</b></div>`;
+ return `<div class="pinfo"><div class="pih"><b>${esc(S.name||'Dresseur')}</b><span class="lv px">Niv.${S.lvl}</span></div>
+ <div class="bar" style="height:11px"><i style="width:${Math.min(100,S.xp/n*100)}%;background:var(--c)"></i></div>
+ ${row('Expérience',fmtN(S.xp)+' / '+fmtN(n))}${row('Prochain niveau','encore '+fmtN(left)+' XP')}
+ ${row('Niveau max des Pokémon',capLv()+' <small>(joueur +2, +3 par badge)</small>')}${row('Badges',nb+' / 9')}
+ ${row('Bonus de repos',rm?'×1,5 · '+rm+' min':'inactif <small>(6 h d\'absence)</small>')}${row('Captures du jour',(d.wn||0)+' / 300 <small>(XP pleine)</small>')}
+ ${(it.bonbonxp||0)>0?row('Super Bonbon XP','×'+it.bonbonxp+' <small>(Sac)</small>'):''}</div>`}
+function saveCode(){return btoa(unescape(encodeURIComponent(JSON.stringify(S))))}
+function saveIO(mode){
+ let o=document.querySelector('.io-ov');if(o)o.remove();o=document.createElement('div');o.className='pick-ov io-ov';document.body.appendChild(o);
+ const code=mode==='exp'?saveCode():'';
+ o.innerHTML=mode==='exp'
+  ?`<div class="pick-c"><h4 class="px">Exporter la partie</h4><div class="svnote" style="margin:0">Copie ce code ou télécharge le fichier. Colle-le dans « Importer » sur un autre appareil.</div><textarea id="iot" rows="5" readonly style="width:100%;box-sizing:border-box;margin:8px 0;font-size:16px">${code}</textarea><div class="pbt"><a class="btn y" data-io="copy">Copier</a><a class="btn" data-io="dl">Télécharger</a><a class="btn" data-io="x">Fermer</a></div><div id="iom" class="svnote"></div></div>`
+  :`<div class="pick-c"><h4 class="px">Importer une partie</h4><div class="svnote" style="margin:0">Colle un code exporté ou choisis un fichier. <b>Ta partie actuelle sera remplacée.</b></div><textarea id="iot" rows="5" placeholder="Code de sauvegarde" style="width:100%;box-sizing:border-box;margin:8px 0;font-size:16px"></textarea><input type="file" id="iof" accept=".txt,.json,text/plain" style="width:100%;box-sizing:border-box"><div class="pbt"><a class="btn y" data-io="go">Importer</a><a class="btn" data-io="x">Annuler</a></div><div id="iom" class="svnote"></div></div>`;
+ const msg=t=>{const e=o.querySelector('#iom');if(e)e.textContent=t};let armed=false;
+ o.addEventListener('change',e=>{if(e.target.id==='iof'&&e.target.files[0]){const f=new FileReader();f.onload=()=>{o.querySelector('#iot').value=String(f.result).trim();msg('Fichier chargé.')};f.readAsText(e.target.files[0])}});
+ o.addEventListener('click',e=>{const t=e.target.closest('[data-io]');if(!t){if(e.target===o)o.remove();return}const a=t.dataset.io;
+  if(a==='x')o.remove();
+  else if(a==='copy'){const ta=o.querySelector('#iot');try{navigator.clipboard.writeText(ta.value).then(()=>msg('Code copié !'),()=>{ta.select();msg('Sélectionne et copie le code.')})}catch(er){ta.select();msg('Sélectionne et copie le code.')}}
+  else if(a==='dl'){try{const b=new Blob([code],{type:'text/plain'}),u=URL.createObjectURL(b),l=document.createElement('a');l.href=u;l.download='pokemon-sauvegarde-'+todayKey()+'.txt';document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),2000);msg('Fichier téléchargé.')}catch(er){msg('Téléchargement impossible : copie le code.')}}
+  else if(a==='go'){let txt=o.querySelector('#iot').value.trim().replace(/\s+/g,''),j;
+   try{j=JSON.parse(decodeURIComponent(escape(atob(txt))));if(!j||!Array.isArray(j.box)||typeof j.lvl!=='number')throw 0}catch(er){msg('Code invalide : rien n\'a été modifié.');armed=false;t.textContent='Importer';return}
+   if(!armed){armed=true;t.textContent='Confirmer le remplacement';msg(`Partie détectée : niveau ${j.lvl}, ${j.box.length} Pokémon. Appuie à nouveau pour remplacer.`);return}
+   try{localStorage.setItem(KEY,JSON.stringify(j));location.reload()}catch(er){msg('Import impossible sur ce navigateur.')}}
+ });
+}
+document.addEventListener('click',e=>{if(PINFO&&!(e.target.closest&&e.target.closest('.pinfo,[data-act=pinfo]'))){PINFO=false;const p=document.querySelector('.pinfo');if(p)p.remove()}},true);
 function plusView(){
  const d=dayS(),streak=(S.streak&&S.streak.n)||0,qd=DAY_QUESTS.filter(q=>d[q[0]]>=q[2]).length,cs=capState();
  const T=(go,img,lab,sub,bd)=>`<a class="pl-t" ${go.startsWith('act:')?`data-act="${go.slice(4)}"`:`data-go="${go}"`}><i class="ti ti-${img}"></i><b>${lab}</b><small>${sub}</small>${bd?`<span class="bd">${bd}</span>`:''}</a>`;
  return `<div class="title"><h3 class="px">Menu</h3><span class="chip" id="capt"></span></div>
  <div class="pl-g">${T('pokemon','pokeball','Pokémon','Boîte et fiches')}${T('elevage','egg','Élevage',eggsReady()?eggsReady()+' œuf(s) prêt(s)':'3 incubateurs',eggsReady())}${T('act:gocamp','tent','Camp EV',campN()+'/'+CAMP_MAX+' au camp')}${T('boutique','shopping-bag','Boutique','Objets et Balls')}${T('gacha','gift','Gacha',d.gacha?gems()+' gemmes':'1 tirage offert',d.gacha?'':1)}${T('ligue','trophy','Ligue','Aventure')}${T('boss','skull','Boss','Boss mondial')}${T('manoir','ghost','Halloween',hwSum())}${T('social','users','Social','Amis')}${T('quetes','list-check','Quêtes',qd+'/'+DAY_QUESTS.length+' du jour')}</div>
- <div class="panel hm-ch ${d.chest?'':'rdy'}"><div class="cb"><img src="${d.chest?'img/chestO.png':'img/chest.png'}" alt=""></div><div style="flex:1;min-width:0"><b>Coffre quotidien</b><small>Série ${streak} jour${streak>1?'s':''} · quêtes ${qd}/${DAY_QUESTS.length}</small></div><a class="btn y sm ${d.chest?'off':''}" data-act="chest">${d.chest?'Ouvert':'Ouvrir'}</a></div>`;
+ <div class="panel hm-ch ${d.chest?'':'rdy'}"><div class="cb"><img src="${d.chest?'img/chestO.png':'img/chest.png'}" alt=""></div><div style="flex:1;min-width:0"><b>Coffre quotidien</b><small>Série ${streak} jour${streak>1?'s':''} · quêtes ${qd}/${DAY_QUESTS.length}</small></div><a class="btn y sm ${d.chest?'off':''}" data-act="chest">${d.chest?'Ouvert':'Ouvrir'}</a></div>
+ <div class="panel pl-sv"><div style="flex:1;min-width:0"><b>Sauvegarde</b><small>Exporte ta partie pour la garder ou changer d'appareil.</small></div><a class="btn sm" data-act="sexp">Exporter</a><a class="btn sm" data-act="simp">Importer</a></div>`;
 }
 function teamEdit(){
  let o=document.querySelector('.te-ov');if(o)o.remove();o=document.createElement('div');o.className='pick-ov te-ov';document.body.appendChild(o);
