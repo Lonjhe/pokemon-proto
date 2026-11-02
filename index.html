@@ -621,6 +621,14 @@ input{flex:1;min-width:140px}
 .li .ico .gi{height:42px;width:auto;max-width:46px;image-rendering:auto}.li .ico img:not(.gi){width:42px;height:42px;object-fit:contain}
 .li.dim .ico,.li.off .ico{filter:saturate(.45) brightness(.8)}
 .fplate i.ti,.fplate .gi{height:46px;width:auto}
+.fmid{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%) scale(.8);z-index:8;max-width:84%;padding:10px 14px;background:#0b1030e6;border:3px solid #ffcb05;color:#fff;font:700 13px/1.35 'Press Start 2P',monospace;text-align:center;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;text-wrap:balance}
+.fmid.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.fexc{position:absolute;left:50%;top:42%;z-index:9;width:92px;height:92px;margin:-46px 0 0 -46px;border-radius:50%;background:#ef5350;border:5px solid #0b1030;box-shadow:inset 0 -8px 0 #a02222,0 6px 0 #0b1030;color:#fff;font:900 54px/84px 'Press Start 2P',monospace;text-align:center;cursor:pointer;touch-action:none;animation:fshake .09s infinite}
+.fexc[hidden]{display:none}
+@keyframes fshake{0%{transform:translate(-3px,2px) rotate(-4deg)}25%{transform:translate(3px,-2px) rotate(3deg)}50%{transform:translate(-2px,-3px) rotate(-3deg)}75%{transform:translate(2px,3px) rotate(4deg)}100%{transform:translate(-3px,2px) rotate(-4deg)}}
+.fdial.idle .fplate,.fdial.charge .fplate{background:#4fc3f7!important;box-shadow:inset 0 -6px 0 #1f86c4,0 4px 0 #0b1030!important}
+.fdial.cast .fplate,.fdial.wait .fplate,.fdial.bite .fplate{background:#9aa3b5!important;box-shadow:inset 0 -6px 0 #6c7487,0 4px 0 #0b1030!important;color:#0b1030!important;animation:none!important}
+.fdial.bite .fplate b,.fdial.bite .fplate small{color:#0b1030!important}
 </style>
 </head>
 <body>
@@ -2778,8 +2786,8 @@ const BAIT={ver:{n:'Ver',d:'Les Pokémon mordent plus vite',ic:'bug'},leurre:{n:
 const rar=id=>{const t=fishTier(id);return[TIERN[t],['#66bb6a','#4dd0e1','#ff9800','#ef5350'][t]]};
 const TIERN=['Commun','Peu commun','Rare','Très rare'];
 let FS={ph:'idle',reel:false,dir:null};
-function fsStop(){FS.lo=FS.hi=null;clearTimeout(FS.to);clearTimeout(FS.to2);cancelAnimationFrame(FS.raf);cancelAnimationFrame(FS.lraf);FS={ph:'idle',reel:false,dir:null,cd:FS.cd,cdi:FS.cdi}}
-const fsMsg=t=>{const e=$('#fmsg');if(e)e.textContent=t};
+function fsStop(){FS.lo=FS.hi=null;clearTimeout(FS.to);clearTimeout(FS.to2);cancelAnimationFrame(FS.raf);cancelAnimationFrame(FS.lraf);FS={ph:'idle',reel:false,dir:null,cd:FS.cd,cdi:FS.cdi,lk:FS.lk}}
+const fsMsg=t=>{const e=$('#fmid');if(!e)return;clearTimeout(FS.mt);if(!t){e.classList.remove('on');return}e.textContent=t;e.classList.remove('on');void e.offsetWidth;e.classList.add('on');FS.mt=setTimeout(()=>e.classList.remove('on'),2600)};
 /* décor pixel : ciel, mer, plage au premier plan (même palette que les décors Showdown) */
 const FSP={river:{sky:['#9ad8c8','#c4ecd8'],w:['#5cc0a0','#46ae90','#3a9a82','#2e8672'],foam:'#d8f6e6',land:['#e8d79a','#d8c27c','#c4aa64']},
  shore:{sky:['#7ec8f2','#d4eefb'],w:['#5cd0ea','#46bce0','#36a4d4','#2a8cc0'],foam:'#f4ffff',land:['#f6e8b0','#ecd68e','#dcc27a']},
@@ -2834,8 +2842,9 @@ function fsUI(){
  if(cdl>0){att='';plate=`<b id="fcd">${cdl}</b><small>Patiente…</small>`;if(!FS.cdi)FS.cdi=setInterval(()=>{const l=Math.ceil((FS.cd-Date.now())/1000);if(l<=0||!$('#fui')){clearInterval(FS.cdi);FS.cdi=0;if($('#fui')&&FS.ph==='idle'){fsUI();fsMsg('Tu peux relancer.')}return}const e=$('#fcd');if(e)e.textContent=l},250)}
  else if(ph==='idle'||chg){att='id="fcharge"';plate=chg?'<i class="ti ti-arrow-big-up-lines"></i><small>Relâche !</small>':'<i class="ti ti-fish"></i><small>Maintiens</small>'}
  else if(ph==='cast'||ph==='wait'){att='';plate='<i class="ti ti-hourglass"></i><small>Patiente</small>'}
- else if(ph==='bite'){att='data-act="ffer"';plate='<b class="bang">!</b><small>FERRER</small>'}
+ else if(ph==='bite'){att='data-act="ffer"';plate='<b>!</b><small>Ferre</small>'}
  else plate='<b id="fdt">0.0</b><small>m</small>';
+ {const bg=$('#fexc');if(bg)bg.hidden=ph!=='bite'}
  u.innerHTML=`${reel?fsGauge('tens'):chg?fsGauge('power'):''}
  <div class="fdial ${ph}" id="fdial"><svg class="fring" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" class="r0"/><circle id="fprg" cx="50" cy="50" r="45" class="r1" pathLength="100" stroke-dasharray="0 100"/></svg>
   <div class="fplate" ${reel?'id="fhold"':att}>${plate}</div>${[['U','up'],['D','down'],['L','left'],['R','right']].map(([d,n])=>`<i class="far ${d} ${reel?'':'dim'} ti ti-caret-${n}-filled" ${reel?`data-d="${d}"`:''}></i>`).join('')}</div>`;
@@ -2856,12 +2865,12 @@ function fishView(){
  <div id="frip" class="frip"></div>
  <div id="fb" class="fb" style="left:34%;top:46%;display:none;background:url(${BI('poke')}) center/contain no-repeat;border:0;border-radius:0;width:26px;height:26px;image-rendering:pixelated"></div>
  <div class="tag" style="left:10px;top:10px"><span class="px" style="font-size:10px">${Z.name}</span><div style="font-size:12px">${rodLv()?ROD[rodLv()].n:''} · Niv. ${Z.lv[0]}–${Z.lv[1]}</div></div>
- <div id="fui"></div></div>
- <div class="dialog" id="fmsg">Maintiens le cadran pour charger ton lancer, relâche au bon moment. Plus c'est loin, plus les Pokémon rares sont proches de la touche.</div>`;
+ <div id="fui"></div><div id="fmid" class="fmid"></div><div id="fexc" class="fexc" hidden>!</div></div>
+ `;
 }
 /* 1. charge de puissance */
 function fsCharge(){
- if(FS.ph!=='idle'||Date.now()<(FS.cd||0))return;fsStop();FS.ph='charge';FS.pw=0;FS.dirp=1;FS.last=0;fsUI();fsMsg('Relâche dans la zone dorée pour un lancer parfait.');
+ if(FS.ph!=='idle'||Date.now()<Math.max(FS.cd||0,FS.lk||0))return;fsStop();FS.ph='charge';FS.pw=0;FS.dirp=1;FS.last=0;fsUI();fsMsg('');
  const loop=ts=>{if(FS.ph!=='charge')return;const dt=Math.min(.05,FS.last?(ts-FS.last)/1000:.016);FS.last=ts;FS.pw+=FS.dirp*dt*1.15;if(FS.pw>=1){FS.pw=1;FS.dirp=-1}if(FS.pw<=0){FS.pw=0;FS.dirp=1}
   const nd=$('#fnd');if(nd){const[x,y]=fsPol(fsAng(FS.pw),104);nd.setAttribute('cx',x.toFixed(1));nd.setAttribute('cy',y.toFixed(1));nd.setAttribute('class',FS.pw>.93?'hot':FS.pw>.72?'ok':'')}
   FS.raf=requestAnimationFrame(loop)};FS.raf=requestAnimationFrame(loop);
@@ -2891,10 +2900,10 @@ function fsPick(){
 }
 const FS_WIN=[0,450,540,640];
 function fsBite(){
- if(FS.ph!=='wait')return;FS.ph='bite';FS.pick=fsPick();FS.boot=Math.random()<.07;$('#fb').classList.add('dip');fsUI();fsMsg('Ça mord ! Ferre !');try{navigator.vibrate&&navigator.vibrate([30,40,30])}catch(e){}
+ if(FS.ph!=='wait')return;FS.ph='bite';FS.pick=fsPick();FS.boot=Math.random()<.07;$('#fb').classList.add('dip');fsUI();fsMsg('');try{navigator.vibrate&&navigator.vibrate([30,40,30])}catch(e){}
  FS.to=setTimeout(()=>{if(FS.ph!=='bite')return;fsFail('Trop tard… le Pokémon s\'est enfui.')},Math.max(300,FS_WIN[(rodLv()||1)]-45*fishTier(FS.pick)));
 }
-function fsFail(t){const b=$('#fb');cancelAnimationFrame(FS.lraf);clearTimeout(FS.to);clearTimeout(FS.to2);cancelAnimationFrame(FS.raf);FS.ph='idle';FS.reel=false;FS.dir=null;if(b){b.style.display='none';b.className='fb'}fsUI();fsMsg(t);const p=$('#flp');if(p)p.setAttribute('d','')}
+function fsFail(t){const b=$('#fb');cancelAnimationFrame(FS.lraf);clearTimeout(FS.to);clearTimeout(FS.to2);cancelAnimationFrame(FS.raf);FS.ph='idle';FS.reel=false;FS.dir=null;if(b){b.style.display='none';b.className='fb'}FS.lk=Date.now()+900;fsUI();fsMsg(t);const p=$('#flp');if(p)p.setAttribute('d','')}
 function fsEarly(){if(FS.ph!=='cast'&&FS.ph!=='wait')return;FS.cd=Date.now()+10000;fsFail('Trop tôt ! Le Pokémon s\'est enfui. Attends 10 secondes.')}
 function fsStrike(){
  if(FS.ph!=='bite')return;
@@ -2938,13 +2947,13 @@ function fsHooked(){
  setTimeout(()=>{const f=document.createElement('div');f.className='ftrn';f.innerHTML='<i class="fl"></i>'+Array.from({length:8},(_,k)=>`<i class="br ${k%2?'r':'l'}" style="top:${k*12.5}%;animation-delay:${(.25+k*.04).toFixed(2)}s"></i>`).join('');a.appendChild(f)},600);
  setTimeout(()=>FS.boot?fsBoot():fsFinish(id),1300);
 }
-function fsBoot(){
+function fsBoot(){FS.lk=Date.now()+900;
  const it=itm();it.botte=(it.botte||0)+1;save();FS.boot=false;document.querySelectorAll('#fa .fjump,#fa .ftrn').forEach(e=>e.remove());const b=$('#fb');if(b){b.style.display='none';b.className='fb'}const p=$('#flp');if(p)p.setAttribute('d','');FS.ph='idle';fsUI();fsMsg('Une Vieille Botte ! Pas de Pokémon cette fois… (×'+it.botte+' dans le Sac)');
 }
-function fsFinish(id){FS.ph='idle';newEnc();E.id=id;E.msg=`Un ${BY[id][1]} sauvage est remonté ! (${TIERN[fishTier(id)]})`;if(!S.dex[id])S.dex[id]='s';save();render()}
+function fsFinish(id){FS.ph='idle';FS.lk=Date.now()+900;newEnc();E.id=id;E.msg=`Un ${BY[id][1]} sauvage est remonté ! (${TIERN[fishTier(id)]})`;if(!S.dex[id])S.dex[id]='s';save();render()}
 const fsPtr=new Map();
 function fsSync(){const v=[...fsPtr.values()];FS.reel=v.includes('X');FS.dir=v.filter(x=>x!=='X'&&x!=='C').pop()||null;document.querySelectorAll('#fhold').forEach(e=>e.classList.toggle('on',FS.reel));document.querySelectorAll('.far').forEach(e=>e.classList.toggle('on',FS.dir===e.dataset.d))}
-document.addEventListener('pointerdown',e=>{if((FS.ph==='cast'||FS.ph==='wait')&&e.target.closest&&e.target.closest('#fdial')){e.preventDefault();fsEarly();return}if(FS.ph==='bite'&&e.target.closest&&e.target.closest('#fdial')){e.preventDefault();fsStrike();return}const c=e.target.closest&&e.target.closest('#fcharge');if(c){e.preventDefault();if(FS.ph==='idle'){fsPtr.set(e.pointerId,'C');fsCharge()}return}
+document.addEventListener('pointerdown',e=>{if((FS.ph==='cast'||FS.ph==='wait')&&e.target.closest&&e.target.closest('#fdial')){e.preventDefault();fsEarly();return}if(FS.ph==='bite'&&e.target.closest&&e.target.closest('#fdial,#fexc')){e.preventDefault();fsStrike();return}const c=e.target.closest&&e.target.closest('#fcharge');if(c){e.preventDefault();if(FS.ph==='idle'){fsPtr.set(e.pointerId,'C');fsCharge()}return}
  const el=e.target.closest&&e.target.closest('#fhold,.far[data-d]');if(!el||FS.ph!=='reel')return;e.preventDefault();fsPtr.set(e.pointerId,el.id==='fhold'?'X':el.dataset.d);fsSync()});
 const fsUp=e=>{if(fsPtr.get(e.pointerId)==='C'){fsPtr.delete(e.pointerId);fsRelease();return}if(fsPtr.delete(e.pointerId))fsSync()};document.addEventListener('pointerup',fsUp);document.addEventListener('pointercancel',fsUp);
 const FSK={Space:'X',ArrowLeft:'L',ArrowRight:'R',ArrowUp:'U',ArrowDown:'D'};
