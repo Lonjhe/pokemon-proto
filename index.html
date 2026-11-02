@@ -687,6 +687,7 @@ const stats=id=>[['PV',30+(id*7)%60],['Att',35+(id*11)%60],['Déf',30+(id*13)%60
 const NAV=[['hub','map-2','Accueil'],['explorer','compass','Explorer'],['pokemon','pokeball','Pokémon'],['elevage','egg','Élevage'],['gacha','gift','Gacha'],['manoir','ghost','Halloween'],['sac','backpack','Sac'],['boutique','shopping-bag','Boutique'],['combat','swords','Combat'],['ligue','trophy','Ligue'],['boss','skull','Boss'],['social','users','Social'],['quetes','list-check','Quêtes'],['evenement','ghost','Événement']];
 const IMPL=['hub','explorer','pokemon'];
 const need=()=>S.lvl*60;
+const capLv=()=>Math.min(100,Math.max(5,S.lvl+2+3*(((S.adv&&S.adv.badges)||[]).length)));
 /* --- minuteur de capture : 10 essais max, +1 toutes les CAP_REGEN_MIN min, pleins à chaque nouveau jour --- */
 const nowMs=()=>Date.now()+(S.dayShift||0)*864e5;
 function capState(){
@@ -2227,6 +2228,7 @@ async function act(who,mv){
  if(A.st==='slp'){if(--A.sl>0){say(`${A.name} dort profondément…`);await sleep(900);return true}A.st=null;setSt(who);say(`${A.name} se réveille !`);await sleep(700)}
  if(A.st==='frz'){if(Math.random()<.25){A.st=null;setSt(who);say(`${A.name} n'est plus gelé !`);await sleep(700)}else{say(`${A.name} est gelé : il ne peut pas bouger !`);await sleep(900);return true}}
  if(A.st==='par'&&Math.random()<.25){say(`${A.name} est paralysé ! Il ne peut pas attaquer !`);await sleep(900);return true}
+ if(who==='me'&&A.lvl>capLv()&&Math.random()<.3){say(`${A.name} est trop fort pour toi : il refuse d'obéir !`);await sleep(1000);return true}
  say(`${who==='me'?'':'L\'ennemi '}${A.name} utilise ${mv.n} !`);await sleep(300);
  if(mv.acc&&Math.random()>mv.acc){say('Mais l\'attaque échoue !');await sleep(600);return true}
  try{await playFx(who,mv)}catch(e){}
@@ -2279,7 +2281,7 @@ function finish(win){
  B.over=true;B.busy=false;const lines=[];
  if(B.hw!=null)hwFinish(win,lines);
  else if(B.adv!=null)advFinish(win,lines);
- else if(B.mode==='duel'){const c=win?60+B.foe.lvl*5:10,x=win?30+B.foe.lvl*4:5;S.coins+=c;S.xp+=x;while(S.xp>=need()){S.xp-=need();S.lvl++}lines.push(`+${fmtN(c)} pièces · +${x} XP`);if(win){const up=S.box.filter(m=>m.team&&m.lvl<100&&m.lvl<B.foe.lvl+5);up.forEach(m=>{m.lvl=Math.min(100,m.lvl+(m.lvl<B.foe.lvl?2:1))});if(up.length)lines.push(`Niveau supérieur : ${up.map(m=>BY[m.id][1]+' → '+m.lvl).join(', ')}`)}}
+ else if(B.mode==='duel'){const c=win?60+B.foe.lvl*5:10,x=win?30+B.foe.lvl*4:5;S.coins+=c;S.xp+=x;while(S.xp>=need()){S.xp-=need();S.lvl++}lines.push(`+${fmtN(c)} pièces · +${x} XP`);if(win){const up=S.box.filter(m=>m.team&&m.lvl<capLv()&&m.lvl<B.foe.lvl+5);up.forEach(m=>{m.lvl=Math.min(capLv(),m.lvl+(m.lvl<B.foe.lvl?2:1))});if(up.length)lines.push(`Niveau supérieur : ${up.map(m=>BY[m.id][1]+' → '+m.lvl).join(', ')}`)}}
  else{const b=bossS(),c=Math.round(B.dealt/30);S.coins+=c;S.xp+=20;lines.push(`${fmtN(B.dealt)} dégâts infligés au boss`,`+${fmtN(c)} pièces`);
   if(bossStat().dead)lines.push('Le boss est vaincu ! Ouvre l\'onglet Boss pour le récap et tes lots.')}
  B.res={win,lines};say(win?'Victoire !':B.mode==='boss'?'Tentative terminée.':'Défaite...');save();LOBBY=null;render(true);
@@ -2452,7 +2454,7 @@ function advFinish(win,lines){
  const c=Math.round(s.reward*(first?1:.4)),x=Math.round((20+s.top*3)*(first?1:.4));S.coins+=c;S.xp+=x;while(S.xp>=need()){S.xp-=need();S.lvl++}lines.push(`+${fmtN(c)} pièces · +${x} XP`);
  if(!first)return;
  A.step=B.adv+1;
- const up=S.box.filter(m=>m.team&&m.lvl<s.top);up.forEach(m=>{m.lvl+=Math.min(3,Math.ceil((s.top-m.lvl)/5))});if(up.length)lines.push(`Équipe : niveaux +${Math.min(3,Math.ceil((s.top-up[0].lvl)/5))} environ (${up.length} Pokémon)`);
+ const up=S.box.filter(m=>m.team&&m.lvl<s.top&&m.lvl<capLv());up.forEach(m=>{m.lvl+=Math.min(3,Math.ceil((s.top-m.lvl)/5),capLv()-m.lvl)});if(up.length)lines.push(`Équipe : niveaux +${Math.min(3,Math.ceil((s.top-up[0].lvl)/5))} environ (${up.length} Pokémon)`);
  if(s.kind==='gym'){A.badges.push(s.badge);const it=itm();it.appat+=1;it.baie+=2;lines.push(`${s.badge} obtenu !`,'+2 Baies, +1 Appât');}
  if(s.kind==='champ')lines.push('Tu es Maître de la Ligue !');
  const nx=ADV[A.step];if(nx&&nx.zone!==s.zone)lines.push('Nouvelle zone : '+ZONES[nx.zone].name);
@@ -2605,7 +2607,7 @@ const EGGP=['Ultralaser','Séisme','Close Combat','Pouvoir Lunaire','Poing Ombre
 const eggMoves=m=>{const sd=hash('egg'+m.id),pick=[0,1,2].map(i=>EGGP[Math.floor(seeded(sd,i)*EGGP.length)]);return[...new Set(pick)].filter(n=>!m.moves.includes(n))};
 function evoOpts(m){return(EVO[m.id]||[]).map(([to,c])=>{const own=typeof c==='number'?m.lvl>=c:c==='Échange'?false:(itm()[STONE[c]]||0)>0;return{to,c,ok:own,why:typeof c==='number'?(own?'':`Niv. ${c} requis`):c==='Échange'?'Échange (bientôt)':own?'':`${c} requise`}})}
 function evolve(m,to){const o=evoOpts(m).find(x=>x.to===to);if(!o||!o.ok)return;if(typeof o.c==='string')itm()[STONE[o.c]]--;const from=BY[m.id][1];m.id=to;S.dex[to]='c';P.flash=`Félicitations ! ${from} évolue en ${BY[to][1]} !`;save();render(true)}
-function candy(m,k){const it=itm();if((it[k]||0)<1||m.lvl>=100)return;it[k]--;m.lvl=Math.min(100,m.lvl+CANDY[k].lv);P.flash=`${BY[m.id][1]} monte au niveau ${m.lvl} !`;save();render(true)}
+function candy(m,k){const it=itm();if((it[k]||0)<1)return;if(m.lvl>=capLv()){P.flash=`Niveau max atteint (${capLv()}) : monte de niveau ou gagne un badge.`;render(true);return}it[k]--;m.lvl=Math.min(capLv(),m.lvl+CANDY[k].lv);P.flash=`${BY[m.id][1]} monte au niveau ${m.lvl} !`;save();render(true)}
 function useCap(m,k){const it=itm();if((it[k]||0)<1)return;ensure(m);
  if(k==='capargent'){const i=m.iv.indexOf(Math.min(...m.iv));if(m.iv[i]>=31){P.flash='Tous les IV sont déjà au maximum.';render(true);return}m.iv[i]=31;P.flash=`IV ${SN[i]} porté à 31 !`}
  else if(k==='capor'){if(m.iv.every(v=>v===31)){P.flash='Tous les IV sont déjà au maximum.';render(true);return}m.iv=m.iv.map(()=>31);P.flash='Tous les IV sont au maximum !'}
@@ -2616,7 +2618,7 @@ function holdItem(m,k){const it=itm();if(m.held)it[m.held]=(it[m.held]||0)+1;if(
 function itemsTab(m){
  const it=itm(),sec=(t,b)=>`<div class="svit"><h5 class="px">${t}</h5>${b}</div>`;
  const evo=evoOpts(m),evh=evo.length?evo.map(o=>`<a class="btn sm ${o.ok?'y':'off'}" ${o.ok?`data-act="evolve" data-to="${o.to}" data-uid="${m.uid}"`:''}><i class="ti ti-sparkles"></i>${o.ok?`Évoluer en ${BY[o.to][1]}`:`${BY[o.to][1]} · ${o.why}`}</a>`).join(''):`<div class="svnote" style="margin:0">${EVP[m.id]?'Forme finale : ne peut plus évoluer.':'Ce Pokémon n\'évolue pas.'}</div>`;
- const cd=Object.entries(CANDY).map(([k,c])=>`<a class="btn sm ${(it[k]||0)>0&&m.lvl<100?'y':'off'}" ${(it[k]||0)>0&&m.lvl<100?`data-act="candy" data-k="${k}" data-uid="${m.uid}"`:''}><i class="ti ti-candy"></i>${c.n} +${c.lv} <small>×${it[k]||0}</small></a>`).join('');
+ const cd=Object.entries(CANDY).map(([k,c])=>`<a class="btn sm ${(it[k]||0)>0&&m.lvl<capLv()?'y':'off'}" ${(it[k]||0)>0&&m.lvl<capLv()?`data-act="candy" data-k="${k}" data-uid="${m.uid}"`:''}><i class="ti ti-candy"></i>${c.n} +${c.lv} <small>×${it[k]||0}</small></a>`).join('');
  const cp=Object.entries(CAPS).map(([k,c])=>`<a class="btn sm ${(it[k]||0)>0?'y':'off'}" title="${c.d}" ${(it[k]||0)>0?`data-act="cap" data-k="${k}" data-uid="${m.uid}"`:''}><i class="ti ti-${c.ic}"></i>${c.n} <small>×${it[k]||0}</small></a>`).join('');
  const hl=Object.entries(HELD).map(([k,h])=>`<div class="li pick ${m.held===k?'sel':''} ${(it[k]||0)>0||m.held===k?'':'dim'}" ${(it[k]||0)>0&&m.held!==k?`data-act="hold" data-k="${k}" data-uid="${m.uid}"`:''}><div class="ico"><i class="ti ti-${h.ic}"></i></div><div class="grow"><b>${h.n}</b><div style="color:var(--m);font-size:12px">${h.d}</div></div>${m.held===k?'<i class="ti ti-check" style="color:var(--g)"></i>':`<span class="chip">×${it[k]||0}</span>`}</div>`).join('');
  const vt=VIT.map(([k,n,ic],i)=>`<a class="btn sm ${(it[k]||0)>0?'y':'off'}" title="+10 EV ${SN[i]}" ${(it[k]||0)>0?`data-act="vit" data-k="${k}" data-uid="${m.uid}"`:''}><i class="ti ti-${ic}"></i>${n} <small>×${it[k]||0}</small></a>`).join('');
