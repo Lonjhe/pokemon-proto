@@ -677,7 +677,7 @@ const KEY='proto-pokemon-v1';const SHINY=1/10; /* test : à remettre à 1/64 */
 const fresh=()=>({coins:1200,xp:0,lvl:1,balls:{poke:20,super:4,hyper:1},next:1,box:[],dex:{}});
 function mk(id,lvl,sh=false){const s=BY[id];return{uid:Math.random().toString(36).slice(2,9),id,lvl,sh,fav:false,team:false}}
 let S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!S||!S.box)S=fresh();
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const save=()=>{try{S.seen=Date.now();localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
 let route=(location.hash||'#hub').slice(1),E=null,busy=false,P={tab:'box',q:'',type:'',sort:'lvl',sel:null,confirm:null},mode='herbe',biome={herbe:'meadow',peche:'river'},mapView=true,mapSel=null;
 const $=s=>document.querySelector(s);
 const ty=t=>`<span class="ty" style="background:${TC[t]||'#555'}">${t}</span>`;
@@ -687,7 +687,13 @@ const pick=a=>a[Math.floor(Math.random()*a.length)];
 const stats=id=>[['PV',30+(id*7)%60],['Att',35+(id*11)%60],['Déf',30+(id*13)%60],['Vit',30+(id*17)%65]];
 const NAV=[['hub','pkc','Accueil'],['explorer','compass','Explorer'],['pokemon','pokeball','Pokémon'],['elevage','egg','Élevage'],['gacha','gift','Gacha'],['manoir','ghost','Halloween'],['sac','backpack','Sac'],['boutique','shopping-bag','Boutique'],['combat','swords','Combat'],['ligue','trophy','Ligue'],['boss','skull','Boss'],['social','users','Social'],['quetes','list-check','Quêtes'],['evenement','ghost','Événement']];
 const IMPL=['hub','explorer','pokemon'];
-const need=()=>S.lvl*60;
+const need=()=>S.lvl*40+(S.lvl>20?2*S.lvl*S.lvl:0);
+const REST_AFTER=6*36e5,REST_LEN=2*36e5;
+const restOn=()=>(S.rest||0)>Date.now();
+const xpNote=()=>restOn()?' · repos ×1,5':'';
+function addXp(n,wild){let m=1;if(restOn())m*=1.5;if(wild){const d=dayS();d.wn=(d.wn||0)+1;if(d.wn>300)m*=.25}
+ n=Math.max(1,Math.round(n*m));S.xp+=n;while(S.lvl<100&&S.xp>=need()){S.xp-=need();S.lvl++}return n}
+function restCheck(from){const now=Date.now();if(from&&now-from>=REST_AFTER&&!restOn())S.rest=now+REST_LEN}
 const capLv=()=>Math.min(100,Math.max(5,S.lvl+2+3*(((S.adv&&S.adv.badges)||[]).length)));
 /* --- minuteur de capture : 10 essais max, +1 toutes les CAP_REGEN_MIN min, pleins à chaque nouveau jour --- */
 const nowMs=()=>Date.now()+(S.dayShift||0)*864e5;
@@ -797,7 +803,7 @@ function openChest(){
  const k=todayKey(),y=new Date(Date.now()+((S.dayShift||0)-1)*864e5),yk=y.getFullYear()+'-'+(y.getMonth()+1)+'-'+y.getDate();
  const stk=S.streak||(S.streak={last:'',n:0});stk.n=stk.last===yk?stk.n+1:1;stk.last=k;
  const coins=100+stk.n*20,sup=stk.n%5===0?5:0;S.coins+=coins;S.gems=gems()+10;S.balls.poke+=2;let egn='';if(stk.n%7===0){breed();S.eggs.push({k:'l',id:pickEgg('l')});egn='<div style="color:var(--y);margin-top:4px">Événement série de 7 jours : <b>Œuf légendaire</b> !</div>'}if(sup)S.balls.super=(S.balls.super||0)+sup;
- const qs=DAY_QUESTS.filter(q=>d[q[0]]>=q[2]);const qc=qs.reduce((a,q)=>a+q[3],0);S.coins+=qc;
+ const qs=DAY_QUESTS.filter(q=>d[q[0]]>=q[2]);const qc=qs.reduce((a,q)=>a+q[3],0);S.coins+=qc;egn+=`<div style="color:var(--y);margin-top:4px">+${addXp(100)} XP${xpNote()}</div>`;
  save();
  hmOverlay(`<h4 class="px" style="font-size:11px;color:var(--y)">Coffre ouvert</h4><i class="ti ti-box" style="font-size:64px;color:#ffd54f"></i><div style="font-weight:900;font-size:16px;margin-top:6px">+${coins} pièces · +2 Poké Balls${sup?' · +5 Super Balls':''}</div>${egn}${qc?`<div style="color:var(--y);margin-top:4px">Quêtes : +${qc} pièces</div>`:''}<div style="color:var(--m);margin-top:4px">Série : ${stk.n} jour${stk.n>1?'s':''}</div>`);
 }
@@ -1274,7 +1280,7 @@ function hwFinish(win,lines){
  const h=hwS(),r=h.rooms&&h.rooms[B.hw];if(!r)return;
  if(!win){lines.push('Défaite… La pièce reste hantée : reviens la défier (1 bougie).');h.msg='Tu as dû fuir la pièce.';return}
  r.done=true;
- if(r.t==='boss'){const n=40+h.floor*15;h.pk+=n;lines.push(`Gardien vaincu ! +${n} 🎃`,`Étage ${h.floor} terminé. L'étage suivant s'ouvre demain.`);h.floor++;h.lock=todayKey();h.rooms=null;h.key=false;h.msg=''}
+ if(r.t==='boss'){const n=40+h.floor*15;h.pk+=n;const xh=addXp(60+15*h.floor);lines.push(`Gardien vaincu ! +${n} 🎃 · +${xh} XP${xpNote()}`,`Étage ${h.floor} terminé. L'étage suivant s'ouvre demain.`);if(h.floor%5===0){const it=itm();it.bonbonxp=(it.bonbonxp||0)+1;lines.push('Étage '+h.floor+' : +1 Super Bonbon XP !')}h.floor++;h.lock=todayKey();h.rooms=null;h.key=false;h.msg=''}
  else{const n=r.t==='trainer'?12+h.floor*3:6+h.floor*2;h.pk+=n;lines.push(`+${n} 🎃 citrouilles`);h.msg=`Victoire ! +${n} 🎃`}
 }
 function hwInfo(k){
@@ -1414,8 +1420,7 @@ async function throwBall(){
  if(ok){
   b.classList.add('ok');try{if(fxInit()){const q=ctr(b,$('#arena'));sp({x:q.x,y:q.y,s0:20,s1:140,life:.5,col:'rgba(255,220,80,.95)'});rad(30,(x,y)=>sp({type:'star',x:q.x,y:q.y,vx:x*rnd(60,260),vy:y*rnd(60,260)-40,vr:rnd(-8,8),drag:1.3,s0:rnd(6,14),s1:0,life:rnd(.7,1.2),col:pick(['#ffe08a','#fff','#ffb3d9','#9be7ff'])}));ringAt(q,'rgba(255,220,80,.9)',0,120)}}catch(e){}
   const m=mk(E.id,E.lvl,E.sh);S.box.push(m);S.dex[E.id]='c';zcAdd(mode,biome[mode],E.id);dayS().cap++;friendAdd(3);
-  const gain=10+E.lvl+(E.sh?200:0);S.xp+=gain;S.coins+=5+Math.round(E.lvl/2);
-  while(S.xp>=need()){S.xp-=need();S.lvl++}
+  const gain=addXp((8+2*E.lvl)*(E.sh?3:1),true);S.coins+=5+Math.round(E.lvl/2);
   save();
   msg(`${E.sh?'Un shiny ! ':''}${s[1]} est attrapé ! +${gain} XP`);
   E.state='done';
@@ -1530,6 +1535,7 @@ document.addEventListener('click',e=>{
  else if(a==='pickp'){P.tab='box';P.sort='lvl';go('pokemon')}
  else if(a==='partner'){S.partner=t.dataset.uid;P.flash='Nouveau partenaire d\'exploration !';save();render(true)}
  else if(a==='candy'){if(m)candy(m,t.dataset.k)}
+ else if(a==='xpcandy'){const it=itm();if((it.bonbonxp||0)>0){it.bonbonxp--;const n=500;S.xp+=n;while(S.lvl<100&&S.xp>=need()){S.xp-=need();S.lvl++}save();render(true)}}
  else if(a==='cap'){if(m)useCap(m,t.dataset.k)}
  else if(a==='hold'){if(m)holdItem(m,t.dataset.k)}
  else if(a==='evolve'){if(m)evolve(m,+t.dataset.to)}
@@ -2282,8 +2288,8 @@ function finish(win){
  B.over=true;B.busy=false;const lines=[];
  if(B.hw!=null)hwFinish(win,lines);
  else if(B.adv!=null)advFinish(win,lines);
- else if(B.mode==='duel'){const c=win?60+B.foe.lvl*5:10,x=win?30+B.foe.lvl*4:5;S.coins+=c;S.xp+=x;while(S.xp>=need()){S.xp-=need();S.lvl++}lines.push(`+${fmtN(c)} pièces · +${x} XP`);if(win){const up=S.box.filter(m=>m.team&&m.lvl<capLv()&&m.lvl<B.foe.lvl+5);up.forEach(m=>{m.lvl=Math.min(capLv(),m.lvl+(m.lvl<B.foe.lvl?2:1))});if(up.length)lines.push(`Niveau supérieur : ${up.map(m=>BY[m.id][1]+' → '+m.lvl).join(', ')}`)}}
- else{const b=bossS(),c=Math.round(B.dealt/30);S.coins+=c;S.xp+=20;lines.push(`${fmtN(B.dealt)} dégâts infligés au boss`,`+${fmtN(c)} pièces`);
+ else if(B.mode==='duel'){const c=win?60+B.foe.lvl*5:10,x=addXp(win?40+B.foe.lvl*3:5);S.coins+=c;lines.push(`+${fmtN(c)} pièces · +${x} XP${xpNote()}`);if(win){const up=S.box.filter(m=>m.team&&m.lvl<capLv()&&m.lvl<B.foe.lvl+5);up.forEach(m=>{m.lvl=Math.min(capLv(),m.lvl+(m.lvl<B.foe.lvl?2:1))});if(up.length)lines.push(`Niveau supérieur : ${up.map(m=>BY[m.id][1]+' → '+m.lvl).join(', ')}`)}}
+ else{const b=bossS(),c=Math.round(B.dealt/30);S.coins+=c;const xb=addXp(100+Math.min(300,Math.floor(B.dealt/500)));lines.push(`${fmtN(B.dealt)} dégâts infligés au boss`,`+${fmtN(c)} pièces · +${xb} XP${xpNote()}`);
   if(bossStat().dead)lines.push('Le boss est vaincu ! Ouvre l\'onglet Boss pour le récap et tes lots.')}
  B.res={win,lines};say(win?'Victoire !':B.mode==='boss'?'Tentative terminée.':'Défaite...');save();LOBBY=null;render(true);
 }
@@ -2452,7 +2458,7 @@ function advFinish(win,lines){
  const s=ADV[B.adv],A=advS(),first=win&&B.adv>=A.step;
  if(!win){lines.push(s.kind==='gym'?'Défaite... Reviens demain : un seul essai par jour pour ce chef d\'arène.':'Défaite... Monte de niveau ou change de tactique et retente.');return}
  {const dd=dayS();dd.win++;if(s.kind==='gym')dd.gym++}
- const c=Math.round(s.reward*(first?1:.4)),x=Math.round((20+s.top*3)*(first?1:.4));S.coins+=c;S.xp+=x;while(S.xp>=need()){S.xp-=need();S.lvl++}lines.push(`+${fmtN(c)} pièces · +${x} XP`);
+ const c=Math.round(s.reward*(first?1:.4)),bx=s.kind==='gym'||s.kind==='elite'?150+8*s.top:s.kind==='champ'?1.5*(150+8*s.top):s.kind==='rival'?1.5*(25+3*s.top):25+3*s.top,x=addXp(Math.round(bx*(first?(s.kind==='gym'||s.kind==='elite'||s.kind==='champ'?1.5:1):.4)));S.coins+=c;lines.push(`+${fmtN(c)} pièces · +${x} XP${xpNote()}`);
  if(!first)return;
  A.step=B.adv+1;
  const up=S.box.filter(m=>m.team&&m.lvl<s.top&&m.lvl<capLv());up.forEach(m=>{m.lvl+=Math.min(3,Math.ceil((s.top-m.lvl)/5),capLv()-m.lvl)});if(up.length)lines.push(`Équipe : niveaux +${Math.min(3,Math.ceil((s.top-up[0].lvl)/5))} environ (${up.length} Pokémon)`);
@@ -2971,7 +2977,7 @@ function sac(){
  const rods=[1,2,3].map(lv=>{const own=o>=lv,on=own&&eq===lv;return `<div class="li pick ${on?'sel':''} ${own?'':'dim'}" ${own?`data-act="eq" data-k="rod" data-v="${lv}"`:''}><div class="ico"><i class="ti ti-rod${lv}"></i></div><div class="grow"><b>${ROD[lv].n}</b><div style="color:var(--m);font-size:12px">${own?(on?'Équipée':'Toucher pour équiper'):'À acheter à la boutique'}</div></div>${on?'<i class="ti ti-check" style="color:var(--g);font-size:20px"></i>':''}</div>`}).join('');
  const bl=[['none','Aucun appât','Pêche normale',null],...Object.entries(BAIT).map(([k,b])=>[k,b.n,b.d,it[k]||0])].map(([k,n,d,c])=>{const own=c===null||c>0,on=bait===k||(k==='none'&&(bait==='none'||!(it[bait]>0)));return `<div class="li pick ${on?'sel':''} ${own?'':'dim'}" ${own?`data-act="eq" data-k="bait" data-v="${k}"`:''}><div class="ico"><i class="ti ti-${k==='none'?'ban':BAIT[k].ic}"></i></div><div class="grow"><b>${n}</b><div style="color:var(--m);font-size:12px">${d}</div></div>${c===null?'':`<span class="chip">×${c}</span>`}${on?'<i class="ti ti-check" style="color:var(--g);font-size:20px"></i>':''}</div>`}).join('');
  const balls=Object.entries(BALLS).map(([k,b])=>`<div class="li"><div class="ico"><img src="${BI(k)}" width="30" height="30" alt=""></div><div class="grow"><b>${b.n}</b></div><span class="chip">×${S.balls[k]||0}</span></div>`).join('');
- const objs=[...(((it.botte||0)>0)?[['botte','Vieille Botte','boot-item']]:[]),['baie','Baie',xn(ITEMICO.baie)],['dodo','Dodo',xn(ITEMICO.dodo)],['appat','Appât',xn(ITEMICO.appat)],...Object.entries(CANDY).map(([k,c])=>[k,c.n,xn(ITEMICO[k])]),...Object.entries(CAPS).map(([k,c])=>[k,c.n,c.ic]),...VIT,...Object.entries(HELD).map(([k,h])=>[k,h.n,h.ic]),...Object.entries(STONE).map(([n,k])=>[k,n,xn(ITEMICO[k])])].map(([k,n,ic])=>`<div class="li"><div class="ico"><i class="ti ti-${ic}"></i></div><div class="grow"><b>${n}</b></div><span class="chip">×${it[k]||0}</span></div>`).join('');
+ const objs=[...(((it.botte||0)>0)?[['botte','Vieille Botte','boot-item']]:[]),...(((it.bonbonxp||0)>0)?[['bonbonxp','Super Bonbon XP',xn('Rare Candy')]]:[]),['baie','Baie',xn(ITEMICO.baie)],['dodo','Dodo',xn(ITEMICO.dodo)],['appat','Appât',xn(ITEMICO.appat)],...Object.entries(CANDY).map(([k,c])=>[k,c.n,xn(ITEMICO[k])]),...Object.entries(CAPS).map(([k,c])=>[k,c.n,c.ic]),...VIT,...Object.entries(HELD).map(([k,h])=>[k,h.n,h.ic]),...Object.entries(STONE).map(([n,k])=>[k,n,xn(ITEMICO[k])])].map(([k,n,ic])=>`<div class="li"><div class="ico"><i class="ti ti-${ic}"></i></div><div class="grow"><b>${n}</b></div>${k==='bonbonxp'&&(it.bonbonxp||0)>0?'<a class="btn sm y" data-act="xpcandy">Utiliser</a>':''}<span class="chip">×${it[k]||0}</span></div>`).join('');
  return `<div class="title"><h3 class="px">Sac</h3><a class="btn sm" data-go="boutique"><i class="ti ti-shopping-bag"></i>Boutique</a></div>
  <div class="cols eq"><div style="display:flex;flex-direction:column;gap:10px"><div class="panel"><h4 class="px">Canne équipée</h4><div class="list">${rods}</div></div><div class="panel"><h4 class="px">Appât équipé</h4><div class="list">${bl}</div></div></div>
  <div style="display:flex;flex-direction:column;gap:10px"><div class="panel"><h4 class="px">Balls</h4><div class="list">${balls}</div></div><div class="panel"><h4 class="px">Objets</h4><div class="list">${objs}</div></div></div></div>`;
@@ -2998,6 +3004,7 @@ const SHOP=[
  {k:'vit5',g:'Vitamines',t:'Carbone',d:'+10 EV Vitesse',p:500,ty:'item',i:'vit5',n:1,ic:'bolt'},
  {k:'bonbon3',g:'Bonbons',t:'Bonbon Rare ×3',d:'+1 niveau chacun',p:300,ty:'item',i:'bonbon',n:3,ic:'candy'},
  {k:'bonbonm3',g:'Bonbons',t:'Bonbon EXP M ×3',d:'+3 niveaux chacun',p:450,ty:'item',i:'bonbonm',n:3,ic:'candy'},
+ {k:'bxp1',g:'Bonbons',t:'Super Bonbon XP',d:'+500 XP joueur · 3 par jour',p:1500,ty:'item',i:'bonbonxp',n:1,ic:'candy'},
  {k:'bonbonxl1',g:'Bonbons',t:'Bonbon EXP XL',d:'+8 niveaux',p:600,ty:'item',i:'bonbonxl',n:1,ic:'candy'},
  {k:'capargent',g:'Capsules',t:'Capsule Argent',d:'IV le plus faible au maximum',p:800,ty:'item',i:'capargent',n:1,ic:'circle-dot'},
  {k:'capor',g:'Capsules',t:'Capsule Or',d:'Tous les IV au maximum',p:2500,ty:'item',i:'capor',n:1,ic:'star'},
@@ -3025,7 +3032,7 @@ function boutique(){
  <div class="cols eq">${groups.map(g=>`<div class="panel"><h4 class="px">${g}</h4><div class="list">${SHOP.filter(x=>x.g===g).map(row).join('')}</div></div>`).join('')}</div>`;
 }
 function buy(k){
- const x=SHOP.find(q=>q.k===k);if(!x||S.coins<x.p)return;
+ const x=SHOP.find(q=>q.k===k);if(!x||S.coins<x.p)return;if(x.i==='bonbonxp'){const d=dayS();if((d.bx||0)>=3)return;d.bx=(d.bx||0)+1}
  if(x.ty==='rod'){if((S.rod||0)!==x.lv-1)return;S.rod=x.lv}
  else if(x.ty==='egg'){breed();S.eggs.push({k:x.e,id:pickEgg(x.e)})}
  else if(x.ty==='ball')S.balls[x.b]=(S.balls[x.b]||0)+x.n;
@@ -3136,6 +3143,7 @@ Object.entries(HELD).forEach(([k,h])=>{if(ITEMICO[k])h.ic=xn(ITEMICO[k])});
 VIT.forEach(v=>{if(ITEMICO[v[0]])v[2]=xn(ITEMICO[v[0]])});
 Object.entries(ITEMS).forEach(([k,v])=>{if(ITEMICO[k])v[1]=xn(ITEMICO[k])});
 
+restCheck(S.seen);save();document.addEventListener('visibilitychange',()=>{if(document.hidden)S.hid=Date.now();else if(S.hid){restCheck(S.hid);S.hid=0;save();render(true)}});
 breed();render();
 </script>
 </body>
