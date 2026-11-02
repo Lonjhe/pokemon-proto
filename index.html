@@ -629,6 +629,7 @@ input{flex:1;min-width:140px}
 .fdial.idle .fplate,.fdial.charge .fplate{background:#4fc3f7!important;box-shadow:inset 0 -6px 0 #1f86c4,0 4px 0 #0b1030!important}
 .fdial.cast .fplate,.fdial.wait .fplate,.fdial.bite .fplate{background:#9aa3b5!important;box-shadow:inset 0 -6px 0 #6c7487,0 4px 0 #0b1030!important;color:#0b1030!important;animation:none!important}
 .fdial.bite .fplate b,.fdial.bite .fplate small{color:#0b1030!important}
+.tabs a.go .gi{height:auto;width:42px;max-width:42px;vertical-align:0;filter:drop-shadow(0 2px 0 #0004)}
 </style>
 </head>
 <body>
@@ -684,7 +685,7 @@ const bar=(w,c='var(--c)')=>`<div class="bar"><i style="width:${w}%;background:$
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const stats=id=>[['PV',30+(id*7)%60],['Att',35+(id*11)%60],['Déf',30+(id*13)%60],['Vit',30+(id*17)%65]];
-const NAV=[['hub','map-2','Accueil'],['explorer','compass','Explorer'],['pokemon','pokeball','Pokémon'],['elevage','egg','Élevage'],['gacha','gift','Gacha'],['manoir','ghost','Halloween'],['sac','backpack','Sac'],['boutique','shopping-bag','Boutique'],['combat','swords','Combat'],['ligue','trophy','Ligue'],['boss','skull','Boss'],['social','users','Social'],['quetes','list-check','Quêtes'],['evenement','ghost','Événement']];
+const NAV=[['hub','pkc','Accueil'],['explorer','compass','Explorer'],['pokemon','pokeball','Pokémon'],['elevage','egg','Élevage'],['gacha','gift','Gacha'],['manoir','ghost','Halloween'],['sac','backpack','Sac'],['boutique','shopping-bag','Boutique'],['combat','swords','Combat'],['ligue','trophy','Ligue'],['boss','skull','Boss'],['social','users','Social'],['quetes','list-check','Quêtes'],['evenement','ghost','Événement']];
 const IMPL=['hub','explorer','pokemon'];
 const need=()=>S.lvl*60;
 const capLv=()=>Math.min(100,Math.max(5,S.lvl+2+3*(((S.adv&&S.adv.badges)||[]).length)));
@@ -708,7 +709,7 @@ setInterval(capTick,1000);
 
 function shell(c){
  const rail=NAV.map(([k,i,l])=>`<a data-go="${k}" class="${k===route?'on':''}"><i class="ti ti-${i}"></i>${l}</a>`).join('');
- const TB=[['explorer','compass','Explorer'],['sac','backpack','Sac'],['hub','map-2','Accueil'],['combat','swords','Combat'],['plus','menu-2','Plus']],tabs=TB.map(([k,i,l])=>`<a data-go="${k}" class="${k===route||(k==='plus'&&!TB.some(t=>t[0]===route))?'on':''} ${k==='hub'?'go':''}"><i class="ti ti-${i}"></i>${k==='hub'?'':l}</a>`).join('');
+ const TB=[['explorer','compass','Explorer'],['sac','backpack','Sac'],['hub','pkc','Accueil'],['combat','swords','Combat'],['plus','menu-2','Plus']],tabs=TB.map(([k,i,l])=>`<a data-go="${k}" class="${k===route||(k==='plus'&&!TB.some(t=>t[0]===route))?'on':''} ${k==='hub'?'go':''}"><i class="ti ti-${i}"></i>${k==='hub'?'':l}</a>`).join('');
  return `<div class="hud"><div class="av"><img src="${SPEC.RED}" alt="" referrerpolicy="no-referrer"></div><b class="name">${esc(S.name||"")}</b><span class="lv px">Niv.${S.lvl}</span><div class="bar"><i style="width:${Math.min(100,S.xp/need()*100)}%;background:var(--c)"></i></div><span class="chip"><i class="ti ti-coin" style="color:var(--y)"></i>${S.coins}</span><span class="chip" title="Gemmes" data-go="gacha"><i class="ti ti-diamond" style="color:#ff7ad9"></i>${gems()}</span><span class="chip opt" title="Poké Balls"><i class="ti ti-circle-dot" style="color:var(--r)"></i>${S.balls.poke}</span></div><div class="main"><nav class="rail">${rail}</nav><div class="content">${c}</div></div><nav class="tabs">${tabs}</nav>`;
 }
 function card(m,o={}){const s=BY[m.id],c=TC[s[2][0]]||'#8a8a7a';
@@ -756,12 +757,12 @@ PUNCH:UB+'0/0f/Bag_Punching_Glove_SV_Sprite.png',ARMOR:UB+'1/19/Bag_Malicious_Ar
 LIGHTBALL:UB+'5/56/Bag_Light_Ball_SV_Sprite.png',RAZZ:UB+'d/d4/Bag_Razz_Berry_SV_Sprite.png',SILVER:UB+'9/94/Bag_Silver_Powder_SV_Sprite.png',HONEY:UB+'2/22/Bag_Honey_SV_Sprite.png',RED:'https://play.pokemonshowdown.com/sprites/trainers/red.png'};
 const BBU=n=>SPEC[n]||(BBP[n]?UB+BBP[n]+'/Bag_'+n.replace(/ /g,'_').replace(/é/g,'%C3%A9')+'_SV_Sprite.png':null);
 const xn=n=>'x-'+n.replace(/ /g,'_');
-const ICOMAP={'boot-item':'px:boot','map-2':'px:center',compass:'bb:Adventure Guide',backpack:'bb:BAG','menu-2':'bb:ROTOM',swords:'bb:Choice Band','attack-x':'bb:X Attack',run:'bb:Escape Rope',pokeball:'bb:Poké Ball','circle-dot':'bb:Poké Ball',egg:'bb:EGG',gift:'bb:DICE',rod1:'bb:ROD1',rod2:'bb:ROD2',rod3:'bb:ROD3','shopping-bag':'bb:Potion',trophy:'bb:PUNCH',skull:'bb:MASK',ghost:'bb:ARMOR',users:'bb:Poké Doll','list-check':'bb:Star Piece',coin:'bb:DOLLAR',diamond:'bb:Prism Scale',candy:'bb:Rare Candy',flask:'bb:Potion',tent:'bb:Protein',fish:'bb:ROD2',box:'px:chest',star:'bb:Star Piece','star-filled':'bb:Star Piece',package:'bb:Potion',book:'bb:Adventure Guide','map-pin':'bb:Adventure Guide','test-pipe':'bb:Potion'};
+const ICOMAP={pkc:'url:img/home.png','boot-item':'px:boot','map-2':'px:center',compass:'bb:Adventure Guide',backpack:'bb:BAG','menu-2':'bb:ROTOM',swords:'bb:Choice Band','attack-x':'bb:X Attack',run:'bb:Escape Rope',pokeball:'bb:Poké Ball','circle-dot':'bb:Poké Ball',egg:'bb:EGG',gift:'bb:DICE',rod1:'bb:ROD1',rod2:'bb:ROD2',rod3:'bb:ROD3','shopping-bag':'bb:Potion',trophy:'bb:PUNCH',skull:'bb:MASK',ghost:'bb:ARMOR',users:'bb:Poké Doll','list-check':'bb:Star Piece',coin:'bb:DOLLAR',diamond:'bb:Prism Scale',candy:'bb:Rare Candy',flask:'bb:Potion',tent:'bb:Protein',fish:'bb:ROD2',box:'px:chest',star:'bb:Star Piece','star-filled':'bb:Star Piece',package:'bb:Potion',book:'bb:Adventure Guide','map-pin':'bb:Adventure Guide','test-pipe':'bb:Potion'};
 const ITEMICO={botte:'px:boot',leaf:'Leaf Stone',ver:'WEEDLE',leurre:'LIGHTBALL',pfeu:'Fire Stone',peau:'Water Stone',pfoudre:'Thunder Stone',plune:'Moon Stone',pfeuille:'Leaf Stone',bonbon:'Rare Candy',bonbonm:'Exp. Candy M',bonbonxl:'Exp. Candy XL',restes:'Leftovers',orbe:'Life Orb',sitrus:'Sitrus Berry',ceinture:'Focus Sash',vit0:'HP Up',vit1:'Protein',vit2:'Iron',vit3:'Calcium',vit4:'Zinc',vit5:'Carbos',capargent:'Bottle Cap',capor:'Gold Bottle Cap',capoeuf:'Ability Capsule',captal:'Ability Capsule',baie:'RAZZ',dodo:'SILVER',appat:'HONEY'};
 function gameIcons(root){
  (root.querySelectorAll?root.querySelectorAll('i.ti'):[]).forEach(i=>{
   const c=[...i.classList].find(x=>x.startsWith('ti-')&&x!=='ti');if(!c)return;const k=c.slice(3);let src=null;
-  let bb=false;if(k.startsWith('x-')){const nm=k.slice(2).replace(/_/g,' ');const u=BBU(nm);src=u?(bb=true,u):IT(k.slice(2))}else{const m=ICOMAP[k];if(!m)return;if(m.startsWith('px:'))src=pxi(m.slice(3));else if(m.startsWith('bb:')){bb=true;src=BBU(m.slice(3))}else src=IT(m)}
+  let bb=false;if(k.startsWith('x-')){const nm=k.slice(2).replace(/_/g,' ');const u=BBU(nm);src=u?(bb=true,u):IT(k.slice(2))}else{const m=ICOMAP[k];if(!m)return;if(m.startsWith('px:'))src=pxi(m.slice(3));else if(m.startsWith('bb:')){bb=true;src=BBU(m.slice(3))}else if(m.startsWith('url:')){bb=true;src=m.slice(4)}else src=IT(m)}
   const im=document.createElement('img');im.className='gi '+(bb?'bb ':'')+[...i.classList].filter(x=>x!=='ti'&&!x.startsWith('ti-')).join(' ');im.src=src;im.alt='';im.referrerPolicy='no-referrer';const bn=bb?(k.startsWith('x-')?k.slice(2).replace(/_/g,' '):ICOMAP[k].slice(3)):null;im.onerror=()=>{if(bn==='LANTERN'){im.src=pxi('candle');im.classList.remove('bb')}else if(bn&&!im.dataset.fb&&BBFB[bn]){im.dataset.fb=1;im.src=IT(BBFB[bn]);im.classList.remove('bb')}else if(k==='coin'){im.src=pxi('coin');im.classList.remove('bb')}else im.style.visibility='hidden'};
   const st=i.getAttribute('style');if(st&&/margin|position|top|left|right|bottom/.test(st))im.setAttribute('style',st.replace(/color:[^;]+;?/,''));
   i.replaceWith(im)});
