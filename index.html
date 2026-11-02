@@ -2335,20 +2335,17 @@ function pinfoHTML(){
 function saveCode(){return btoa(unescape(encodeURIComponent(JSON.stringify(S))))}
 function saveIO(mode){
  let o=document.querySelector('.io-ov');if(o)o.remove();o=document.createElement('div');o.className='pick-ov io-ov';document.body.appendChild(o);
- const code=mode==='exp'?saveCode():'';
+ const code=mode==='exp'?saveCode():'';let pend=null;
  o.innerHTML=mode==='exp'
-  ?`<div class="pick-c"><h4 class="px">Exporter la partie</h4><div class="svnote" style="margin:0">Copie ce code ou télécharge le fichier. Colle-le dans « Importer » sur un autre appareil.</div><textarea id="iot" rows="5" readonly style="width:100%;box-sizing:border-box;margin:8px 0;font-size:16px">${code}</textarea><div class="pbt"><a class="btn y" data-io="copy">Copier</a><a class="btn" data-io="dl">Télécharger</a><a class="btn" data-io="x">Fermer</a></div><div id="iom" class="svnote"></div></div>`
-  :`<div class="pick-c"><h4 class="px">Importer une partie</h4><div class="svnote" style="margin:0">Colle un code exporté ou choisis un fichier. <b>Ta partie actuelle sera remplacée.</b></div><textarea id="iot" rows="5" placeholder="Code de sauvegarde" style="width:100%;box-sizing:border-box;margin:8px 0;font-size:16px"></textarea><input type="file" id="iof" accept=".txt,.json,text/plain" style="width:100%;box-sizing:border-box"><div class="pbt"><a class="btn y" data-io="go">Importer</a><a class="btn" data-io="x">Annuler</a></div><div id="iom" class="svnote"></div></div>`;
- const msg=t=>{const e=o.querySelector('#iom');if(e)e.textContent=t};let armed=false;
- o.addEventListener('change',e=>{if(e.target.id==='iof'&&e.target.files[0]){const f=new FileReader();f.onload=()=>{o.querySelector('#iot').value=String(f.result).trim();msg('Fichier chargé.')};f.readAsText(e.target.files[0])}});
+  ?`<div class="pick-c"><h4 class="px">Exporter la partie</h4><div class="svnote" style="margin:0">Télécharge ta sauvegarde dans un fichier. Garde-le pour restaurer ta partie ou la reprendre sur un autre appareil via « Importer ».</div><div class="pbt"><a class="btn y" data-io="dl">Télécharger le fichier</a><a class="btn" data-io="x">Fermer</a></div><div id="iom" class="svnote"></div></div>`
+  :`<div class="pick-c"><h4 class="px">Importer une partie</h4><div class="svnote" style="margin:0">Choisis un fichier de sauvegarde exporté. <b>Ta partie actuelle sera remplacée.</b></div><input type="file" id="iof" accept=".txt,.json,text/plain" style="width:100%;box-sizing:border-box;margin:8px 0"><div class="pbt"><a class="btn y off" data-io="go">Remplacer ma partie</a><a class="btn" data-io="x">Annuler</a></div><div id="iom" class="svnote"></div></div>`;
+ const msg=t=>{const e=o.querySelector('#iom');if(e)e.textContent=t},gob=()=>o.querySelector('[data-io=go]');
+ o.addEventListener('change',e=>{if(e.target.id!=='iof'||!e.target.files[0])return;pend=null;gob().classList.add('off');
+  const f=new FileReader();f.onload=()=>{try{const j=JSON.parse(decodeURIComponent(escape(atob(String(f.result).trim().replace(/\s+/g,'')))));if(!j||!Array.isArray(j.box)||typeof j.lvl!=='number')throw 0;pend=j;gob().classList.remove('off');msg(`Sauvegarde détectée : niveau ${j.lvl}, ${j.box.length} Pokémon. Appuie sur « Remplacer ma partie » pour la charger.`)}catch(er){msg('Fichier invalide : rien n\'a été modifié.')}};f.readAsText(e.target.files[0])});
  o.addEventListener('click',e=>{const t=e.target.closest('[data-io]');if(!t){if(e.target===o)o.remove();return}const a=t.dataset.io;
   if(a==='x')o.remove();
-  else if(a==='copy'){const ta=o.querySelector('#iot');try{navigator.clipboard.writeText(ta.value).then(()=>msg('Code copié !'),()=>{ta.select();msg('Sélectionne et copie le code.')})}catch(er){ta.select();msg('Sélectionne et copie le code.')}}
-  else if(a==='dl'){try{const b=new Blob([code],{type:'text/plain'}),u=URL.createObjectURL(b),l=document.createElement('a');l.href=u;l.download='pokemon-sauvegarde-'+todayKey()+'.txt';document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),2000);msg('Fichier téléchargé.')}catch(er){msg('Téléchargement impossible : copie le code.')}}
-  else if(a==='go'){let txt=o.querySelector('#iot').value.trim().replace(/\s+/g,''),j;
-   try{j=JSON.parse(decodeURIComponent(escape(atob(txt))));if(!j||!Array.isArray(j.box)||typeof j.lvl!=='number')throw 0}catch(er){msg('Code invalide : rien n\'a été modifié.');armed=false;t.textContent='Importer';return}
-   if(!armed){armed=true;t.textContent='Confirmer le remplacement';msg(`Partie détectée : niveau ${j.lvl}, ${j.box.length} Pokémon. Appuie à nouveau pour remplacer.`);return}
-   try{localStorage.setItem(KEY,JSON.stringify(j));location.reload()}catch(er){msg('Import impossible sur ce navigateur.')}}
+  else if(a==='dl'){try{const b=new Blob([code],{type:'text/plain'}),u=URL.createObjectURL(b),l=document.createElement('a');l.href=u;l.download='pokemon-sauvegarde-'+todayKey()+'.txt';document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),2000);msg('Fichier téléchargé.')}catch(er){msg('Téléchargement impossible sur ce navigateur.')}}
+  else if(a==='go'){if(!pend)return;try{localStorage.setItem(KEY,JSON.stringify(pend));location.reload()}catch(er){msg('Import impossible sur ce navigateur.')}}
  });
 }
 document.addEventListener('click',e=>{if(PINFO&&!(e.target.closest&&e.target.closest('.pinfo,[data-act=pinfo]'))){PINFO=false;const p=document.querySelector('.pinfo');if(p)p.remove()}},true);
