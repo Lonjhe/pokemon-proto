@@ -632,6 +632,18 @@ input{flex:1;min-width:140px}
 .pinfo .pir{display:flex;justify-content:space-between;gap:8px;border-top:1px solid var(--b);padding-top:5px}.pinfo .pir span{color:var(--m)}.pinfo .pir b{text-align:right}.pinfo small{color:var(--m);font-weight:600}
 .pl-sv{display:flex;align-items:center;gap:8px;margin-top:10px}.pl-sv small{display:block;color:var(--m)}
 .io-ov textarea{background:#080c26;color:var(--t);border:2px solid var(--b);padding:8px;user-select:text;-webkit-user-select:text;word-break:break-all}
+.pm{position:relative;margin:-16px;padding:14px 14px 16px;flex:1;background:#c8203c;overflow:hidden;display:flex;flex-direction:column;gap:10px}
+.pm::before{content:"";position:absolute;inset:-20%;background:linear-gradient(115deg,transparent 0 22%,#d92d49 22% 46%,transparent 46% 62%,#b01a33 62% 100%)}
+.pm::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 0 78%,#ffffff22 78% 100%);pointer-events:none}
+.pm>*{position:relative;z-index:1}
+.pm-h{display:flex;justify-content:center;align-items:center;font-size:11px;text-shadow:0 2px 0 #0006;padding:2px 0}.pm-h .chip{position:absolute;right:0}
+.pm-g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 6px;align-content:start}
+.pm-t{position:relative;display:flex;flex-direction:column;align-items:center;gap:7px;color:#fff;cursor:pointer;font-size:11px;font-weight:900;letter-spacing:.03em;text-transform:uppercase;text-shadow:0 1px 0 #0007}
+.pm-t .rd{width:clamp(76px,23vw,92px);aspect-ratio:1;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 4px 0 #0004;transition:transform .1s}
+.pm-t:active .rd{transform:translateY(3px);box-shadow:0 1px 0 #0004}
+.pm-t .rd img{width:64%;height:64%;object-fit:contain;image-rendering:auto}
+.pm-t .bd{position:absolute;right:calc(50% - 50px);top:-2px;background:#ef5350;border:2px solid #fff;border-radius:10px;font-style:normal;font-size:11px;padding:0 6px;font-weight:900;text-shadow:none}
+.pm-i{margin-top:auto;background:#2a2a30;border:2px solid #0008;padding:12px 14px;font-size:13px;font-weight:700;text-align:center;color:#fff}
 
 body{margin:0;background:var(--bg);color:var(--t);font-family:Nunito,sans-serif}
 .wrap{max-width:1180px;margin:0 auto;padding:12px}

@@ -636,6 +636,18 @@ input{flex:1;min-width:140px}
 .pinfo .pir{display:flex;justify-content:space-between;gap:8px;border-top:1px solid var(--b);padding-top:5px}.pinfo .pir span{color:var(--m)}.pinfo .pir b{text-align:right}.pinfo small{color:var(--m);font-weight:600}
 .pl-sv{display:flex;align-items:center;gap:8px;margin-top:10px}.pl-sv small{display:block;color:var(--m)}
 .io-ov textarea{background:#080c26;color:var(--t);border:2px solid var(--b);padding:8px;user-select:text;-webkit-user-select:text;word-break:break-all}
+.pm{position:relative;margin:-16px;padding:14px 14px 16px;flex:1;background:#c8203c;overflow:hidden;display:flex;flex-direction:column;gap:10px}
+.pm::before{content:"";position:absolute;inset:-20%;background:linear-gradient(115deg,transparent 0 22%,#d92d49 22% 46%,transparent 46% 62%,#b01a33 62% 100%)}
+.pm::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 0 78%,#ffffff22 78% 100%);pointer-events:none}
+.pm>*{position:relative;z-index:1}
+.pm-h{display:flex;justify-content:center;align-items:center;font-size:11px;text-shadow:0 2px 0 #0006;padding:2px 0}.pm-h .chip{position:absolute;right:0}
+.pm-g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 6px;align-content:start}
+.pm-t{position:relative;display:flex;flex-direction:column;align-items:center;gap:7px;color:#fff;cursor:pointer;font-size:11px;font-weight:900;letter-spacing:.03em;text-transform:uppercase;text-shadow:0 1px 0 #0007}
+.pm-t .rd{width:clamp(76px,23vw,92px);aspect-ratio:1;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 4px 0 #0004;transition:transform .1s}
+.pm-t:active .rd{transform:translateY(3px);box-shadow:0 1px 0 #0004}
+.pm-t .rd img{width:64%;height:64%;object-fit:contain;image-rendering:auto}
+.pm-t .bd{position:absolute;right:calc(50% - 50px);top:-2px;background:#ef5350;border:2px solid #fff;border-radius:10px;font-style:normal;font-size:11px;padding:0 6px;font-weight:900;text-shadow:none}
+.pm-i{margin-top:auto;background:#2a2a30;border:2px solid #0008;padding:12px 14px;font-size:13px;font-weight:700;text-align:center;color:#fff}
 </style>
 </head>
 <body>
@@ -1541,7 +1553,7 @@ document.addEventListener('click',e=>{
  else if(a==='pickp'){P.tab='box';P.sort='lvl';go('pokemon')}
  else if(a==='partner'){S.partner=t.dataset.uid;P.flash='Nouveau partenaire d\'exploration !';save();render(true)}
  else if(a==='candy'){if(m)candy(m,t.dataset.k)}
- else if(a==='sexp')saveIO('exp');else if(a==='simp')saveIO('imp');else if(a==='pinfo'){PINFO=!PINFO;render(true)}
+ else if(a==='smenu')saveMenu();else if(a==='sexp')saveIO('exp');else if(a==='simp')saveIO('imp');else if(a==='pinfo'){PINFO=!PINFO;render(true)}
  else if(a==='xpcandy'){const it=itm();if((it.bonbonxp||0)>0){it.bonbonxp--;const n=500;S.xp+=n;while(S.lvl<100&&S.xp>=need()){S.xp-=need();S.lvl++}save();render(true)}}
  else if(a==='cap'){if(m)useCap(m,t.dataset.k)}
  else if(a==='hold'){if(m)holdItem(m,t.dataset.k)}
@@ -2349,13 +2361,19 @@ function saveIO(mode){
  });
 }
 document.addEventListener('click',e=>{if(PINFO&&!(e.target.closest&&e.target.closest('.pinfo,[data-act=pinfo]'))){PINFO=false;const p=document.querySelector('.pinfo');if(p)p.remove()}},true);
+function saveMenu(){
+ let o=document.querySelector('.io-ov');if(o)o.remove();o=document.createElement('div');o.className='pick-ov io-ov';document.body.appendChild(o);
+ o.innerHTML='<div class="pick-c"><h4 class="px">Sauvegarde</h4><div class="svnote" style="margin:0">Exporte ta partie dans un fichier pour la garder ou changer d\'appareil, ou importe un fichier pour la restaurer.</div><div class="pbt"><a class="btn y" data-sm="exp">Exporter</a><a class="btn" data-sm="imp">Importer</a><a class="btn" data-sm="x">Fermer</a></div></div>';
+ o.addEventListener('click',e=>{const t=e.target.closest('[data-sm]');if(!t){if(e.target===o)o.remove();return}const a=t.dataset.sm;o.remove();if(a!=='x')saveIO(a)});
+}
 function plusView(){
- const d=dayS(),streak=(S.streak&&S.streak.n)||0,qd=DAY_QUESTS.filter(q=>d[q[0]]>=q[2]).length,cs=capState();
- const T=(go,img,lab,sub,bd)=>`<a class="pl-t" ${go.startsWith('act:')?`data-act="${go.slice(4)}"`:`data-go="${go}"`}><i class="ti ti-${img}"></i><b>${lab}</b><small>${sub}</small>${bd?`<span class="bd">${bd}</span>`:''}</a>`;
- return `<div class="title"><h3 class="px">Menu</h3><span class="chip" id="capt"></span></div>
- <div class="pl-g">${T('pokemon','pokeball','Pokémon','Boîte et fiches')}${T('elevage','egg','Élevage',eggsReady()?eggsReady()+' œuf(s) prêt(s)':'3 incubateurs',eggsReady())}${T('act:gocamp','tent','Camp EV',campN()+'/'+CAMP_MAX+' au camp')}${T('boutique','shopping-bag','Boutique','Objets et Balls')}${T('gacha','gift','Gacha',d.gacha?gems()+' gemmes':'1 tirage offert',d.gacha?'':1)}${T('ligue','trophy','Ligue','Aventure')}${T('boss','skull','Boss','Boss mondial')}${T('manoir','ghost','Halloween',hwSum())}${T('social','users','Social','Amis')}${T('quetes','pkq','Quêtes',qd+'/'+DAY_QUESTS.length+' du jour')}</div>
- <div class="panel hm-ch ${d.chest?'':'rdy'}"><div class="cb"><img src="${d.chest?'img/chestO.png':'img/chest.png'}" alt=""></div><div style="flex:1;min-width:0"><b>Coffre quotidien</b><small>Série ${streak} jour${streak>1?'s':''} · quêtes ${qd}/${DAY_QUESTS.length}</small></div><a class="btn y sm ${d.chest?'off':''}" data-act="chest">${d.chest?'Ouvert':'Ouvrir'}</a></div>
- <div class="panel pl-sv"><div style="flex:1;min-width:0"><b>Sauvegarde</b><small>Exporte ta partie pour la garder ou changer d'appareil.</small></div><a class="btn sm" data-act="sexp">Exporter</a><a class="btn sm" data-act="simp">Importer</a></div>`;
+ const d=dayS(),streak=(S.streak&&S.streak.n)||0,qd=DAY_QUESTS.filter(q=>d[q[0]]>=q[2]).length;
+ const IM=(src,fb)=>`<img src="${src}" referrerpolicy="no-referrer" alt="" onerror="this.onerror=null;this.src='${fb||pxi('coin')}'">`,PA=n=>'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/'+n+'.png';
+ const T=(go,ic,lab,bd)=>`<a class="pm-t" ${go.startsWith('act:')?`data-act="${go.slice(4)}"`:`data-go="${go}"`}><span class="rd">${ic}</span><b>${lab}</b>${bd?`<i class="bd">${bd}</i>`:''}</a>`;
+ const er=eggsReady();
+ return `<div class="pm"><div class="pm-h"><span class="px">MENU</span><span class="chip" id="capt"></span></div>
+ <div class="pm-g">${T('pokemon',IM(UB+'d/da/Bag_Premier_Ball_SV_Sprite.png',PA('premier-ball')),'Pokémon')}${T('elevage',IM(UB+'3/3f/Bag_Lucky_Egg_SV_Sprite.png',PA('lucky-egg')),'Élevage',er)}${T('act:gocamp',IM('img/mn_camp.png'),'Camp EV')}${T('boutique',IM(SPEC.DOLLAR),'Boutique')}${T('gacha',IM(SPEC.DICE,PA('lucky-egg')),'Gacha',d.gacha?'':1)}${T('ligue',IM(SPEC.PUNCH,PA('muscle-band')),'Ligue')}${T('boss',IM(SPEC.MASK,PA('x-attack')),'Boss')}${T('manoir',IM(R+'other/official-artwork/710.png'),'Halloween')}${T('social',IM(BBU('Poké Doll'),PA('poke-doll')),'Social')}${T('quetes',IM('img/quest.png'),'Quêtes')}${T('act:chest',IM(d.chest?'img/chestO.png':'img/chest.png'),'Coffre',d.chest?'':1)}${T('act:smenu',IM('img/mn_save.png'),'Sauvegarde')}</div>
+ <div class="pm-i">${d.chest?`Série de ${streak} jour${streak>1?'s':''} · quêtes ${qd}/${DAY_QUESTS.length}`:'Le coffre quotidien est prêt à être ouvert !'}</div></div>`;
 }
 function teamEdit(){
  let o=document.querySelector('.te-ov');if(o)o.remove();o=document.createElement('div');o.className='pick-ov te-ov';document.body.appendChild(o);
