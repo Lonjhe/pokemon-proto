@@ -488,6 +488,10 @@ input{flex:1;min-width:140px}
 .pick-c{background:var(--p);border:3px solid var(--b);box-shadow:0 0 0 2px #0b1030;max-width:460px;width:100%;max-height:86vh;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
 .prows{display:flex;flex-direction:column;gap:8px}.prow{display:flex;align-items:center;gap:10px;background:var(--p2);border:2px solid var(--b);padding:6px 10px}.prow small{display:block;color:var(--m);font-size:12px}.prow .grow{flex:1}
 .pbt{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.sbt{display:flex;gap:6px;justify-content:space-between;background:#c98a1a;padding:10px 8px;border:3px solid var(--b)}
+.sb{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:#0b1030;border:3px solid #0b1030;cursor:pointer;flex:none;opacity:.8}.sb .ti{font-size:28px}.sb:not(.on){background:#1b2358}
+.sb.on{background:#fff;color:#0b1030;opacity:1;transform:scale(1.15);border-color:#0b1030;box-shadow:0 3px 0 #0006}
+.sbl{background:#c98a1a;color:#fff;text-align:center;font-weight:900;font-size:14px;padding:4px 10px;margin:-4px 14px 0;clip-path:polygon(6% 0,100% 0,94% 100%,0 100%);text-shadow:0 1px 0 #0007}
 .labbtn{position:relative;display:flex;align-items:center;gap:12px;padding:12px 14px;min-height:84px;border:3px solid var(--b);box-shadow:inset 0 0 0 2px #0b1030;cursor:pointer;color:#fff;overflow:hidden;background:
  linear-gradient(90deg,#0b1030ee 30%,#0b103022),
  repeating-linear-gradient(90deg,#7d8fb5 0 2px,transparent 2px 28px),
@@ -1590,6 +1594,7 @@ document.addEventListener('click',e=>{
  else if(a==='pickp'){P.tab='box';P.sort='lvl';go('pokemon')}
  else if(a==='partner'){S.partner=t.dataset.uid;P.flash='Nouveau partenaire d\'exploration !';save();render(true)}
  else if(a==='candy'){if(m)candy(m,t.dataset.k)}
+ else if(a==='sactab'){SACTAB=t.dataset.k;render(true)}
  else if(a==='smenu')saveMenu();else if(a==='sexp')saveIO('exp');else if(a==='simp')saveIO('imp');else if(a==='pinfo'){PINFO=!PINFO;render(true)}
  else if(a==='evoff')modalOv('<h4 class="px">Événement indisponible</h4><div class="svnote" style="margin:0">Cet événement est désactivé pour le moment. Reviens bientôt !</div><div class="pbt"><a class="btn y" data-m="x">OK</a></div>');
  else if(a==='afnew'){AF={idx:null,id:0,q:'',lvl:60,sh:false,bg:'meadow',moves:[]};render(true)}
@@ -3149,11 +3154,21 @@ function sac(){
  const rods=[1,2,3].map(lv=>{const own=o>=lv,on=own&&eq===lv;return `<div class="li pick ${on?'sel':''} ${own?'':'dim'}" ${own?`data-act="eq" data-k="rod" data-v="${lv}"`:''}><div class="ico"><i class="ti ti-rod${lv}"></i></div><div class="grow"><b>${ROD[lv].n}</b><div style="color:var(--m);font-size:12px">${own?(on?'Équipée':'Toucher pour équiper'):'À acheter à la boutique'}</div></div>${on?'<i class="ti ti-check" style="color:var(--g);font-size:20px"></i>':''}</div>`}).join('');
  const bl=[['none','Aucun appât','Pêche normale',null],...Object.entries(BAIT).map(([k,b])=>[k,b.n,b.d,it[k]||0])].map(([k,n,d,c])=>{const own=c===null||c>0,on=bait===k||(k==='none'&&(bait==='none'||!(it[bait]>0)));return `<div class="li pick ${on?'sel':''} ${own?'':'dim'}" ${own?`data-act="eq" data-k="bait" data-v="${k}"`:''}><div class="ico"><i class="ti ti-${k==='none'?'ban':BAIT[k].ic}"></i></div><div class="grow"><b>${n}</b><div style="color:var(--m);font-size:12px">${d}</div></div>${c===null?'':`<span class="chip">×${c}</span>`}${on?'<i class="ti ti-check" style="color:var(--g);font-size:20px"></i>':''}</div>`}).join('');
  const balls=Object.entries(BALLS).map(([k,b])=>`<div class="li"><div class="ico"><img src="${BI(k)}" width="30" height="30" alt=""></div><div class="grow"><b>${b.n}</b></div><span class="chip">×${S.balls[k]||0}</span></div>`).join('');
- const objs=[...(((it.botte||0)>0)?[['botte','Vieille Botte','boot-item']]:[]),...(((it.bonbonxp||0)>0)?[['bonbonxp','Super Bonbon XP',xn('Rare Candy')]]:[]),['baie','Baie',xn(ITEMICO.baie)],['dodo','Dodo',xn(ITEMICO.dodo)],['appat','Appât',xn(ITEMICO.appat)],...Object.entries(CANDY).map(([k,c])=>[k,c.n,xn(ITEMICO[k])]),...Object.entries(CAPS).map(([k,c])=>[k,c.n,c.ic]),...VIT,...Object.entries(HELD).map(([k,h])=>[k,h.n,h.ic]),...Object.entries(STONE).map(([n,k])=>[k,n,xn(ITEMICO[k])])].map(([k,n,ic])=>`<div class="li"><div class="ico"><i class="ti ti-${ic}"></i></div><div class="grow"><b>${n}</b></div>${k==='bonbonxp'&&(it.bonbonxp||0)>0?'<a class="btn sm y" data-act="xpcandy">Utiliser</a>':''}<span class="chip">×${it[k]||0}</span></div>`).join('');
+ const rw=(ic,n,k,d,x)=>`<div class="li"><div class="ico"><i class="ti ti-${ic}"></i></div><div class="grow"><b>${n}</b>${d?`<div style="color:var(--m);font-size:12px">${d}</div>`:''}</div>${x||''}<span class="chip">×${it[k]||0}</span></div>`;
+ const rows=l=>l.map(([k,n,ic,d,x])=>rw(ic,n,k,d,x)).join('')||'<div style="color:var(--m)">Rien ici pour le moment.</div>';
+ const bon=[...(((it.bonbonxp||0)>0)?[['bonbonxp','Super Bonbon XP',xn('Rare Candy'),'XP pour le dresseur',`<a class="btn sm y" data-act="xpcandy">Utiliser</a>`]]:[]),...Object.entries(CANDY).map(([k,c])=>[k,c.n,xn(ITEMICO[k]),'+'+c.lv+' niveau'+(c.lv>1?'x':'')]),...VIT.map(v=>[v[0],v[1],v[2]])];
+ const tenu=Object.entries(HELD).map(([k,h])=>[k,h.n,h.ic,h.d]);
+ const evo=[...Object.entries(STONE).map(([n,k])=>[k,n,xn(ITEMICO[k])]),...Object.entries(CAPS).map(([k,c])=>[k,c.n,c.ic,c.d])];
+ const div=[...(((it.botte||0)>0)?[['botte','Vieille Botte','boot-item']]:[]),['baie','Baie',xn(ITEMICO.baie)],['dodo','Dodo',xn(ITEMICO.dodo)],['appat','Appât',xn(ITEMICO.appat)]];
+ const TABS=[['balls','pokeball','Balls',`<div class="list">${balls}</div>`],['peche','fish','Pêche',`<h4 class="px" style="font-size:10px">Canne équipée</h4><div class="list">${rods}</div><h4 class="px" style="font-size:10px;margin-top:10px">Appât équipé</h4><div class="list">${bl}</div>`],['bonbons','candy','Bonbons et vitamines',`<div class="list">${rows(bon)}</div>`],['tenus','shield','Objets tenus',`<div class="list">${rows(tenu)}</div>`],['evo','diamond','Pierres et capsules',`<div class="list">${rows(evo)}</div>`],['div','package','Divers',`<div class="list">${rows(div)}</div>`]];
+ if(!TABS.some(t=>t[0]===SACTAB))SACTAB='balls';
+ const cur=TABS.find(t=>t[0]===SACTAB);
  return `<div class="title"><h3 class="px">Sac</h3><a class="btn sm" data-go="boutique"><i class="ti ti-shopping-bag"></i>Boutique</a></div>
- <div class="cols eq"><div style="display:flex;flex-direction:column;gap:10px"><div class="panel"><h4 class="px">Canne équipée</h4><div class="list">${rods}</div></div><div class="panel"><h4 class="px">Appât équipé</h4><div class="list">${bl}</div></div></div>
- <div style="display:flex;flex-direction:column;gap:10px"><div class="panel"><h4 class="px">Balls</h4><div class="list">${balls}</div></div><div class="panel"><h4 class="px">Objets</h4><div class="list">${objs}</div></div></div></div>`;
+ <div class="sbt">${TABS.map(([k,ic])=>`<a class="sb ${k===SACTAB?'on':''}" data-act="sactab" data-k="${k}"><i class="ti ti-${ic}"></i></a>`).join('')}</div>
+ <div class="sbl">${cur[2]}</div>
+ <div class="panel">${cur[3]}</div>`;
 }
+let SACTAB='balls';
 
 /* ===== BOUTIQUE ===== */
 const SHOP=[
