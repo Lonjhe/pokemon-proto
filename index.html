@@ -488,6 +488,13 @@ input{flex:1;min-width:140px}
 .pick-c{background:var(--p);border:3px solid var(--b);box-shadow:0 0 0 2px #0b1030;max-width:460px;width:100%;max-height:86vh;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
 .prows{display:flex;flex-direction:column;gap:8px}.prow{display:flex;align-items:center;gap:10px;background:var(--p2);border:2px solid var(--b);padding:6px 10px}.prow small{display:block;color:var(--m);font-size:12px}.prow .grow{flex:1}
 .pbt{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.labbtn{position:relative;display:flex;align-items:center;gap:12px;padding:12px 14px;min-height:84px;border:3px solid var(--b);box-shadow:inset 0 0 0 2px #0b1030;cursor:pointer;color:#fff;overflow:hidden;background:
+ linear-gradient(90deg,#0b1030ee 30%,#0b103022),
+ repeating-linear-gradient(90deg,#7d8fb5 0 2px,transparent 2px 28px),
+ linear-gradient(#aebfd8 0 55%,#e4e9f2 55% 60%,#8a96ad 60%),
+ repeating-conic-gradient(#cfd6e4 0 25%,#b4bdd0 0 50%) 0 0/24px 24px}
+.labbtn b{display:block;font-size:12px;color:var(--y);margin-bottom:4px;text-shadow:0 2px 0 #0008}.labbtn small{display:block;font-size:12px;color:#fff;text-shadow:0 1px 0 #0008}
+.labbtn>div{flex:1;min-width:0}.labbtn .oak{width:64px;height:64px;object-fit:contain;image-rendering:pixelated;flex:none}.labbtn .ti{font-size:22px}
 .te-ov{padding:8px}
 .tef{width:100%;max-width:520px;height:100%;max-height:100%;margin:0 auto;display:flex;flex-direction:column;gap:8px;background:var(--p);border:3px solid var(--b);box-shadow:0 0 0 2px #0b1030;padding:10px;min-height:0}
 .tef select{width:100%;margin-top:4px}
@@ -2608,8 +2615,9 @@ function ligue(){
   const done=idx.filter(i=>i<A.step).length;
   return `<div class="panel"><div class="zh"><div class="bgimg" style="background-image:url(${BG_}${z.bg}.png)"></div><b class="px" style="font-size:11px;position:relative">${z.name}</b><div style="position:relative;font-size:12px">${done}/${idx.length} combats</div></div><div class="list">${idx.map(i=>row(ADV[i],i)).join('')}</div></div>`}).join('');
  const h=Math.floor(msToMidnight()/36e5),mi=Math.floor(msToMidnight()/6e4)%60;
- return `<div class="title"><h3 class="px">Ligue · Kanto</h3><span style="display:flex;gap:6px;align-items:center"><span class="chip">Niv. moy. : ${avg}</span><a class="btn y" data-act="teamedit" title="Équipe"><i class="ti ti-users"></i>${S.box.filter(m=>m.team).length}/6</a></span></div>
- <div class="panel"><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">${badges}</div>${bar(pct,'var(--y)')}<div style="font-size:12px;color:var(--m);margin-top:4px">${A.step}/${ADV.length} combats · ${A.step>=ADV.length?'Tu es Maître de la Ligue !':'Prochain : '+ADV[A.step].name}</div><div style="font-size:12px;color:var(--m);margin-top:4px"><i class="ti ti-clock"></i> Chaque chef d'arène n'accepte qu'<b>un seul essai par jour</b> (nouveaux essais dans ${h} h ${String(mi).padStart(2,'0')}).</div></div>${zones}
+ return `<div class="title"><h3 class="px">Ligue · Kanto</h3></div>
+ <div class="panel"><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">${badges}</div>${bar(pct,'var(--y)')}<div style="font-size:12px;color:var(--m);margin-top:4px">${A.step}/${ADV.length} combats · ${A.step>=ADV.length?'Tu es Maître de la Ligue !':'Prochain : '+ADV[A.step].name}</div><div style="font-size:12px;color:var(--m);margin-top:4px"><i class="ti ti-clock"></i> Chaque chef d'arène n'accepte qu'<b>un seul essai par jour</b> (nouveaux essais dans ${h} h ${String(mi).padStart(2,'0')}).</div></div><a class="labbtn" data-act="teamedit"><img class="oak" src="${TSP}oak.png" referrerpolicy="no-referrer" alt=""><div><b class="px">Former l'équipe</b><small>Labo du Prof. Chen · ${S.box.filter(m=>m.team).length}/6</small></div><i class="ti ti-chevron-right"></i></a>
+ ${zones}
  <div class="panel" style="border-style:dashed"><h4 class="px">Outils de test (prototype)</h4><div style="display:flex;gap:6px;flex-wrap:wrap"><a class="btn sm" data-act="nextday"><i class="ti ti-calendar-plus"></i>Passer au jour suivant</a><a class="btn sm" data-act="resetadv"><i class="ti ti-refresh"></i>Réinitialiser la Ligue</a></div></div>`;
 }
 function startAdv(i){
