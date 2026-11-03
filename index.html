@@ -1517,15 +1517,16 @@ function stub(){
 const esc=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const STARTERS=[[1,'Plante'],[4,'Feu'],[7,'Eau']];
 function intro(){
+ if(document.querySelector('.intro'))return;
  const old=S.box.length>0,st={n:S.name||'',p:old?0:null};
  const draw=()=>{
   $('#app').innerHTML=`<div class="intro"><h1 class="px">Bienvenue, Dresseur !</h1><p>Comment t'appelles-tu ?</p>
   <input id="inm" maxlength="14" placeholder="Ton pseudo" value="${esc(st.n)}" autocomplete="off">
-  ${old?'':`<p>Choisis ton Pokémon de départ (Niv. 5)</p><div class="sts">${STARTERS.map(([id,t])=>`<button class="st ${st.p===id?'on':''}" data-p="${id}"><img src="${SP(id)}" referrerpolicy="no-referrer" alt=""><b class="px">${BY[id][1]}</b><small>${t}</small></button>`).join('')}</div>`}
+  ${old?'':`<p>Choisis ton Pokémon de départ (Niv. 5)</p><div class="sts">${STARTERS.map(([id,t])=>`<button type="button" class="st ${st.p===id?'on':''}" data-p="${id}"><img src="${SP(id)}" referrerpolicy="no-referrer" alt=""><b class="px">${BY[id][1]}</b><small>${t}</small></button>`).join('')}</div>`}
   <button class="go px" id="igo" ${st.n.trim()&&st.p!==null?'':'disabled'}>Commencer l'aventure</button></div>`;
   const inp=document.getElementById('inm'),go=document.getElementById('igo');
   inp.oninput=()=>{st.n=inp.value;go.disabled=!(st.n.trim()&&st.p!==null)};
-  document.querySelectorAll('.st').forEach(b=>b.onclick=()=>{st.p=+b.dataset.p;const v=inp.value;st.n=v;draw();const i2=document.getElementById('inm');i2.focus();i2.setSelectionRange(v.length,v.length)});
+  document.querySelectorAll('.st').forEach(b=>b.onclick=()=>{st.p=+b.dataset.p;st.n=inp.value;document.querySelectorAll('.st').forEach(x=>x.classList.toggle('on',x===b));go.disabled=!(st.n.trim()&&st.p!==null)});
   go.onclick=()=>{if(!st.n.trim()||st.p===null)return;S.name=st.n.trim().slice(0,14);
    if(!old){const m=mk(st.p,5);m.team=true;S.box=[m];S.dex={[st.p]:'c'};S.partner=m.uid}
    save();render()};
