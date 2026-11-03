@@ -488,10 +488,20 @@ input{flex:1;min-width:140px}
 .pick-c{background:var(--p);border:3px solid var(--b);box-shadow:0 0 0 2px #0b1030;max-width:460px;width:100%;max-height:86vh;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
 .prows{display:flex;flex-direction:column;gap:8px}.prow{display:flex;align-items:center;gap:10px;background:var(--p2);border:2px solid var(--b);padding:6px 10px}.prow small{display:block;color:var(--m);font-size:12px}.prow .grow{flex:1}
 .pbt{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-.sbt{display:flex;gap:6px;justify-content:space-between;background:#c98a1a;padding:10px 8px;border:3px solid var(--b)}
-.sb{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:#0b1030;border:3px solid #0b1030;cursor:pointer;flex:none;opacity:.8}.sb .ti{font-size:28px}.sb:not(.on){background:#1b2358}
-.sb.on{background:#fff;color:#0b1030;opacity:1;transform:scale(1.15);border-color:#0b1030;box-shadow:0 3px 0 #0006}
-.sbl{background:#c98a1a;color:#fff;text-align:center;font-weight:900;font-size:14px;padding:4px 10px;margin:-4px 14px 0;clip-path:polygon(6% 0,100% 0,94% 100%,0 100%);text-shadow:0 1px 0 #0007}
+.bag{position:relative;margin:-16px;padding:14px 14px 20px;flex:1;display:flex;flex-direction:column;gap:10px;color:#1b0f00;background:#edb31e url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1920 1080%22 preserveAspectRatio=%22none%22%3E%3Cdefs%3E%3ClinearGradient id=%22g%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23f0fbfa%22/%3E%3Cstop offset=%22.5%22 stop-color=%22%23fcd6ee%22/%3E%3Cstop offset=%221%22 stop-color=%22%23fde4ff%22/%3E%3C/linearGradient%3E%3CclipPath id=%22c%22%3E%3Cpath d=%22M0 0H857L375 1080H0Z%22/%3E%3C/clipPath%3E%3Cfilter id=%22b%22%3E%3CfeGaussianBlur stdDeviation=%2214%22/%3E%3C/filter%3E%3C/defs%3E%3Crect width=%221920%22 height=%221080%22 fill=%22%23edb31e%22/%3E%3Cg fill=%22none%22 stroke=%22%23efc524%22 stroke-width=%2270%22 opacity=%22.7%22%3E%3Ccircle cx=%221500%22 cy=%22720%22 r=%22240%22/%3E%3Ccircle cx=%221500%22 cy=%22720%22 r=%22400%22/%3E%3Ccircle cx=%221500%22 cy=%22720%22 r=%22560%22/%3E%3C/g%3E%3Cpath d=%22M857 0H1077L595 1080H375Z%22 fill=%22%23e3a202%22/%3E%3Cpath d=%22M0 0H857L375 1080H0Z%22 fill=%22url%28%23g%29%22/%3E%3Cg clip-path=%22url%28%23c%29%22%3E%3Cpath d=%22M857 0L375 1080%22 stroke=%22%23d3d8e4%22 stroke-width=%2244%22 opacity=%22.75%22 filter=%22url%28%23b%29%22/%3E%3C/g%3E%3C/svg%3E") right top/140% 100% no-repeat}
+.bag .bh{display:flex;align-items:center;justify-content:space-between}.bag .bh h3{font:900 34px Nunito,sans-serif;letter-spacing:.02em;display:flex;align-items:center;gap:8px;margin:0}.bag .bh .ti{font-size:34px}
+.bag .bh .btn{background:#0b1030;color:#fff}
+.sbt{display:flex;gap:4px;justify-content:space-around;align-items:center;padding:6px 0;min-height:64px}
+.sb{width:44px;height:44px;display:grid;place-items:center;cursor:pointer;flex:none;opacity:.95}.sb img{width:36px;height:36px;object-fit:contain;filter:drop-shadow(0 0 1px #8a5a00)}
+.sb.on{transform:scale(1.4)}.sb.on img{filter:brightness(0)}
+.sbl{background:#db8a21;color:#fff;text-align:center;font-weight:900;font-size:15px;padding:5px 10px;margin:0 auto;width:min(80%,320px);clip-path:polygon(0 0,100% 0,94% 100%,6% 100%);text-shadow:0 1px 0 #0005}
+.bag .bl{display:flex;flex-direction:column;gap:2px}
+.bag .li{background:none;border:0;color:#1b0f00;padding:6px 10px;gap:10px;border-radius:30px}.bag .li b{font-size:16px;font-weight:800}
+.bag .li .ico{border:0;box-shadow:none}.bag .li .grow div{color:#6b4a00!important}
+.bag .chip{background:none;border:0;color:#1b0f00;font-size:16px;font-weight:800}
+.bag .li.sel{background:#000;color:#fff}.bag .li.sel b{color:#fff}.bag .li.sel .grow div{color:#ddd!important}.bag .li.sel .chip{color:#fff}
+.bag h4.px{color:#1b0f00;font-size:11px;margin:6px 4px 2px}
+.bag .list{gap:2px}
 .labbtn{position:relative;display:flex;align-items:center;gap:12px;padding:12px 14px;min-height:84px;border:3px solid var(--b);box-shadow:inset 0 0 0 2px #0b1030;cursor:pointer;color:#fff;overflow:hidden;background:
  linear-gradient(90deg,#0b1030ee 30%,#0b103022),
  repeating-linear-gradient(90deg,#7d8fb5 0 2px,transparent 2px 28px),
@@ -3160,13 +3170,13 @@ function sac(){
  const tenu=Object.entries(HELD).map(([k,h])=>[k,h.n,h.ic,h.d]);
  const evo=[...Object.entries(STONE).map(([n,k])=>[k,n,xn(ITEMICO[k])]),...Object.entries(CAPS).map(([k,c])=>[k,c.n,c.ic,c.d])];
  const div=[...(((it.botte||0)>0)?[['botte','Vieille Botte','boot-item']]:[]),['baie','Baie',xn(ITEMICO.baie)],['dodo','Dodo',xn(ITEMICO.dodo)],['appat','Appât',xn(ITEMICO.appat)]];
- const TABS=[['balls','pokeball','Balls',`<div class="list">${balls}</div>`],['peche','fish','Pêche',`<h4 class="px" style="font-size:10px">Canne équipée</h4><div class="list">${rods}</div><h4 class="px" style="font-size:10px;margin-top:10px">Appât équipé</h4><div class="list">${bl}</div>`],['bonbons','candy','Bonbons et vitamines',`<div class="list">${rows(bon)}</div>`],['tenus','shield','Objets tenus',`<div class="list">${rows(tenu)}</div>`],['evo','diamond','Pierres et capsules',`<div class="list">${rows(evo)}</div>`],['div','package','Divers',`<div class="list">${rows(div)}</div>`]];
+ const TABS=[['balls','pokeball','Balls',`<div class="list">${balls}</div>`,'ball'],['peche','fish','Pêche',`<h4 class="px" style="font-size:10px">Canne équipée</h4><div class="list">${rods}</div><h4 class="px" style="font-size:10px;margin-top:10px">Appât équipé</h4><div class="list">${bl}</div>`,'key'],['bonbons','candy','Bonbons et vitamines',`<div class="list">${rows(bon)}</div>`,'candy'],['tenus','shield','Objets tenus',`<div class="list">${rows(tenu)}</div>`,'other'],['evo','diamond','Pierres et capsules',`<div class="list">${rows(evo)}</div>`,'battle'],['div','package','Divers',`<div class="list">${rows(div)}</div>`,'berry']];
  if(!TABS.some(t=>t[0]===SACTAB))SACTAB='balls';
  const cur=TABS.find(t=>t[0]===SACTAB);
- return `<div class="title"><h3 class="px">Sac</h3><a class="btn sm" data-go="boutique"><i class="ti ti-shopping-bag"></i>Boutique</a></div>
- <div class="sbt">${TABS.map(([k,ic])=>`<a class="sb ${k===SACTAB?'on':''}" data-act="sactab" data-k="${k}"><i class="ti ti-${ic}"></i></a>`).join('')}</div>
+ return `<div class="bag"><div class="bh"><h3><i class="ti ti-backpack"></i>SAC</h3><a class="btn sm" data-go="boutique"><i class="ti ti-shopping-bag"></i>Boutique</a></div>
+ <div class="sbt">${TABS.map(([k,ic,lb,h,ib])=>`<a class="sb ${k===SACTAB?'on':''}" data-act="sactab" data-k="${k}" title="${lb}"><img src="img/bag_${ib}.png" alt=""></a>`).join('')}</div>
  <div class="sbl">${cur[2]}</div>
- <div class="panel">${cur[3]}</div>`;
+ <div class="bl">${cur[3]}</div></div>`;
 }
 let SACTAB='balls';
 
