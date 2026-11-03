@@ -1583,7 +1583,7 @@ function render(keep){
  if(!S.name||!S.box.length){intro();return}
  const c=route==='hub'?hub():route==='explorer'?explorer():route==='pokemon'?pokemon():route==='combat'?combat():route==='boss'?boss():route==='ligue'?ligue():route==='boutique'?boutique():route==='sac'?sac():route==='elevage'?elevageView():route==='gacha'?gachaView():route==='manoir'?manoirView():route==='plus'?plusView():route==='admin'?adminView():stub();
  const y=window.scrollY;
- $('#app').innerHTML=shell(c);$('#app').classList.toggle('bagpg',route==='sac'||route==='boutique'||route==='plus'||(route==='combat'&&!(B&&B.mode==='duel')));$('#app').classList.toggle('plusp',route==='plus'||(route==='combat'&&!(B&&B.mode==='duel')));capTick();drawZone();zScroll();if(document.getElementById('bzc')||document.getElementById('czc')||document.getElementById('gzc')||document.getElementById('hwc'))bzStart();if(document.getElementById('fa')){fsInit();}
+ $('#app').innerHTML=shell(c);$('#app').classList.toggle('bagpg',route==='sac'||route==='boutique'||route==='plus'||(route==='combat'&&!(B&&B.mode==='duel')));$('#app').classList.toggle('plusp',route==='plus');capTick();drawZone();zScroll();if(document.getElementById('bzc')||document.getElementById('czc')||document.getElementById('gzc')||document.getElementById('hwc'))bzStart();if(document.getElementById('fa')){fsInit();}
  if(keep)window.scrollTo(0,y);
  document.querySelectorAll('img').forEach(i=>i.addEventListener('error',()=>{i.style.visibility='hidden'},{once:true}));
 }
