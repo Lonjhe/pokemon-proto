@@ -850,7 +850,7 @@ function openChest(){
  const coins=100+stk.n*20,sup=stk.n%5===0?5:0;S.coins+=coins;S.gems=gems()+10;S.balls.poke+=2;let egn='';if(stk.n%7===0){breed();S.eggs.push({k:'l',id:pickEgg('l')});egn='<div style="color:var(--y);margin-top:4px">Événement série de 7 jours : <b>Œuf légendaire</b> !</div>'}if(sup)S.balls.super=(S.balls.super||0)+sup;
  const qs=DAY_QUESTS.filter(q=>d[q[0]]>=q[2]);const qc=qs.reduce((a,q)=>a+q[3],0);S.coins+=qc;egn+=`<div style="color:var(--y);margin-top:4px">+${addXp(100)} XP${xpNote()}</div>`;
  save();
- hmOverlay(`<h4 class="px" style="font-size:11px;color:var(--y)">Coffre ouvert</h4><i class="ti ti-box" style="font-size:64px;color:#ffd54f"></i><div style="font-weight:900;font-size:16px;margin-top:6px">+${coins} pièces · +2 Poké Balls${sup?' · +5 Super Balls':''}</div>${egn}${qc?`<div style="color:var(--y);margin-top:4px">Quêtes : +${qc} pièces</div>`:''}<div style="color:var(--m);margin-top:4px">Série : ${stk.n} jour${stk.n>1?'s':''}</div>`);
+ hmOverlay(`<h4 class="px" style="font-size:11px;color:var(--y)">Coffre ouvert</h4><img src="img/chest.png" alt="" style="width:96px;height:96px;object-fit:contain;filter:drop-shadow(0 4px 3px #0008)"><div style="font-weight:900;font-size:16px;margin-top:6px">+${coins} pièces · +2 Poké Balls${sup?' · +5 Super Balls':''}</div>${egn}${qc?`<div style="color:var(--y);margin-top:4px">Quêtes : +${qc} pièces</div>`:''}<div style="color:var(--m);margin-top:4px">Série : ${stk.n} jour${stk.n>1?'s':''}</div>`);
 }
 
 function newEnc(){
