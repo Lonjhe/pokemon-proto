@@ -1567,6 +1567,13 @@ document.addEventListener('click',e=>{
  else if(a==='candy'){if(m)candy(m,t.dataset.k)}
  else if(a==='smenu')saveMenu();else if(a==='sexp')saveIO('exp');else if(a==='simp')saveIO('imp');else if(a==='pinfo'){PINFO=!PINFO;render(true)}
  else if(a==='evoff')modalOv('<h4 class="px">Événement indisponible</h4><div class="svnote" style="margin:0">Cet événement est désactivé pour le moment. Reviens bientôt !</div><div class="pbt"><a class="btn y" data-m="x">OK</a></div>');
+ else if(a==='afnew'){AF={idx:null,id:0,q:'',lvl:60,sh:false,bg:'meadow',moves:[]};render(true)}
+ else if(a==='afedit'){const bi=+t.dataset.i,b=BOSSES[bi];AF={idx:bi-BASEN,id:b.id,q:'',lvl:b.lvl,sh:!!b.sh,bg:b.bg,moves:[...b.moves]};render(true)}
+ else if(a==='afpick'){AF.id=+t.dataset.i;if(!AF.moves.some(Boolean))AF.moves=[];render(true)}
+ else if(a==='afsh'){AF.sh=!AF.sh;render(true)}
+ else if(a==='afcancel'){AF=null;render(true)}
+ else if(a==='afsave'){if(!AF.id)return;const f=AF,mv=f.moves.filter(Boolean),b={id:f.id,name:BY[f.id][1],lvl:f.lvl,sh:f.sh,bg:f.bg,custom:1,moves:mv.length?mv:movesOf(f.id,f.lvl).map(m=>({n:m.n,t:m.t,p:m.p}))};const c=CFG();(c.custom||(c.custom=[]));if(f.idx!=null)c.custom[f.idx]=b;else{c.custom.push(b);c.rot.push(BASEN+c.custom.length-1)}syncB();AF=null;save();render(true)}
+ else if(a==='afdel'){const c=CFG(),bi=BASEN+AF.idx;c.custom.splice(AF.idx,1);c.rot=c.rot.filter(x=>x!==bi).map(x=>x>bi?x-1:x);if(!c.rot.length)c.rot=[0];syncB();AF=null;save();render(true)}
  else if(a==='alogin'){const v=($('#apin')||{}).value;if(v===CFG().pin){window.ADM=true;render(true)}else{const e=$('#aerr');if(e)e.textContent='Code incorrect'}}
  else if(a==='alogout'){window.ADM=false;go('hub')}
  else if(a==='arot'){const c=CFG(),i=+t.dataset.i,d=+t.dataset.d;if(d===0){if(c.rot.length>1)c.rot.splice(i,1)}else{const j=i+d;if(j>=0&&j<c.rot.length){[c.rot[i],c.rot[j]]=[c.rot[j],c.rot[i]]}}save();render(true)}
@@ -1626,6 +1633,8 @@ const BOSSES=[
  {id:150,name:'Mewtwo',lvl:90,bg:'mountain',moves:[{n:'Psyko',t:'Psy',p:90},{n:'Ball\'Ombre',t:'Spectre',p:80},{n:'Choc Mental',t:'Psy',p:50}]},
  {id:149,name:'Dracolosse',lvl:80,bg:'beach',moves:[{n:'Dracogriffe',t:'Dragon',p:80},{n:'Ouragan',t:'Vol',p:70},{n:'Tonnerre',t:'Électrik',p:90}]},
  {id:34,name:'Nidoking',lvl:75,sh:true,bg:'desert',moves:[{n:'Détricanon',t:'Poison',p:90},{n:'Séisme',t:'Normal',p:100},{n:'Mégacorne',t:'Insecte',p:75}]}];
+const BASEN=BOSSES.length,syncB=()=>{BOSSES.length=BASEN;((S.cfg&&S.cfg.custom)||[]).forEach(b=>BOSSES.push(b))};syncB();
+let AF=null;
 const EVTS=[['manoir','Manoir hanté (Halloween)'],['boss','Boss de monde']];
 const CFG=()=>S.cfg||(S.cfg={rot:BOSSES.map((b,i)=>i),ev:{},pin:'2468'});
 const evOn=k=>!(S.cfg&&S.cfg.ev&&S.cfg.ev[k]===false);
@@ -2449,15 +2458,43 @@ function bossRank(){
  const rows=r.top.map((x,i)=>row(x,i+1)).join('')+(r.rank>10?`<div class="lb" style="grid-template-columns:1fr;text-align:center">…</div>${row({n:S.name||'Toi',d:r.mine,me:1},r.rank)}`:'');
  const o=modalOv(`<h4 class="px">Classement</h4><div class="lbs">${rows}</div><div class="pbt"><a class="btn y" data-m="x">Fermer</a></div>`);o.firstChild.classList.add('pm-pop');
 }
+const MVL=()=>Object.keys(MD).filter(n=>MD[n][2]>0&&!STMOVE[n]).sort((a,b)=>MD[a][0].localeCompare(MD[b][0])||a.localeCompare(b));
+const NRM=x=>String(x).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+function afList(){
+ const q=NRM(AF.q.trim()),all=Object.values(BY).sort((a,b)=>a[0]-b[0]);
+ const r=(q?all.filter(x=>NRM(x[1]).includes(q)||String(x[0])===q||x[2].some(t=>NRM(t).includes(q))):all).slice(0,40);
+ return r.map(x=>`<div class="arow" data-act="afpick" data-i="${x[0]}" style="cursor:pointer"><img src="${SP(x[0])}" referrerpolicy="no-referrer" alt="" loading="lazy"><div class="grow"><b>${x[1]}</b> <small>#${x[0]}</small><br><small>${x[2].join(' · ')}</small></div></div>`).join('')||'<div style="color:var(--m)">Aucun Pokémon trouvé.</div>';
+}
+function adminForm(){
+ const f=AF,sp=f.id?BY[f.id]:null,ml=MVL();
+ const opt=cur=>'<option value="">— choisir —</option>'+ml.map(n=>`<option value="${esc(n)}" ${n===cur?'selected':''}>${n} (${MD[n][0]} · ${MD[n][2]})</option>`).join('');
+ let body=`<div class="panel"><h4 class="px">${f.idx!=null?'Modifier le boss':'Nouveau boss'}</h4><input id="afq" class="ain" placeholder="Rechercher un Pokémon (nom, n°, type)" value="${esc(f.q)}" autocomplete="off" style="margin-top:8px"><div id="afl" style="max-height:220px;overflow:auto;margin-top:6px">${afList()}</div></div>`;
+ if(sp){
+  const mx=hpMax(f.id,f.lvl),ms=[0,1,2,3].map(i=>`<select class="ain" data-af="m${i}" style="margin-bottom:4px">${opt(f.moves[i]&&f.moves[i].n)}</select>`).join('');
+  body+=`<div class="panel"><h4 class="px">${sp[1]}${f.sh?' ✦':''}</h4>
+  <div class="arow" style="margin-top:8px"><img src="${f.sh?SH(f.id):SP(f.id)}" referrerpolicy="no-referrer" alt="" style="width:64px;height:64px"><div class="grow"><b>PV : ${fmtN(mx)}</b><div class="bar" style="height:10px;background:#080c26;border:1px solid var(--b);margin:4px 0"><i style="display:block;height:100%;width:100%;background:var(--g)"></i></div><small>Att ${atkOf(f.id,f.lvl)} · Déf ${defOf(f.id,f.lvl)} · Vit ${spdOf(f.id,f.lvl)}</small></div></div>
+  <div style="color:var(--m);font-size:12px;margin:2px 0 8px">En raid, tous les dresseurs se partagent une barre commune de ${fmtN(TOT)} PV.</div>
+  <div class="arow"><div class="grow"><b>Niveau</b></div><input class="ain" type="number" min="1" max="100" value="${f.lvl}" data-af="lvl" style="width:80px"></div>
+  <div class="arow"><div class="grow"><b>Shiny ✦</b></div><div class="sw ${f.sh?'on':''}" data-act="afsh"></div></div>
+  <div class="arow"><div class="grow"><b>Décor</b></div><select class="ain" data-af="bg" style="width:130px">${BIOMES.herbe.map(([k,n])=>`<option value="${k}" ${k===f.bg?'selected':''}>${n}</option>`).join('')}</select></div>
+  <h4 class="px" style="font-size:11px;margin:8px 0 4px">Attaques (4 max)</h4>${ms}<div style="color:var(--m);font-size:12px">Vide = attaques naturelles du Pokémon à ce niveau.</div></div>`;
+ }
+ return `<div class="title"><h3 class="px">Administration</h3><a class="btn" data-act="afcancel">Retour</a></div>${body}<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><a class="btn y ${sp?'':'off'}" data-act="afsave"><i class="ti ti-check"></i>Enregistrer</a>${f.idx!=null?'<a class="btn" data-act="afdel" style="color:var(--r)"><i class="ti ti-trash"></i>Supprimer</a>':''}</div>`;
+}
+document.addEventListener('input',e=>{if(e.target.id==='afq'&&AF){AF.q=e.target.value;const l=$('#afl');if(l)l.innerHTML=afList()}});
+document.addEventListener('change',e=>{const k=e.target.dataset&&e.target.dataset.af;if(!k||!AF)return;const v=e.target.value;
+ if(k==='lvl')AF.lvl=Math.max(1,Math.min(100,+v||1));else if(k==='bg')AF.bg=v;else if(/^m\d$/.test(k)){const i=+k[1];AF.moves[i]=v?{n:v,t:MD[v][0],p:MD[v][2]}:null}
+ render(true)});
 function rewIco(e){return e.k==='coin'?'<i class="ti ti-coin" style="color:var(--y)"></i>':e.k==='gem'?'<i class="ti ti-diamond" style="color:#ff7ad9"></i>':e.k==='ball'?`<img src="${BI(e.v)}" alt="">`:e.k==='egg'?eggImg(e.v,46):`<i class="ti ti-${ITI(e.v)}"></i>`}
 function adminView(){
  if(!window.ADM)return `<div class="title"><h3 class="px">Administration</h3></div><div class="panel"><h4 class="px">Accès réservé</h4><div style="color:var(--m);margin:6px 0 8px">Code administrateur requis.</div><input id="apin" class="ain" type="password" inputmode="numeric" placeholder="Code" autocomplete="off"><div id="aerr" style="color:var(--r);min-height:18px;margin-top:4px"></div><div style="display:flex;gap:8px"><a class="btn y" data-act="alogin">Entrer</a><a class="btn" data-go="hub">Retour</a></div></div>`;
+ if(AF)return adminForm();
  const c=CFG(),cur=bossIdx(curSlot());
- const rot=c.rot.map((bi,i)=>{const b=BOSSES[bi];return `<div class="arow"><img src="${b.sh?SH(b.id):SP(b.id)}" referrerpolicy="no-referrer" alt=""><div class="grow"><b>${i+1}. ${b.name}</b>${bi===cur?' <span class="chip">en cours</span>':''}<br><small>Niv. ${b.lvl}</small></div><a class="btn sq" data-act="arot" data-i="${i}" data-d="-1">↑</a><a class="btn sq" data-act="arot" data-i="${i}" data-d="1">↓</a><a class="btn sq" data-act="arot" data-i="${i}" data-d="0">✕</a></div>`}).join('')||'<div style="color:var(--m)">Aucun boss : la rotation par défaut s\'applique.</div>';
- const out=BOSSES.map((b,bi)=>c.rot.includes(bi)?'':`<div class="arow"><img src="${b.sh?SH(b.id):SP(b.id)}" referrerpolicy="no-referrer" alt=""><div class="grow"><b>${b.name}</b><br><small>Niv. ${b.lvl} · hors rotation</small></div><a class="btn" data-act="aradd" data-i="${bi}">+ Ajouter</a></div>`).join('');
+ const rot=c.rot.map((bi,i)=>{const b=BOSSES[bi];return `<div class="arow"><img src="${b.sh?SH(b.id):SP(b.id)}" referrerpolicy="no-referrer" alt=""><div class="grow"><b>${i+1}. ${b.name}</b>${bi===cur?' <span class="chip">en cours</span>':''}<br><small>Niv. ${b.lvl}</small></div>${b.custom?`<a class="btn sq" data-act="afedit" data-i="${bi}">✎</a>`:''}<a class="btn sq" data-act="arot" data-i="${i}" data-d="-1">↑</a><a class="btn sq" data-act="arot" data-i="${i}" data-d="1">↓</a><a class="btn sq" data-act="arot" data-i="${i}" data-d="0">✕</a></div>`}).join('')||'<div style="color:var(--m)">Aucun boss : la rotation par défaut s\'applique.</div>';
+ const out=BOSSES.map((b,bi)=>c.rot.includes(bi)?'':`<div class="arow"><img src="${b.sh?SH(b.id):SP(b.id)}" referrerpolicy="no-referrer" alt=""><div class="grow"><b>${b.name}</b><br><small>Niv. ${b.lvl} · hors rotation</small></div>${b.custom?`<a class="btn sq" data-act="afedit" data-i="${bi}">✎</a>`:''}<a class="btn" data-act="aradd" data-i="${bi}">+ Ajouter</a></div>`).join('');
  const ev=EVTS.map(([k,n])=>`<div class="arow"><div class="grow"><b>${n}</b><br><small>${evOn(k)?'Actif':'Désactivé'}</small></div><div class="sw ${evOn(k)?'on':''}" data-act="aev" data-k="${k}"></div></div>`).join('');
  return `<div class="title"><h3 class="px">Administration</h3><a class="btn" data-act="alogout">Quitter</a></div>
- <div class="panel"><h4 class="px">Rotation des boss</h4><div style="color:var(--m);margin:6px 0 8px;font-size:12px">Un boss toutes les 2 h, dans l'ordre ci-dessous, en boucle.</div>${rot}${out}</div>
+ <div class="panel"><h4 class="px">Rotation des boss</h4><div style="color:var(--m);margin:6px 0 8px;font-size:12px">Un boss toutes les 2 h, dans l'ordre ci-dessous, en boucle.</div>${rot}${out}<a class="btn y" data-act="afnew" style="margin-top:6px"><i class="ti ti-plus"></i>Créer un boss</a></div>
  <div class="panel"><h4 class="px">Événements</h4><div style="margin-top:8px">${ev}</div></div>
  <div class="panel"><h4 class="px">Sécurité</h4><div style="color:var(--m);margin:6px 0 8px;font-size:12px">Prototype : réglages et code stockés sur cet appareil. La vraie protection viendra avec le serveur.</div><a class="btn" data-act="apin2">Changer le code</a></div>`;
 }
