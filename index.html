@@ -488,6 +488,19 @@ input{flex:1;min-width:140px}
 .pick-c{background:var(--p);border:3px solid var(--b);box-shadow:0 0 0 2px #0b1030;max-width:460px;width:100%;max-height:86vh;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
 .prows{display:flex;flex-direction:column;gap:8px}.prow{display:flex;align-items:center;gap:10px;background:var(--p2);border:2px solid var(--b);padding:6px 10px}.prow small{display:block;color:var(--m);font-size:12px}.prow .grow{flex:1}
 .pbt{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.bag{padding-bottom:0}
+.bag .bl{display:flex;flex-direction:column;gap:2px;flex:1}
+.br{display:flex;align-items:center;gap:10px;padding:4px 6px 4px 10px;border-radius:30px;cursor:pointer;min-height:48px;color:#1b0f00}
+.br .ic{width:42px;height:42px;display:grid;place-items:center;flex:none}
+.br .ic img,.br .ic .gi{height:36px;width:auto;max-width:42px;object-fit:contain;image-rendering:auto;filter:drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff) drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff)}
+.br .ic .ti{font-size:30px;color:#1b0f00}
+.br b{flex:1;min-width:0;font-size:16px;font-weight:800}
+.br .q{font-weight:800;font-size:16px;padding:6px 12px;white-space:nowrap;display:flex;gap:4px;align-items:center}
+.br.dim{opacity:.55}.br.dim.sel{opacity:.9}
+.br.sel{background:#000;color:#fff;padding-right:0}.br.sel .q{background:#e06f08;color:#fff;border-radius:0 30px 30px 0;align-self:stretch}
+.bdet{position:sticky;bottom:84px;margin:8px -14px 0;background:#edb31e;box-shadow:0 -6px 8px #edb31e}
+.bdh{background:#db8a21;color:#fff;font-weight:900;font-size:14px;padding:4px 16px;text-shadow:0 1px 0 #0005}
+.bdt{display:flex;align-items:center;gap:10px;padding:8px 16px 12px;font-size:14px;font-weight:600;min-height:60px;color:#1b0f00}.bdt span{flex:1}
 .shp{display:inline-flex;align-items:center;gap:7px;background:#1b0f00aa;color:#fff;border:3px solid #fff;border-radius:30px;padding:6px 16px 6px 12px;font:900 14px Nunito,sans-serif;cursor:pointer;box-shadow:0 2px 0 #0004;text-shadow:0 1px 0 #0006}.shp svg{width:22px;height:22px}
 .bag .bh .cart{width:34px;height:34px}.bag .chip.pk{background:#1b0f00aa;color:#fff;border:3px solid #fff;border-radius:30px;padding:4px 14px;font-size:15px}
 .bag .li .btn.y{background:var(--y);color:#0b1030;border:2px solid #0b1030;border-radius:20px}
@@ -707,7 +720,7 @@ input{flex:1;min-width:140px}
 <script>
 const R='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
 const SD=R+'other/showdown/';
-const BALLIMG={poke:'poke-ball',super:'great-ball',hyper:'ultra-ball'},BI=k=>({poke:'https://archives.bulbagarden.net/media/upload/0/00/Bag_Pok%C3%A9_Ball_SV_Sprite.png',super:'https://archives.bulbagarden.net/media/upload/5/54/Bag_Great_Ball_SV_Sprite.png',hyper:'https://archives.bulbagarden.net/media/upload/5/55/Bag_Ultra_Ball_SV_Sprite.png'})[k];
+const BALLIMG={poke:'poke-ball',super:'great-ball',hyper:'ultra-ball'},BI=k=>'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/'+({poke:'poke-ball',super:'great-ball',hyper:'ultra-ball'})[k]+'.png';
 const SPS=i=>R+i+'.png',SP=i=>SD+i+'.gif',BK=i=>SD+'back/'+i+'.gif',SH=i=>SD+'shiny/'+i+'.gif',BKS=i=>SD+'back/shiny/'+i+'.gif',AR=i=>R+'other/official-artwork/'+i+'.png',ARS=i=>R+'other/official-artwork/shiny/'+i+'.png';
 
 /* sprites animés : taille entière (net) calée sur la scène, sinon réduction douce */
@@ -1607,6 +1620,7 @@ document.addEventListener('click',e=>{
  else if(a==='pickp'){P.tab='box';P.sort='lvl';go('pokemon')}
  else if(a==='partner'){S.partner=t.dataset.uid;P.flash='Nouveau partenaire d\'exploration !';save();render(true)}
  else if(a==='candy'){if(m)candy(m,t.dataset.k)}
+ else if(a==='bsel'){BAGSEL[t.dataset.t]=t.dataset.k;render(true)}
  else if(a==='shoptab'){SHOPTAB=t.dataset.k;render(true)}
  else if(a==='sactab'){SACTAB=t.dataset.k;render(true)}
  else if(a==='smenu')saveMenu();else if(a==='sexp')saveIO('exp');else if(a==='simp')saveIO('imp');else if(a==='pinfo'){PINFO=!PINFO;render(true)}
@@ -3163,26 +3177,33 @@ document.addEventListener('keyup',e=>{if(e.code==='Space'&&fsPtr.get('kS')==='C'
 
 
 /* ===== SAC : équipement de pêche, balls, objets ===== */
+const BAGSEL={};
+function bagRows(tab,items){
+ let sel=items.find(x=>x.k===BAGSEL[tab])||items[0];
+ const rows=items.map(x=>`<div class="br ${x===sel?'sel':''} ${x.dim?'dim':''}" data-act="bsel" data-t="${tab}" data-k="${x.k}"><span class="ic">${x.ic}</span><b>${x.n}</b><span class="q">${x.q||''}</span></div>`).join('')||'<div style="padding:10px">Rien ici pour le moment.</div>';
+ return{rows,det:sel?`<div class="bdet"><div class="bdh">${sel.n}</div><div class="bdt"><span>${sel.d||''}</span>${sel.btn||''}</div></div>`:''};
+}
+const itemD=k=>{const x=SHOP.find(q=>q.i===k);return x?x.d:''};
 function sac(){
  const o=S.rod||0,eq=rodLv(),bait=(S.eq&&S.eq.bait)||'none',it=itm();
- const rods=[1,2,3].map(lv=>{const own=o>=lv,on=own&&eq===lv;return `<div class="li pick ${on?'sel':''} ${own?'':'dim'}" ${own?`data-act="eq" data-k="rod" data-v="${lv}"`:''}><div class="ico"><i class="ti ti-rod${lv}"></i></div><div class="grow"><b>${ROD[lv].n}</b><div style="color:var(--m);font-size:12px">${own?(on?'Équipée':'Toucher pour équiper'):'À acheter à la boutique'}</div></div>${on?'<i class="ti ti-check" style="color:var(--g);font-size:20px"></i>':''}</div>`}).join('');
- const bl=[['none','Aucun appât','Pêche normale',null],...Object.entries(BAIT).map(([k,b])=>[k,b.n,b.d,it[k]||0])].map(([k,n,d,c])=>{const own=c===null||c>0,on=bait===k||(k==='none'&&(bait==='none'||!(it[bait]>0)));return `<div class="li pick ${on?'sel':''} ${own?'':'dim'}" ${own?`data-act="eq" data-k="bait" data-v="${k}"`:''}><div class="ico"><i class="ti ti-${k==='none'?'ban':BAIT[k].ic}"></i></div><div class="grow"><b>${n}</b><div style="color:var(--m);font-size:12px">${d}</div></div>${c===null?'':`<span class="chip">×${c}</span>`}${on?'<i class="ti ti-check" style="color:var(--g);font-size:20px"></i>':''}</div>`}).join('');
- const balls=Object.entries(BALLS).map(([k,b])=>`<div class="li"><div class="ico"><img src="${BI(k)}" width="30" height="30" alt=""></div><div class="grow"><b>${b.n}</b></div><span class="chip">×${S.balls[k]||0}</span></div>`).join('');
- const rw=(ic,n,k,d,x)=>`<div class="li"><div class="ico"><i class="ti ti-${ic}"></i></div><div class="grow"><b>${n}</b>${d?`<div style="color:var(--m);font-size:12px">${d}</div>`:''}</div>${x||''}<span class="chip">×${it[k]||0}</span></div>`;
- const rows=l=>l.map(([k,n,ic,d,x])=>rw(ic,n,k,d,x)).join('')||'<div style="color:var(--m)">Rien ici pour le moment.</div>';
- const bon=[...(((it.bonbonxp||0)>0)?[['bonbonxp','Super Bonbon XP',xn('Rare Candy'),'XP pour le dresseur',`<a class="btn sm y" data-act="xpcandy">Utiliser</a>`]]:[]),...Object.entries(CANDY).map(([k,c])=>[k,c.n,xn(ITEMICO[k]),'+'+c.lv+' niveau'+(c.lv>1?'x':'')]),...VIT.map(v=>[v[0],v[1],v[2]])];
- const tenu=Object.entries(HELD).map(([k,h])=>[k,h.n,h.ic,h.d]);
- const evo=[...Object.entries(STONE).map(([n,k])=>[k,n,xn(ITEMICO[k])]),...Object.entries(CAPS).map(([k,c])=>[k,c.n,c.ic,c.d])];
- const div=[...(((it.botte||0)>0)?[['botte','Vieille Botte','boot-item']]:[]),['baie','Baie',xn(ITEMICO.baie)],['dodo','Dodo',xn(ITEMICO.dodo)],['appat','Appât',xn(ITEMICO.appat)]];
- const TABS=[['balls','pokeball','Balls',`<div class="list">${balls}</div>`,'ball'],['peche','fish','Pêche',`<h4 class="px" style="font-size:10px">Canne équipée</h4><div class="list">${rods}</div><h4 class="px" style="font-size:10px;margin-top:10px">Appât équipé</h4><div class="list">${bl}</div>`,'key'],['bonbons','candy','Bonbons et vitamines',`<div class="list">${rows(bon)}</div>`,'candy'],['tenus','shield','Objets tenus',`<div class="list">${rows(tenu)}</div>`,'other'],['evo','diamond','Pierres et capsules',`<div class="list">${rows(evo)}</div>`,'battle'],['div','package','Divers',`<div class="list">${rows(div)}</div>`,'berry']];
+ const eqb=(kind,v)=>`<a class="btn sm y" data-act="eq" data-k="${kind}" data-v="${v}">Équiper</a>`;
+ const balls=Object.entries(BALLS).map(([k,b])=>({k,n:b.n,ic:`<img src="${BI(k)}" alt="">`,q:'×'+(S.balls[k]||0),d:'Capture ×'+b.m+' par rapport à une Poké Ball.'}));
+ const rods=[1,2,3].map(lv=>{const own=o>=lv,on=own&&eq===lv;return{k:'rod'+lv,n:ROD[lv].n,ic:`<i class="ti ti-rod${lv}"></i>`,q:on?'Équipée':own?'':'—',dim:!own,d:own?(SHOP.find(x=>x.k==='rod'+lv).d):'À acheter à la boutique.',btn:own&&!on?eqb('rod',lv):''}});
+ const baits=[['none','Aucun appât','Pêche normale',null],...Object.entries(BAIT).map(([k,b])=>[k,b.n,b.d,it[k]||0])].map(([k,n,d,c])=>{const own=c===null||c>0,on=bait===k||(k==='none'&&(bait==='none'||!(it[bait]>0)));return{k:'b'+k,n,ic:`<i class="ti ti-${k==='none'?'ban':BAIT[k].ic}"></i>`,q:c===null?(on?'Équipé':''):'×'+c,dim:!own,d,btn:own&&!on?eqb('bait',k):''}});
+ const mk=(k,n,ic,d,x)=>({k,n,ic:`<i class="ti ti-${ic}"></i>`,q:'×'+(it[k]||0),d:d||itemD(k),btn:x||''});
+ const bon=[...(((it.bonbonxp||0)>0)?[mk('bonbonxp','Super Bonbon XP',xn('Rare Candy'),"Donne de l'XP au dresseur.",`<a class="btn sm y" data-act="xpcandy">Utiliser</a>`)]:[]),...Object.entries(CANDY).map(([k,c])=>mk(k,c.n,xn(ITEMICO[k]),'+'+c.lv+' niveau'+(c.lv>1?'x':'')+' au Pokémon.')),...VIT.map(v=>mk(v[0],v[1],v[2]))];
+ const tenu=Object.entries(HELD).map(([k,h])=>mk(k,h.n,h.ic,h.d));
+ const evo=[...Object.entries(STONE).map(([n,k])=>mk(k,n,xn(ITEMICO[k]),'Fait évoluer certains Pokémon.')),...Object.entries(CAPS).map(([k,c])=>mk(k,c.n,c.ic,c.d))];
+ const div=[...(((it.botte||0)>0)?[mk('botte','Vieille Botte','boot-item','Un vieil objet trouvé en pêchant.')]:[]),mk('baie','Baie',xn(ITEMICO.baie)),mk('dodo','Dodo',xn(ITEMICO.dodo)),mk('appat','Appât',xn(ITEMICO.appat))];
+ const TABS=[['balls','Balls',balls,'ball'],['peche','Pêche',[...rods,...baits],'key'],['bonbons','Bonbons et vitamines',bon,'candy'],['tenus','Objets tenus',tenu,'other'],['evo','Pierres et capsules',evo,'battle'],['div','Divers',div,'berry']];
  if(!TABS.some(t=>t[0]===SACTAB))SACTAB='balls';
- const cur=TABS.find(t=>t[0]===SACTAB);
+ const cur=TABS.find(t=>t[0]===SACTAB),r=bagRows(cur[0],cur[2]);
  return `<div class="bag"><div class="bh"><h3><i class="ti ti-backpack"></i>SAC</h3><a class="shp" data-go="boutique"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/><path d="M2 3h3l2.6 12.2a1.5 1.5 0 0 0 1.5 1.2h9.1a1.5 1.5 0 0 0 1.5-1.1L21.5 7H6"/></svg>Boutique</a></div>
- <div class="sbt">${TABS.map(([k,ic,lb,h,ib])=>`<a class="sb ${k===SACTAB?'on':''}" data-act="sactab" data-k="${k}" title="${lb}"><img src="img/bag_${ib}.png" alt=""></a>`).join('')}</div>
- <div class="sbl">${cur[2]}</div>
- <div class="bl">${cur[3]}</div></div>`;
+ <div class="sbt">${TABS.map(([k,lb,,ib])=>`<a class="sb ${k===SACTAB?'on':''}" data-act="sactab" data-k="${k}" title="${lb}"><img src="img/bag_${ib}.png" alt=""></a>`).join('')}</div>
+ <div class="sbl">${cur[1]}</div>
+ <div class="bl">${r.rows}</div>${r.det}</div>`;
 }
-let SACTAB='balls';
+let SACTAB='balls',SHOPTAB='balls';
 
 /* ===== BOUTIQUE ===== */
 const SHOP=[
@@ -3223,22 +3244,20 @@ const SHOP=[
  {k:'baie3',g:'Objets',t:'Baie ×3',d:'Calme le Pokémon sauvage',p:120,ty:'item',i:'baie',n:3,ic:'apple'},
  {k:'appat2',g:'Objets',t:'Appât ×2',d:'Attire le Pokémon',p:160,ty:'item',i:'appat',n:2,ic:'bone'}];
 function boutique(){
- const rod=S.rod||0,groups=[...new Set(SHOP.map(x=>x.g))];
- const row=x=>{let st='',dis=false,lbl=`<i class="ti ti-coin"></i>${fmtN(x.p)}`;
+ const rod=S.rod||0;
+ const item=x=>{let st='',dis=false;
   if(x.ty==='rod'){if(rod>=x.lv){st='Possédée';dis=true}else if(rod<x.lv-1){st='Achète d\'abord la '+ROD[x.lv-1].n;dis=true}}
   if(!dis&&S.coins<x.p)dis=true;
-  const ic=x.ty==='ball'?`<img src="${BI(x.b)}" width="30" height="30" alt="">`:`<i class="ti ti-${x.ic}"></i>`;
-  return `<div class="li"><div class="ico">${ic}</div><div class="grow"><b>${x.t}</b><div style="color:var(--m);font-size:12px">${st||x.d}</div></div><a class="btn sm ${dis?'off':'y'}" data-act="buy" data-v="${x.k}">${st&&x.ty==='rod'&&rod>=x.lv?'<i class="ti ti-check"></i>':lbl}</a></div>`};
+  const ic=x.ty==='ball'?`<img src="${BI(x.b)}" alt="">`:`<i class="ti ti-${x.ic}"></i>`;
+  return{k:x.k,n:x.t,ic,q:st==='Possédée'?'<i class="ti ti-check"></i>':`<i class="ti ti-coin"></i>${fmtN(x.p)}`,dim:dis,d:st&&st!=='Possédée'?st:x.d,btn:`<a class="btn sm ${dis?'off':'y'}" data-act="buy" data-v="${x.k}">${st==='Possédée'?'Possédée':'Acheter · '+fmtN(x.p)}</a>`}};
  const TB=[['balls','Balls','ball',['Balls']],['peche','Pêche','key',['Cannes','Appâts de pêche']],['elev','Élevage','other',['Élevage']],['bonb','Bonbons et vitamines','candy',['Bonbons','Vitamines']],['obj','Objets','berry',['Objets','Objets à tenir']],['evo','Pierres et capsules','battle',['Pierres','Capsules']]];
  if(!TB.some(t=>t[0]===SHOPTAB))SHOPTAB='balls';
- const cur=TB.find(t=>t[0]===SHOPTAB);
- const body=cur[3].map(g=>`${cur[3].length>1?`<h4 class="px">${g}</h4>`:''}<div class="list">${SHOP.filter(x=>x.g===g).map(row).join('')}</div>`).join('');
+ const cur=TB.find(t=>t[0]===SHOPTAB),r=bagRows('s'+cur[0],SHOP.filter(x=>cur[3].includes(x.g)).map(item));
  return `<div class="bag shop"><div class="bh"><h3><svg class="cart" viewBox="0 0 24 24" fill="none" stroke="#1b0f00" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/><path d="M2 3h3l2.6 12.2a1.5 1.5 0 0 0 1.5 1.2h9.1a1.5 1.5 0 0 0 1.5-1.1L21.5 7H6"/></svg>BOUTIQUE</h3><span class="chip pk"><i class="ti ti-coin" style="color:var(--y)"></i>${fmtN(S.coins)}</span></div>
  <div class="sbt">${TB.map(([k,lb,ib])=>`<a class="sb ${k===SHOPTAB?'on':''}" data-act="shoptab" data-k="${k}" title="${lb}"><img src="img/bag_${ib}.png" alt=""></a>`).join('')}</div>
  <div class="sbl">${cur[1]}</div>
- <div class="bl">${body}</div></div>`;
+ <div class="bl">${r.rows}</div>${r.det}</div>`;
 }
-let SHOPTAB='balls';
 function buy(k){
  const x=SHOP.find(q=>q.k===k);if(!x||S.coins<x.p)return;if(x.i==='bonbonxp'){const d=dayS();if((d.bx||0)>=3)return;d.bx=(d.bx||0)+1}
  if(x.ty==='rod'){if((S.rod||0)!==x.lv-1)return;S.rod=x.lv}
