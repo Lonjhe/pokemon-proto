@@ -2240,7 +2240,7 @@ async function recall(el){
 /* --- moteur de combat --- */
 let B=null,LOBBY=null;
 const avgLvl=()=>{const t=S.box.filter(m=>m.team);return t.length?Math.round(t.reduce((s,m)=>s+m.lvl,0)/t.length):1};
-function lobby(){const a=avgLvl();LOBBY=[['meadow','Prairie des Brumes','Dresseuse Léa',-2],['forest','Forêt Argentée','Garde forestier',1],['mountain','Mont Éclair','Alpiniste Marc',4]].map(([bg,zone,name,d])=>({bg,zone,name,id:pick(SPECIES)[0],lvl:Math.max(3,a+d)}))}
+function lobby(){const a=avgLvl();LOBBY=[['meadow','Prairie des Brumes','Dresseuse Léa',-2],['forest','Forêt Argentée','Garde forestier',1],['mountain','Mont Éclair','Alpiniste Marc',4]].map(([bg,zone,name,d])=>({bg,zone,name,id:pick(SPECIES.filter(x=>![144,145,146,150,151].includes(x[0])))[0],lvl:Math.max(3,a+d)}))}
 function begin(cfg){
  const team=S.box.filter(m=>m.team).slice(0,6).map(m=>(ensure(m),(()=>{const f=fighter(m.id,m.lvl,{uid:m.uid,sh:!!m.sh,moves:movesFrom(m)}),k=statMul(m);f.hp=f.max=Math.round(f.max*k);f.atk=Math.round(f.atk*k);f.def=Math.round(f.def*k);f.spd=Math.round(f.spd*k);f.held=m.held||null;if(m.held==='orbe')f.dmgMul=1.3;return f})()));if(!team.length)return;
  B={...cfg,team,i:0,turn:1,busy:false,over:false,pick:false,showSw:false,res:null,fresh:true,dealt:0,msg:cfg.mode==='boss'?`${cfg.foe.name} te toise du regard !`:cfg.fname?`${cfg.fname} te défie et envoie ${cfg.foe.name} !`:`${cfg.foe.name} veut se battre !`};
@@ -2332,7 +2332,7 @@ async function swTo(k){
  if(!B||B.over||(B.busy&&!B.pick))return;const t=B.team[k];if(!t||t.hp<=0||k===B.i)return;
  const forced=B.pick;
  if(!forced){B.busy=true;lockUI();say(`${B.team[B.i].name}, reviens !`);await recall($('#me'))}
- B.i=k;B.pick=false;B.fresh=true;say(`Go ${t.name} !`);
+ B.i=k;B.pick=false;B.showSw=false;B.fresh=true;say(`Go ${t.name} !`);
  if(forced){B.busy=false;render(true);await sleep(60);const e=$('#me');if(e)sendOut(e);return}
  render(true);await sleep(60);const e2=$('#me');if(e2)await sendOut(e2);await sleep(300);await round(null);
 }
@@ -2363,7 +2363,7 @@ function battleView(){
  let ctl;
  if(B.res)ctl=`<div class="panel"><h4 class="px">${B.res.win?'Victoire !':boss?(B.team.every(t=>t.hp<=0)?'Équipe K.O.':'Temps écoulé'):'Défaite...'}</h4>${B.res.lines.map(l=>`<div style="margin:3px 0">${l}</div>`).join('')}<div style="margin-top:10px"><a class="btn y" data-b="leave"><i class="ti ti-check"></i>Continuer</a></div></div>`;
  else if(B.pick)ctl=`<div class="panel" style="border-color:var(--y)"><h4 class="px">Choisis ton prochain Pokémon</h4><div class="tstrip">${strip}</div></div>`;
- else ctl=`<div class="mvg">${mvs}</div><div class="panel"><h4 class="px" style="margin-bottom:6px">Changer de Pokémon <small style="font-family:Nunito;color:var(--m);font-weight:700">· coûte ton tour</small></h4><div class="tstrip">${strip}</div></div><div class="acts" style="grid-template-columns:1fr"><a class="btn ${B.busy?'off':''}" data-b="leave"><i class="ti ti-run"></i>Fuir</a></div>`;
+ else ctl=`<div class="mvg">${mvs}</div>${B.showSw?`<div class="panel"><h4 class="px" style="margin-bottom:6px">Changer de Pokémon <small style="font-family:Nunito;color:var(--m);font-weight:700">· coûte ton tour</small></h4><div class="tstrip">${strip}</div></div>`:''}<div class="acts" style="grid-template-columns:1fr 1fr"><a class="btn ${B.busy?'off':''}" data-b="toggle"><i class="ti ti-users"></i>Pokémon</a><a class="btn ${B.busy?'off':''}" data-b="leave"><i class="ti ti-run"></i>Fuir</a></div>`;
  const head=boss?`<div class="panel" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><b class="px" style="font-size:10px;color:var(--r)">BOSS DE MONDE</b><span class="chip">Tour ${B.turn}</span><span class="chip"><i class="ti ti-swords"></i>Dégâts : <b id="dealt">${fmtN(B.dealt)}</b></span></div>`:`<div class="title"><h3 class="px">${B.title}</h3></div>`;
  return `${head}${arena}<div class="dialog" id="bmsg">${B.msg}</div>${ctl}`;
 }
@@ -2509,7 +2509,7 @@ function boss(){
   <img class="bsp" src="${SP(bo.id)}" style="${SHADE}" referrerpolicy="no-referrer" alt="">
   <div class="bsi"><span class="px">${st.dead?bo.name:'? ? ?'}</span> <span class="chip">${st.dead?'Vaincu':'Niv. ??'}</span></div>
   <div class="bsh"><small>${st.dead?'Le boss est vaincu !':'Vie du boss · toute la communauté'}</small><div class="bar" style="height:14px"><i id="bh" style="width:${st.pct}%;background:var(--r)"></i></div><b id="bhp">${Math.ceil(st.pct)} %</b></div></div>
- <div class="panel" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><div style="flex:1;min-width:170px"><b>Ta contribution : ${fmtN(b.mine)} dégâts</b><div style="color:var(--m);font-size:12px">Un nouveau boss toutes les 2 h. Chaque tentative dure jusqu'à la défaite de toute ton équipe. 3 tentatives par boss. Le classement est révélé à la fin.</div></div><a class="btn" data-b="blots"><i class="ti ti-gift"></i>Lots <span class="ibtn">i</span></a><a class="btn r ${st.dead||b.tries<=0||!hasTeam?'off':''}" data-b="boss"><i class="ti ti-swords"></i>Attaquer · ${b.tries}/3</a></div>`;
+ <div class="panel" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><div style="flex:1;min-width:170px"><b>Ta contribution : ${fmtN(b.mine)} dégâts</b><div style="color:var(--m);font-size:12px">Un nouveau boss toutes les 2 h. Chaque tentative dure jusqu'à la défaite de toute ton équipe. 3 tentatives par boss. Le classement est révélé à la fin.</div></div><a class="btn" data-b="blots"><i class="ti ti-gift"></i>Lots <span class="ibtn">i</span></a><a class="btn" data-act="teamedit"><i class="ti ti-users"></i>Équipe</a><a class="btn r ${st.dead||b.tries<=0||!hasTeam?'off':''}" data-b="boss"><i class="ti ti-swords"></i>Attaquer · ${b.tries}/3</a></div>`;
 }
 async function bossThrow(i){
  const r=(S.bossRecs||[])[0],ball=BK3[i];if(!r||r.phase!=='cap'||r.busy||r.throws>=THROWS)return;
