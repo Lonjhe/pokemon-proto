@@ -484,6 +484,15 @@ input{flex:1;min-width:140px}
 .pick-c{background:var(--p);border:3px solid var(--b);box-shadow:0 0 0 2px #0b1030;max-width:460px;width:100%;max-height:86vh;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
 .prows{display:flex;flex-direction:column;gap:8px}.prow{display:flex;align-items:center;gap:10px;background:var(--p2);border:2px solid var(--b);padding:6px 10px}.prow small{display:block;color:var(--m);font-size:12px}.prow .grow{flex:1}
 .pbt{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.sl-ov{position:fixed;inset:0;z-index:300;background:#0000;transition:background .22s}.sl-ov.in{background:#0006}
+.sl{position:absolute;left:0;top:0;bottom:0;width:min(88vw,360px);background:linear-gradient(160deg,#fdeefa,#fff 60%);color:#000;padding:16px 12px;display:flex;flex-direction:column;gap:10px;transform:translateX(-102%);transition:transform .22s ease-out;box-shadow:6px 0 18px #0005;font-family:Nunito,sans-serif}.sl-ov.in .sl{transform:none}
+.slt{font-weight:900;font-size:17px;padding:4px 6px}
+.sli{flex:1;overflow:auto;display:flex;flex-direction:column;gap:8px}
+.slr{display:flex;align-items:center;gap:10px;background:#fff;border-radius:40px;padding:8px 16px 8px 12px;box-shadow:0 2px 6px #0002;cursor:pointer;border:3px solid transparent}.slr:active{border-color:#000}
+.slr img{width:48px;height:48px;object-fit:contain;image-rendering:pixelated}.slr b{font-size:17px}.slr small{color:#a33;font-weight:700;font-size:12px;display:block;min-height:14px}
+.slb{height:6px;background:#ddd;margin:2px 0}.slb i{display:block;height:100%;background:#2ecc40}.sll{font-weight:900;font-size:15px;white-space:nowrap}
+.slr.off{opacity:.5;cursor:default}
+.slc{text-align:center;font-weight:900;font-size:17px;padding:10px;cursor:pointer}
 .qp-ov{align-items:flex-end;justify-content:center;padding-bottom:110px;background:#0006}
 .qp{background:#fff;color:#000;border-radius:22px;padding:14px 16px 12px;width:min(300px,100%);display:flex;flex-direction:column;gap:8px;box-shadow:0 6px 18px #0006;font-family:Nunito,sans-serif}
 .qpt{font-weight:900;font-size:15px;text-align:center}
