@@ -488,6 +488,17 @@ input{flex:1;min-width:140px}
 .pick-c{background:var(--p);border:3px solid var(--b);box-shadow:0 0 0 2px #0b1030;max-width:460px;width:100%;max-height:86vh;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
 .prows{display:flex;flex-direction:column;gap:8px}.prow{display:flex;align-items:center;gap:10px;background:var(--p2);border:2px solid var(--b);padding:6px 10px}.prow small{display:block;color:var(--m);font-size:12px}.prow .grow{flex:1}
 .pbt{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.pick-c.pm-pop{background:#c8203c linear-gradient(115deg,transparent 0 22%,#d92d49 22% 46%,transparent 46% 62%,#b01a33 62% 100%);border-color:#0008;color:#fff}
+.pm-pop h4{text-shadow:0 2px 0 #0006}.pm-pop .lb{background:#2a2a30;border-color:#0008;color:#fff}.pm-pop .lb.me{border-color:var(--y);color:var(--y)}
+.pm-pop .lbs{display:flex;flex-direction:column;overflow:auto;max-height:56vh}
+.rwg{display:grid;grid-template-columns:1fr 1fr;gap:6px}.rwg .li{padding:5px 8px;gap:8px;min-width:0}.rwg .li b{font-size:12px}
+.rwi{width:30px;height:30px;display:grid;place-items:center;flex:none}.rwi img{width:30px;height:30px;object-fit:contain;image-rendering:auto}.rwi .ti{font-size:24px}
+.bsc.cp{min-height:0;height:190px}
+.pm-t.off{opacity:.45;filter:grayscale(1)}
+.ain{background:#080c26;border:2px solid var(--b);color:var(--t);padding:8px;font:700 14px Nunito,sans-serif;width:100%}
+.arow{display:flex;align-items:center;gap:8px;background:#0b1030;border:2px solid var(--b);padding:6px 8px;margin-bottom:4px}.arow img{width:40px;height:40px;object-fit:contain}.arow small{color:var(--m)}
+.sw{width:44px;height:24px;border:2px solid var(--b);background:#080c26;position:relative;cursor:pointer;flex:none}.sw::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;background:var(--m)}.sw.on{background:#1b5e20}.sw.on::after{left:22px;background:#fff}
+.sq{width:30px;height:30px;padding:0}
 .egi-i{position:static;flex:none}
 .hs{position:relative;width:min(96vw,440px,58vh);height:min(96vw,440px,58vh);flex:none;margin-bottom:-40px}
 .hs .hg{position:absolute;inset:-10%;opacity:0}
@@ -1391,6 +1402,7 @@ function hwShop(note){
 }
 function manoirView(){
  if(B&&B.hw!=null)return battleView();
+ if(!evOn('manoir'))return closedView('Manoir hanté');
  const h=hwS(),lock=hwLocked(h);if(!lock&&!h.rooms)hwGen(h);
  const icn={start:'home',trap:'alert-triangle',wild:'ghost-2',trainer:'user',key:'key',boss:'skull',empty:'door'};
  const LBL={start:'Entrée',pump:'Citrouilles',trap:'Piège',wild:'Sauvage',trainer:'Dresseur',key:'Clé',boss:'Gardien',empty:'Vide'};
@@ -1506,7 +1518,7 @@ function intro(){
 }
 function render(keep){
  if(!S.name||!S.box.length){intro();return}
- const c=route==='hub'?hub():route==='explorer'?explorer():route==='pokemon'?pokemon():route==='combat'?combat():route==='boss'?boss():route==='ligue'?ligue():route==='boutique'?boutique():route==='sac'?sac():route==='elevage'?elevageView():route==='gacha'?gachaView():route==='manoir'?manoirView():route==='plus'?plusView():stub();
+ const c=route==='hub'?hub():route==='explorer'?explorer():route==='pokemon'?pokemon():route==='combat'?combat():route==='boss'?boss():route==='ligue'?ligue():route==='boutique'?boutique():route==='sac'?sac():route==='elevage'?elevageView():route==='gacha'?gachaView():route==='manoir'?manoirView():route==='plus'?plusView():route==='admin'?adminView():stub();
  const y=window.scrollY;
  $('#app').innerHTML=shell(c);capTick();drawZone();zScroll();if(document.getElementById('bzc')||document.getElementById('czc')||document.getElementById('gzc')||document.getElementById('hwc'))bzStart();if(document.getElementById('fa')){fsInit();}
  if(keep)window.scrollTo(0,y);
@@ -1554,6 +1566,13 @@ document.addEventListener('click',e=>{
  else if(a==='partner'){S.partner=t.dataset.uid;P.flash='Nouveau partenaire d\'exploration !';save();render(true)}
  else if(a==='candy'){if(m)candy(m,t.dataset.k)}
  else if(a==='smenu')saveMenu();else if(a==='sexp')saveIO('exp');else if(a==='simp')saveIO('imp');else if(a==='pinfo'){PINFO=!PINFO;render(true)}
+ else if(a==='evoff')modalOv('<h4 class="px">Événement indisponible</h4><div class="svnote" style="margin:0">Cet événement est désactivé pour le moment. Reviens bientôt !</div><div class="pbt"><a class="btn y" data-m="x">OK</a></div>');
+ else if(a==='alogin'){const v=($('#apin')||{}).value;if(v===CFG().pin){window.ADM=true;render(true)}else{const e=$('#aerr');if(e)e.textContent='Code incorrect'}}
+ else if(a==='alogout'){window.ADM=false;go('hub')}
+ else if(a==='arot'){const c=CFG(),i=+t.dataset.i,d=+t.dataset.d;if(d===0){if(c.rot.length>1)c.rot.splice(i,1)}else{const j=i+d;if(j>=0&&j<c.rot.length){[c.rot[i],c.rot[j]]=[c.rot[j],c.rot[i]]}}save();render(true)}
+ else if(a==='aradd'){CFG().rot.push(+t.dataset.i);save();render(true)}
+ else if(a==='aev'){const c=CFG(),k=t.dataset.k;c.ev[k]=!evOn(k);save();render(true)}
+ else if(a==='apin2'){const v=prompt('Nouveau code (4 chiffres ou plus)');if(v&&v.length>=4){CFG().pin=v;save()}}
  else if(a==='xpcandy'){const it=itm();if((it.bonbonxp||0)>0){it.bonbonxp--;const n=500;S.xp+=n;while(S.lvl<100&&S.xp>=need()){S.xp-=need();S.lvl++}save();render(true)}}
  else if(a==='cap'){if(m)useCap(m,t.dataset.k)}
  else if(a==='hold'){if(m)holdItem(m,t.dataset.k)}
@@ -1607,7 +1626,12 @@ const BOSSES=[
  {id:150,name:'Mewtwo',lvl:90,bg:'mountain',moves:[{n:'Psyko',t:'Psy',p:90},{n:'Ball\'Ombre',t:'Spectre',p:80},{n:'Choc Mental',t:'Psy',p:50}]},
  {id:149,name:'Dracolosse',lvl:80,bg:'beach',moves:[{n:'Dracogriffe',t:'Dragon',p:80},{n:'Ouragan',t:'Vol',p:70},{n:'Tonnerre',t:'Électrik',p:90}]},
  {id:34,name:'Nidoking',lvl:75,sh:true,bg:'desert',moves:[{n:'Détricanon',t:'Poison',p:90},{n:'Séisme',t:'Normal',p:100},{n:'Mégacorne',t:'Insecte',p:75}]}];
-const curSlot=()=>Math.floor(Date.now()/BSLOT),bossOf=sl=>BOSSES[sl%BOSSES.length];
+const EVTS=[['manoir','Manoir hanté (Halloween)'],['boss','Boss de monde']];
+const CFG=()=>S.cfg||(S.cfg={rot:BOSSES.map((b,i)=>i),ev:{},pin:'2468'});
+const evOn=k=>!(S.cfg&&S.cfg.ev&&S.cfg.ev[k]===false);
+const bossIdx=sl=>{const rot=S.cfg&&S.cfg.rot&&S.cfg.rot.length?S.cfg.rot:BOSSES.map((b,i)=>i);return rot[sl%rot.length]};
+const curSlot=()=>Math.floor(Date.now()/BSLOT),bossOf=sl=>BOSSES[bossIdx(sl)];
+const closedView=t=>`<div class="title"><h3 class="px">${t}</h3></div><div class="panel"><h4 class="px">Événement indisponible</h4><div style="color:var(--m);margin-top:6px">Il est désactivé pour le moment. Reviens bientôt !</div></div>`;
 const FAKE=['Aqua_Léo','Misty42','DraculeFR','Pika_Max','Sacha_J','Noctali','Ondine7','Rondou_King','Tauros_X','Lokhlass','Ronflex_Zzz','Evoli_Fan','Pierre_89','Kanto_Boy','Jirachi','Mew_Hunter','Arcanin_Rush','Carapuce_Sq','Roucool_Air','Magicarpe_Lv100','Mimiqui','Ptitard','Etourmi_Pro','Rattata_Cap','Piplup_Ice','Lucario_Z','Zekrom_77','Gardevoir','Heliolisk','Florizarre_V'];
 const BTIER=[
  [1,1,'1er',[{k:'coin',q:5000},{k:'gem',q:150},{k:'ball',v:'hyper',q:5},{k:'item',v:'bonbonxl',q:3}]],
@@ -1624,7 +1648,7 @@ function bossClose(b,dead){
  const el=dead?Math.min(1,(Date.now()-b.slot*BSLOT)/BSLOT):1,oth=TOT*.86*el;
  const w=FAKE.map((n,i)=>1/Math.pow(i+1,.85)),sw=w.reduce((x,y)=>x+y,0),rows=FAKE.map((n,i)=>({n,d:Math.round(oth*w[i]/sw)}));
  const rank=1+rows.filter(r=>r.d>b.mine).length,all=[...rows,{n:S.name||'Toi',d:b.mine,me:1}].sort((x,y)=>y.d-x.d);
- (S.bossRecs||(S.bossRecs=[])).push({slot:b.slot,dead,mine:b.mine,rank,n:all.length,top:all.slice(0,10),rew:[...tierOf(rank)[3],...(dead?BDEAD:[])],chance:Math.random()<CHN,phase:'recap',throws:0});
+ (S.bossRecs||(S.bossRecs=[])).push({slot:b.slot,bi:bossIdx(b.slot),dead,mine:b.mine,rank,n:all.length,top:all.slice(0,10),rew:[...tierOf(rank)[3],...(dead?BDEAD:[])],chance:Math.random()<CHN,phase:'recap',throws:0});
  save();
 }
 function bossS(){
@@ -2370,9 +2394,9 @@ function plusView(){
  const d=dayS(),streak=(S.streak&&S.streak.n)||0,qd=DAY_QUESTS.filter(q=>d[q[0]]>=q[2]).length;
  const IM=(src,fb)=>`<img src="${src}" referrerpolicy="no-referrer" alt="" onerror="this.onerror=null;this.src='${fb||pxi('coin')}'">`,PA=n=>'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/'+n+'.png';
  const T=(go,ic,lab,bd)=>`<a class="pm-t" ${go.startsWith('act:')?`data-act="${go.slice(4)}"`:`data-go="${go}"`}><span class="rd">${ic}</span><b>${lab}</b>${bd?`<i class="bd">${bd}</i>`:''}</a>`;
- const er=eggsReady();
+ const er=eggsReady(),TO=(k,go,ic,lab,bd)=>evOn(k)?T(go,ic,lab,bd):T('act:evoff',ic,lab,bd).replace('class="pm-t"','class="pm-t off"');
  return `<div class="pm"><div class="pm-h"><span class="px">MENU</span><span class="chip" id="capt"></span></div>
- <div class="pm-g">${T('pokemon',IM(UB+'d/da/Bag_Premier_Ball_SV_Sprite.png',PA('premier-ball')),'Pokémon')}${T('elevage',IM(UB+'3/3f/Bag_Lucky_Egg_SV_Sprite.png',PA('lucky-egg')),'Élevage',er)}${T('act:gocamp',IM('img/mn_camp.png'),'Camp EV')}${T('boutique',IM(SPEC.DOLLAR),'Boutique')}${T('gacha',IM(SPEC.DICE,PA('lucky-egg')),'Gacha',d.gacha?'':1)}${T('ligue',IM(SPEC.PUNCH,PA('muscle-band')),'Ligue')}${T('boss',IM(SPEC.MASK,PA('x-attack')),'Boss')}${T('manoir',IM(R+'other/official-artwork/710.png'),'Halloween')}${T('social',IM(BBU('Poké Doll'),PA('poke-doll')),'Social')}${T('quetes',IM('img/quest.png'),'Quêtes')}${T('act:chest',IM(d.chest?'img/chestO.png':'img/chest.png'),'Coffre',d.chest?'':1)}${T('act:smenu',IM('img/mn_save.png'),'Sauvegarde')}</div>
+ <div class="pm-g">${T('pokemon',IM(UB+'d/da/Bag_Premier_Ball_SV_Sprite.png',PA('premier-ball')),'Pokémon')}${T('elevage',IM(UB+'3/3f/Bag_Lucky_Egg_SV_Sprite.png',PA('lucky-egg')),'Élevage',er)}${T('act:gocamp',IM('img/mn_camp.png'),'Camp EV')}${T('boutique',IM(SPEC.DOLLAR),'Boutique')}${T('gacha',IM(SPEC.DICE,PA('lucky-egg')),'Gacha',d.gacha?'':1)}${T('ligue',IM(SPEC.PUNCH,PA('muscle-band')),'Ligue')}${TO('boss','boss',IM(SPEC.MASK,PA('x-attack')),'Boss')}${TO('manoir','manoir',IM(R+'other/official-artwork/710.png'),'Halloween')}${T('social',IM(BBU('Poké Doll'),PA('poke-doll')),'Social')}${T('quetes',IM('img/quest.png'),'Quêtes')}${T('act:chest',IM(d.chest?'img/chestO.png':'img/chest.png'),'Coffre',d.chest?'':1)}${T('act:smenu',IM('img/mn_save.png'),'Sauvegarde')}</div>
  <div class="pm-i">${d.chest?`Série de ${streak} jour${streak>1?'s':''} · quêtes ${qd}/${DAY_QUESTS.length}`:'Le coffre quotidien est prêt à être ouvert !'}</div></div>`;
 }
 function teamEdit(){
@@ -2406,7 +2430,7 @@ function bossLots(){
  modalOv(`<h4 class="px">Lots du boss</h4><div class="svnote" style="margin:0">Les lots sont remis à la fin du chrono (ou à la défaite du boss), selon ton classement parmi tous les dresseurs.</div>${t}<div class="svnote" style="margin:0"><b>Boss vaincu avant la fin</b><br>+ ${rewTxt(BDEAD[0])} pour chaque participant</div><div class="svnote" style="margin:0"><b>Capture</b><br>${Math.round(CHN*100)} % de chance d'obtenir ${THROWS} lancers pour capturer le boss. Réussite selon la Ball : Poké ${BCAP.poke*100} %, Super ${BCAP.super*100} %, Hyper ${BCAP.hyper*100} % par lancer. Sinon, il s'enfuit.</div><div class="pbt"><a class="btn y" data-m="x">Fermer</a></div>`);
 }
 function bossRecapView(r){
- const bo=bossOf(r.slot),img=`<img class="bsp" id="bcimg" src="${bo.sh?SH(bo.id):SP(bo.id)}" referrerpolicy="no-referrer" alt="">`,sc=(txt)=>`<div class="bsc" id="bcs"><div class="bgimg" style="background-image:url(${BG_}${bo.bg}.png)"></div><div class="aura"></div>${img}<img id="bcb" class="bcb" alt="" style="display:none"><div class="bsi"><span class="px">${bo.name}${bo.sh?' ✦':''}</span> <span class="chip">${txt}</span></div></div>`;
+ const bo=BOSSES[r.bi]||bossOf(r.slot),img=`<img class="bsp" id="bcimg" src="${bo.sh?SH(bo.id):SP(bo.id)}" referrerpolicy="no-referrer" alt="">`,sc=(txt)=>`<div class="bsc" id="bcs"><div class="bgimg" style="background-image:url(${BG_}${bo.bg}.png)"></div><div class="aura"></div>${img}<img id="bcb" class="bcb" alt="" style="display:none"><div class="bsi"><span class="px">${bo.name}${bo.sh?' ✦':''}</span> <span class="chip">${txt}</span></div></div>`;
  const head=`<div class="title"><h3 class="px">Boss de monde</h3></div>`;
  if(r.phase==='cap'){
   const left=THROWS-r.throws,balls=BK3.map((k,i)=>`<a class="btn ${(S.balls[k]||0)<=0||r.busy?'off':''}" data-b="bthrow" data-k="${i}"><img src="${BI(k)}" width="22" height="22" alt="">${BALLS[k].n} · ${S.balls[k]||0}<small>${BCAP[k]*100} %</small></a>`).join('');
@@ -2414,13 +2438,32 @@ function bossRecapView(r){
  }
  if(r.phase==='won')return `${head}${sc('Capturé !')}<div class="panel"><h4 class="px">${bo.name}${bo.sh?' ✦':''} capturé !</h4><div>Il rejoint ta boîte (Niv. 50).</div><div style="margin-top:10px"><a class="btn y" data-b="bend"><i class="ti ti-check"></i>Continuer</a></div></div>`;
  if(r.phase==='fled')return `${head}${sc('En fuite')}<div class="panel"><h4 class="px">${bo.name} s'est enfui…</h4><div>Plus de lancers. Une prochaine fois !</div><div style="margin-top:10px"><a class="btn y" data-b="bend"><i class="ti ti-check"></i>Continuer</a></div></div>`;
- const rows=r.top.map((x,i)=>`<div class="lb ${x.me?'me':''}"><b>${i+1}</b><span>${esc(x.n)}</span><b>${fmtN(x.d)}</b></div>`).join('')+(r.rank>10?`<div class="lb me"><b>${r.rank}</b><span>${esc(S.name||'Toi')}</span><b>${fmtN(r.mine)}</b></div>`:'');
- return `${head}${sc(r.dead?'Vaincu !':'Temps écoulé')}
- <div class="panel"><h4 class="px">${r.dead?'Boss vaincu !':'Fin du combat'}</h4><div>Ton classement : <b>${r.rank}${r.rank===1?'er':'e'}</b> sur ${r.n} · ${fmtN(r.mine)} dégâts</div></div>
- <div class="cols"><div class="panel"><h4 class="px">Classement</h4>${rows}</div><div class="panel"><h4 class="px">Tes lots</h4><div class="list">${r.rew.map(e=>`<div class="li"><div class="ico"><i class="ti ti-gift" style="color:var(--y)"></i></div><div class="grow"><b>${rewTxt(e)}</b></div></div>`).join('')}</div><div style="margin-top:10px"><a class="btn y" data-b="bclaim"><i class="ti ti-gift"></i>Récupérer mes lots</a></div></div></div>`;
+ const rk=r.rank+(r.rank===1?'er':'ème');
+ return `${head}${sc(r.dead?'Vaincu !':'Temps écoulé').replace('class="bsc"','class="bsc cp"')}
+ <div class="panel"><h4 class="px">${r.dead?'Boss vaincu !':'Fin du combat'}</h4><div>Ton classement : <b>${rk}</b> <small style="color:var(--m)">sur ${r.n} · ${fmtN(r.mine)} dégâts</small></div><div style="margin-top:8px"><a class="btn" data-b="brank"><i class="ti ti-list-numbers"></i>Voir le classement</a></div></div>
+ <div class="panel"><h4 class="px">Tes lots</h4><div class="rwg">${r.rew.map(e=>`<div class="li"><span class="rwi">${rewIco(e)}</span><div class="grow"><b>${rewTxt(e)}</b></div></div>`).join('')}</div><div style="margin-top:8px"><a class="btn y" data-b="bclaim"><i class="ti ti-gift"></i>Récupérer mes lots</a></div></div>`;
+}
+function bossRank(){
+ const r=(S.bossRecs||[])[0];if(!r)return;
+ const row=(x,i)=>`<div class="lb ${x.me?'me':''}"><b>${i}</b><span>${esc(x.n)}</span><b>${fmtN(x.d)}</b></div>`;
+ const rows=r.top.map((x,i)=>row(x,i+1)).join('')+(r.rank>10?`<div class="lb" style="grid-template-columns:1fr;text-align:center">…</div>${row({n:S.name||'Toi',d:r.mine,me:1},r.rank)}`:'');
+ const o=modalOv(`<h4 class="px">Classement</h4><div class="lbs">${rows}</div><div class="pbt"><a class="btn y" data-m="x">Fermer</a></div>`);o.firstChild.classList.add('pm-pop');
+}
+function rewIco(e){return e.k==='coin'?'<i class="ti ti-coin" style="color:var(--y)"></i>':e.k==='gem'?'<i class="ti ti-diamond" style="color:#ff7ad9"></i>':e.k==='ball'?`<img src="${BI(e.v)}" alt="">`:e.k==='egg'?eggImg(e.v,46):`<i class="ti ti-${ITI(e.v)}"></i>`}
+function adminView(){
+ if(!window.ADM)return `<div class="title"><h3 class="px">Administration</h3></div><div class="panel"><h4 class="px">Accès réservé</h4><div style="color:var(--m);margin:6px 0 8px">Code administrateur requis.</div><input id="apin" class="ain" type="password" inputmode="numeric" placeholder="Code" autocomplete="off"><div id="aerr" style="color:var(--r);min-height:18px;margin-top:4px"></div><div style="display:flex;gap:8px"><a class="btn y" data-act="alogin">Entrer</a><a class="btn" data-go="hub">Retour</a></div></div>`;
+ const c=CFG(),cur=bossIdx(curSlot());
+ const rot=c.rot.map((bi,i)=>{const b=BOSSES[bi];return `<div class="arow"><img src="${b.sh?SH(b.id):SP(b.id)}" referrerpolicy="no-referrer" alt=""><div class="grow"><b>${i+1}. ${b.name}</b>${bi===cur?' <span class="chip">en cours</span>':''}<br><small>Niv. ${b.lvl}</small></div><a class="btn sq" data-act="arot" data-i="${i}" data-d="-1">↑</a><a class="btn sq" data-act="arot" data-i="${i}" data-d="1">↓</a><a class="btn sq" data-act="arot" data-i="${i}" data-d="0">✕</a></div>`}).join('')||'<div style="color:var(--m)">Aucun boss : la rotation par défaut s\'applique.</div>';
+ const out=BOSSES.map((b,bi)=>c.rot.includes(bi)?'':`<div class="arow"><img src="${b.sh?SH(b.id):SP(b.id)}" referrerpolicy="no-referrer" alt=""><div class="grow"><b>${b.name}</b><br><small>Niv. ${b.lvl} · hors rotation</small></div><a class="btn" data-act="aradd" data-i="${bi}">+ Ajouter</a></div>`).join('');
+ const ev=EVTS.map(([k,n])=>`<div class="arow"><div class="grow"><b>${n}</b><br><small>${evOn(k)?'Actif':'Désactivé'}</small></div><div class="sw ${evOn(k)?'on':''}" data-act="aev" data-k="${k}"></div></div>`).join('');
+ return `<div class="title"><h3 class="px">Administration</h3><a class="btn" data-act="alogout">Quitter</a></div>
+ <div class="panel"><h4 class="px">Rotation des boss</h4><div style="color:var(--m);margin:6px 0 8px;font-size:12px">Un boss toutes les 2 h, dans l'ordre ci-dessous, en boucle.</div>${rot}${out}</div>
+ <div class="panel"><h4 class="px">Événements</h4><div style="margin-top:8px">${ev}</div></div>
+ <div class="panel"><h4 class="px">Sécurité</h4><div style="color:var(--m);margin:6px 0 8px;font-size:12px">Prototype : réglages et code stockés sur cet appareil. La vraie protection viendra avec le serveur.</div><a class="btn" data-act="apin2">Changer le code</a></div>`;
 }
 function boss(){
  if(B&&B.mode==='boss')return battleView();
+ if(!evOn('boss'))return closedView('Boss de monde');
  const b=bossS(),st=bossStat(),hasTeam=S.box.some(m=>m.team),r=(S.bossRecs||[])[0];window.BSL=b.slot;
  if(r)return bossRecapView(r);
  const bo=st.bo;
@@ -3133,6 +3176,7 @@ document.addEventListener('click',e=>{
  else if(a==='blots')bossLots();
  else if(a==='bthrow')bossThrow(k);
  else if(a==='bend'){S.bossRecs.shift();save();render()}
+ else if(a==='brank')bossRank();
  else if(a==='bclaim'){const r=S.bossRecs[0];if(!r)return;const got=r.rew.map(bossGive);if(r.chance){r.phase='cap';save();render()}else{S.bossRecs.shift();save();render();modalOv(`<h4 class="px">Lots récupérés</h4><div class="list">${got.map(c=>`<div class="li"><div class="grow"><b>${c.n}</b></div></div>`).join('')}</div><div class="svnote" style="margin:0">Pas de chance de capture cette fois-ci (${Math.round(CHN*100)} %). À la prochaine !</div><div class="pbt"><a class="btn y" data-m="x">OK</a></div>`)}}
  else if(a==='adv')startAdv(k);
  else if(a==='mv')useMove(k);
