@@ -488,6 +488,12 @@ input{flex:1;min-width:140px}
 .pick-c{background:var(--p);border:3px solid var(--b);box-shadow:0 0 0 2px #0b1030;max-width:460px;width:100%;max-height:86vh;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
 .prows{display:flex;flex-direction:column;gap:8px}.prow{display:flex;align-items:center;gap:10px;background:var(--p2);border:2px solid var(--b);padding:6px 10px}.prow small{display:block;color:var(--m);font-size:12px}.prow .grow{flex:1}
 .pbt{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.hud{background:var(--bg);border-bottom:0}
+.hud .bar{background:#ffffff26;border:0;height:11px}.hud .bar i,.pinfo .bar i{background:#ff8a1a!important}
+.bagpg .hud{position:absolute;left:0;right:0;top:0;background:transparent;width:100%;max-width:1180px}
+.bagpg .hud .lv{color:#1b0f00}.bagpg .hud .bar{background:#0004}.bagpg .hud .av{border-color:#fff}
+.bagpg .bag{padding-top:68px}
+.app{position:relative}
 .bag{padding-bottom:0}
 .bag .bl{display:flex;flex-direction:column;gap:2px;flex:1}
 .br{display:flex;align-items:center;gap:10px;padding:4px 6px 4px 10px;border-radius:30px;cursor:pointer;min-height:48px;color:#1b0f00}
@@ -799,7 +805,7 @@ setInterval(capTick,1000);
 function shell(c){
  const rail=NAV.map(([k,i,l])=>`<a data-go="${k}" class="${k===route?'on':''}"><i class="ti ti-${i}"></i>${l}</a>`).join('');
  const TB=[['explorer','compass','Explorer'],['sac','backpack','Sac'],['hub','pkc','Accueil'],['combat','swords','Combat'],['plus','menu-2','Plus']],tabs=TB.map(([k,i,l])=>`<a data-go="${k}" class="${k===route||(k==='plus'&&!TB.some(t=>t[0]===route))?'on':''} ${k==='hub'?'go':''}"><i class="ti ti-${i}"></i>${k==='hub'?'':l}</a>`).join('');
- return `<div class="hud"><div class="av" data-act="pinfo"><img src="${SPEC.RED}" alt="" referrerpolicy="no-referrer"></div><b class="name" data-act="pinfo">${esc(S.name||"")}</b><span class="lv px" data-act="pinfo">Niv.${S.lvl}</span><div class="bar" data-act="pinfo"><i style="width:${Math.min(100,S.xp/need()*100)}%;background:var(--c)"></i></div><span class="chip hud-coin" title="Boutique" data-go="boutique"><i class="ti ti-coin" style="color:var(--y)"></i>${S.coins}</span><span class="chip" title="Gemmes" data-go="gacha"><i class="ti ti-diamond" style="color:#ff7ad9"></i>${gems()}</span><span class="chip opt" title="Poké Balls"><i class="ti ti-circle-dot" style="color:var(--r)"></i>${S.balls.poke}</span>${PINFO?pinfoHTML():''}</div><div class="main"><nav class="rail">${rail}</nav><div class="content">${c}</div></div><nav class="tabs">${tabs}</nav>`;
+ return `<div class="hud"><div class="av" data-act="pinfo"><img src="${SPEC.RED}" alt="" referrerpolicy="no-referrer"></div><b class="name" data-act="pinfo">${esc(S.name||"")}</b><span class="lv px" data-act="pinfo">Niv.${S.lvl}</span><div class="bar" data-act="pinfo"><i style="width:${Math.min(100,S.xp/need()*100)}%;background:var(--c)"></i></div>${PINFO?pinfoHTML():''}</div><div class="main"><nav class="rail">${rail}</nav><div class="content">${c}</div></div><nav class="tabs">${tabs}</nav>`;
 }
 function card(m,o={}){const s=BY[m.id],c=TC[s[2][0]]||'#8a8a7a';
  const img=o.anim?`<img class="pmi" src="${m.sh?SH(m.id):SP(m.id)}" referrerpolicy="no-referrer" alt="">`:`<img src="${m.sh?R+'shiny/'+m.id+'.png':SPS(m.id)}" referrerpolicy="no-referrer" alt="">`;
@@ -1575,7 +1581,7 @@ function render(keep){
  if(!S.name||!S.box.length){intro();return}
  const c=route==='hub'?hub():route==='explorer'?explorer():route==='pokemon'?pokemon():route==='combat'?combat():route==='boss'?boss():route==='ligue'?ligue():route==='boutique'?boutique():route==='sac'?sac():route==='elevage'?elevageView():route==='gacha'?gachaView():route==='manoir'?manoirView():route==='plus'?plusView():route==='admin'?adminView():stub();
  const y=window.scrollY;
- $('#app').innerHTML=shell(c);capTick();drawZone();zScroll();if(document.getElementById('bzc')||document.getElementById('czc')||document.getElementById('gzc')||document.getElementById('hwc'))bzStart();if(document.getElementById('fa')){fsInit();}
+ $('#app').innerHTML=shell(c);$('#app').classList.toggle('bagpg',route==='sac'||route==='boutique');capTick();drawZone();zScroll();if(document.getElementById('bzc')||document.getElementById('czc')||document.getElementById('gzc')||document.getElementById('hwc'))bzStart();if(document.getElementById('fa')){fsInit();}
  if(keep)window.scrollTo(0,y);
  document.querySelectorAll('img').forEach(i=>i.addEventListener('error',()=>{i.style.visibility='hidden'},{once:true}));
 }
@@ -2434,7 +2440,8 @@ function pinfoHTML(){
  ${row('Expérience',fmtN(S.xp)+' / '+fmtN(n))}${row('Prochain niveau','encore '+fmtN(left)+' XP')}
  ${row('Niveau max des Pokémon',capLv()+' <small>(joueur +2, +3 par badge)</small>')}${row('Badges',nb+' / 9')}
  ${row('Bonus de repos',rm?'×1,5 · '+rm+' min':'inactif <small>(6 h d\'absence)</small>')}${row('Captures du jour',(d.wn||0)+' / 300 <small>(XP pleine)</small>')}
- ${(it.bonbonxp||0)>0?row('Super Bonbon XP','×'+it.bonbonxp+' <small>(Sac)</small>'):''}</div>`}
+ ${(it.bonbonxp||0)>0?row('Super Bonbon XP','×'+it.bonbonxp+' <small>(Sac)</small>'):''}
+ ${row('Pokédollars','<a data-go="boutique" style="cursor:pointer">'+fmtN(S.coins)+' <small>(Boutique)</small></a>')}${row('Gemmes','<a data-go="gacha" style="cursor:pointer">'+fmtN(gems())+' <small>(Gacha)</small></a>')}</div>`}
 function saveCode(){return btoa(unescape(encodeURIComponent(JSON.stringify(S))))}
 function saveIO(mode){
  let o=document.querySelector('.io-ov');if(o)o.remove();o=document.createElement('div');o.className='pick-ov io-ov';document.body.appendChild(o);
