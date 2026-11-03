@@ -488,6 +488,9 @@ input{flex:1;min-width:140px}
 .pick-c{background:var(--p);border:3px solid var(--b);box-shadow:0 0 0 2px #0b1030;max-width:460px;width:100%;max-height:86vh;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
 .prows{display:flex;flex-direction:column;gap:8px}.prow{display:flex;align-items:center;gap:10px;background:var(--p2);border:2px solid var(--b);padding:6px 10px}.prow small{display:block;color:var(--m);font-size:12px}.prow .grow{flex:1}
 .pbt{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.shp{display:inline-flex;align-items:center;gap:7px;background:#1b0f00aa;color:#fff;border:3px solid #fff;border-radius:30px;padding:6px 16px 6px 12px;font:900 14px Nunito,sans-serif;cursor:pointer;box-shadow:0 2px 0 #0004;text-shadow:0 1px 0 #0006}.shp svg{width:22px;height:22px}
+.bag .bh .cart{width:34px;height:34px}.bag .chip.pk{background:#1b0f00aa;color:#fff;border:3px solid #fff;border-radius:30px;padding:4px 14px;font-size:15px}
+.bag .li .btn.y{background:var(--y);color:#0b1030;border:2px solid #0b1030;border-radius:20px}
 .bag{position:relative;margin:-16px;padding:14px 14px 20px;flex:1;display:flex;flex-direction:column;gap:10px;color:#1b0f00;background:#edb31e url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 1920 1080%22 preserveAspectRatio=%22none%22%3E%3Cdefs%3E%3ClinearGradient id=%22g%22 x1=%220%22 y1=%220%22 x2=%220%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%23f0fbfa%22/%3E%3Cstop offset=%22.5%22 stop-color=%22%23fcd6ee%22/%3E%3Cstop offset=%221%22 stop-color=%22%23fde4ff%22/%3E%3C/linearGradient%3E%3CclipPath id=%22c%22%3E%3Cpath d=%22M0 0H857L375 1080H0Z%22/%3E%3C/clipPath%3E%3Cfilter id=%22b%22%3E%3CfeGaussianBlur stdDeviation=%2214%22/%3E%3C/filter%3E%3C/defs%3E%3Crect width=%221920%22 height=%221080%22 fill=%22%23edb31e%22/%3E%3Cg fill=%22none%22 stroke=%22%23efc524%22 stroke-width=%2270%22 opacity=%22.7%22%3E%3Ccircle cx=%221500%22 cy=%22720%22 r=%22240%22/%3E%3Ccircle cx=%221500%22 cy=%22720%22 r=%22400%22/%3E%3Ccircle cx=%221500%22 cy=%22720%22 r=%22560%22/%3E%3C/g%3E%3Cpath d=%22M857 0H1077L595 1080H375Z%22 fill=%22%23e3a202%22/%3E%3Cpath d=%22M0 0H857L375 1080H0Z%22 fill=%22url%28%23g%29%22/%3E%3Cg clip-path=%22url%28%23c%29%22%3E%3Cpath d=%22M857 0L375 1080%22 stroke=%22%23d3d8e4%22 stroke-width=%2244%22 opacity=%22.75%22 filter=%22url%28%23b%29%22/%3E%3C/g%3E%3C/svg%3E") right top/140% 100% no-repeat}
 .bag .bh{display:flex;align-items:center;justify-content:space-between}.bag .bh h3{font:900 34px Nunito,sans-serif;letter-spacing:.02em;display:flex;align-items:center;gap:8px;margin:0}.bag .bh .ti{font-size:34px}
 .bag .bh .btn{background:#0b1030;color:#fff}
@@ -1604,6 +1607,7 @@ document.addEventListener('click',e=>{
  else if(a==='pickp'){P.tab='box';P.sort='lvl';go('pokemon')}
  else if(a==='partner'){S.partner=t.dataset.uid;P.flash='Nouveau partenaire d\'exploration !';save();render(true)}
  else if(a==='candy'){if(m)candy(m,t.dataset.k)}
+ else if(a==='shoptab'){SHOPTAB=t.dataset.k;render(true)}
  else if(a==='sactab'){SACTAB=t.dataset.k;render(true)}
  else if(a==='smenu')saveMenu();else if(a==='sexp')saveIO('exp');else if(a==='simp')saveIO('imp');else if(a==='pinfo'){PINFO=!PINFO;render(true)}
  else if(a==='evoff')modalOv('<h4 class="px">Événement indisponible</h4><div class="svnote" style="margin:0">Cet événement est désactivé pour le moment. Reviens bientôt !</div><div class="pbt"><a class="btn y" data-m="x">OK</a></div>');
@@ -3173,7 +3177,7 @@ function sac(){
  const TABS=[['balls','pokeball','Balls',`<div class="list">${balls}</div>`,'ball'],['peche','fish','Pêche',`<h4 class="px" style="font-size:10px">Canne équipée</h4><div class="list">${rods}</div><h4 class="px" style="font-size:10px;margin-top:10px">Appât équipé</h4><div class="list">${bl}</div>`,'key'],['bonbons','candy','Bonbons et vitamines',`<div class="list">${rows(bon)}</div>`,'candy'],['tenus','shield','Objets tenus',`<div class="list">${rows(tenu)}</div>`,'other'],['evo','diamond','Pierres et capsules',`<div class="list">${rows(evo)}</div>`,'battle'],['div','package','Divers',`<div class="list">${rows(div)}</div>`,'berry']];
  if(!TABS.some(t=>t[0]===SACTAB))SACTAB='balls';
  const cur=TABS.find(t=>t[0]===SACTAB);
- return `<div class="bag"><div class="bh"><h3><i class="ti ti-backpack"></i>SAC</h3><a class="btn sm" data-go="boutique"><i class="ti ti-shopping-bag"></i>Boutique</a></div>
+ return `<div class="bag"><div class="bh"><h3><i class="ti ti-backpack"></i>SAC</h3><a class="shp" data-go="boutique"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/><path d="M2 3h3l2.6 12.2a1.5 1.5 0 0 0 1.5 1.2h9.1a1.5 1.5 0 0 0 1.5-1.1L21.5 7H6"/></svg>Boutique</a></div>
  <div class="sbt">${TABS.map(([k,ic,lb,h,ib])=>`<a class="sb ${k===SACTAB?'on':''}" data-act="sactab" data-k="${k}" title="${lb}"><img src="img/bag_${ib}.png" alt=""></a>`).join('')}</div>
  <div class="sbl">${cur[2]}</div>
  <div class="bl">${cur[3]}</div></div>`;
@@ -3225,9 +3229,16 @@ function boutique(){
   if(!dis&&S.coins<x.p)dis=true;
   const ic=x.ty==='ball'?`<img src="${BI(x.b)}" width="30" height="30" alt="">`:`<i class="ti ti-${x.ic}"></i>`;
   return `<div class="li"><div class="ico">${ic}</div><div class="grow"><b>${x.t}</b><div style="color:var(--m);font-size:12px">${st||x.d}</div></div><a class="btn sm ${dis?'off':'y'}" data-act="buy" data-v="${x.k}">${st&&x.ty==='rod'&&rod>=x.lv?'<i class="ti ti-check"></i>':lbl}</a></div>`};
- return `<div class="title"><h3 class="px">Boutique</h3><span class="chip"><i class="ti ti-coin" style="color:var(--y)"></i>${fmtN(S.coins)}</span></div>
- <div class="cols eq">${groups.map(g=>`<div class="panel"><h4 class="px">${g}</h4><div class="list">${SHOP.filter(x=>x.g===g).map(row).join('')}</div></div>`).join('')}</div>`;
+ const TB=[['balls','Balls','ball',['Balls']],['peche','Pêche','key',['Cannes','Appâts de pêche']],['elev','Élevage','other',['Élevage']],['bonb','Bonbons et vitamines','candy',['Bonbons','Vitamines']],['obj','Objets','berry',['Objets','Objets à tenir']],['evo','Pierres et capsules','battle',['Pierres','Capsules']]];
+ if(!TB.some(t=>t[0]===SHOPTAB))SHOPTAB='balls';
+ const cur=TB.find(t=>t[0]===SHOPTAB);
+ const body=cur[3].map(g=>`${cur[3].length>1?`<h4 class="px">${g}</h4>`:''}<div class="list">${SHOP.filter(x=>x.g===g).map(row).join('')}</div>`).join('');
+ return `<div class="bag shop"><div class="bh"><h3><svg class="cart" viewBox="0 0 24 24" fill="none" stroke="#1b0f00" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/><path d="M2 3h3l2.6 12.2a1.5 1.5 0 0 0 1.5 1.2h9.1a1.5 1.5 0 0 0 1.5-1.1L21.5 7H6"/></svg>BOUTIQUE</h3><span class="chip pk"><i class="ti ti-coin" style="color:var(--y)"></i>${fmtN(S.coins)}</span></div>
+ <div class="sbt">${TB.map(([k,lb,ib])=>`<a class="sb ${k===SHOPTAB?'on':''}" data-act="shoptab" data-k="${k}" title="${lb}"><img src="img/bag_${ib}.png" alt=""></a>`).join('')}</div>
+ <div class="sbl">${cur[1]}</div>
+ <div class="bl">${body}</div></div>`;
 }
+let SHOPTAB='balls';
 function buy(k){
  const x=SHOP.find(q=>q.k===k);if(!x||S.coins<x.p)return;if(x.i==='bonbonxp'){const d=dayS();if((d.bx||0)>=3)return;d.bx=(d.bx||0)+1}
  if(x.ty==='rod'){if((S.rod||0)!==x.lv-1)return;S.rod=x.lv}
