@@ -512,7 +512,7 @@ input{flex:1;min-width:140px}
 .dxsec{margin-top:10px}.dxsec.dx2{margin-top:18px}.dxsec h5{font-size:15px;font-weight:900;color:#f5c542;margin:0 0 8px}
 .dxr{display:flex;align-items:center;gap:10px;padding:8px 12px;background:#0b2240aa;border-radius:10px;margin-bottom:6px;font-weight:700;font-size:15px}.dxr b{margin-left:auto;color:#f5c542;font-size:13px;text-align:right}.dxr i{width:12px;height:12px;border-radius:3px;flex:none}
 .dxe{display:flex;align-items:center;gap:12px;padding:4px 12px 4px 4px;background:#0b2240aa;border-radius:40px;margin-bottom:6px;cursor:pointer}.dxe b{display:block;font-size:16px;font-weight:900}.dxe small{color:#f5c542;font-weight:700;font-size:13px}
-.dxft{height:54px;background:#fff;border-top:3px solid #e8b800;display:flex;align-items:center;justify-content:flex-end;padding:0 16px;flex:none;padding-bottom:env(safe-area-inset-bottom,0px);font-weight:800;color:#1a1a2a}.dxft a{cursor:pointer;display:flex;align-items:center;gap:6px}.dxft i{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#1a1a2a;color:#fff;font-style:normal;font-size:12px}
+.dxft{height:54px;background:#fff;border-top:3px solid #e8b800;display:flex;align-items:center;justify-content:flex-end;padding:0 16px;flex:none;padding-bottom:env(safe-area-inset-bottom,0px);font-weight:800;color:#1a1a2a}.dxft a{cursor:pointer;display:flex;align-items:center;background:#000;color:#fff;border-radius:30px;padding:9px 26px;font-weight:900;font-size:16px}.dxft i{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#1a1a2a;color:#fff;font-style:normal;font-size:12px}
 .tef.tp{background:linear-gradient(165deg,#9a9cfb,#7371ee 55%,#6258dc);border-color:#1c2250;color:#fff;gap:10px}
 .tpl{flex:1;display:flex;flex-direction:column;gap:6px;min-height:0}
 .tpr{flex:1;min-height:0;background:#4a54a6;border-radius:8px;display:flex;align-items:center;gap:8px;padding:4px 8px}
@@ -2992,7 +2992,7 @@ function dexDetail(id){
  <div class="dxbx">${st==='c'?desc:`<span style="opacity:.75">Capture ce Pokémon pour débloquer sa description.</span>`}<div class="dxdots"></div></div>
  <div class="dxsec"><h5>🔍 Où le trouver</h5>${zones}</div>
  <div class="dxsec dx2"><h5>✨ Évolution</h5>${evs}</div></div>
- <div class="dxft"><a data-act="dxclose"><i>B</i>Retour</a></div></div>`;
+ <div class="dxft"><a data-act="dxclose">Retour</a></div></div>`;
 }
 function demo151(){SPECIES.forEach(s=>{if(!S.box.some(m=>m.id===s[0]))S.box.push(mk(s[0],5+Math.floor(Math.random()*40)));S.dex[s[0]]='c'});save();render(true)}
 
