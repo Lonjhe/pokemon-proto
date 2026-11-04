@@ -488,6 +488,7 @@ input{flex:1;min-width:140px}
 .pick-c{background:var(--p);border:3px solid var(--b);box-shadow:0 0 0 2px #0b1030;max-width:460px;width:100%;max-height:86vh;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
 .prows{display:flex;flex-direction:column;gap:8px}.prow{display:flex;align-items:center;gap:10px;background:var(--p2);border:2px solid var(--b);padding:6px 10px}.prow small{display:block;color:var(--m);font-size:12px}.prow .grow{flex:1}
 .pbt{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.pkret{margin:0 10px;background:#ffd400;color:#1b0f00;border-radius:14px;padding:8px 8px 8px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;font-weight:900;font-size:14px}.pkret a{background:#000;color:#fff;border-radius:30px;padding:8px 22px;font-weight:900;cursor:pointer}
 .dxh{background:#13284c;color:#fff;display:flex;align-items:center;gap:10px;padding:6px 12px;font-weight:800;font-size:15px;margin:0 10px;border-radius:10px 10px 0 0}
 .dxh span{display:flex;align-items:center;gap:6px;white-space:nowrap}.dxh b{flex:1;text-align:center;font-size:16px}
 .dxb{width:16px;height:16px;border-radius:50%;background:#e5483f;border:2px solid #fff;display:inline-block;flex:none}.dxb.s{background:#f5a623}
@@ -1620,7 +1621,7 @@ async function throwBall(){
 }
 function rerenderHud(){const h=$('.hud');if(h){const t=document.createElement('div');t.innerHTML=shell('');h.replaceWith(t.querySelector('.hud'))}}
 
-let PKREP=null;
+let PKREP=null,PKRET=null;
 function pkBody(team,list,types){
  const sp=m=>`<img src="${m.sh?SH(m.id):SP(m.id)}" referrerpolicy="no-referrer" alt="">`;
  const rows=Array.from({length:6},(_,i)=>{const m=team[i];return m?`<div class="pkr ${PKREP?'tgt':''}" data-act="pks" data-uid="${m.uid}"><div class="pkl"><span class="pkv">Niv. ${m.lvl}</span><b>${BY[m.id][1]}${m.sh?' ✦':''}</b></div>${sp(m)}</div>`:`<div class="pkr em"><span>—</span></div>`}).join('');
@@ -1675,6 +1676,7 @@ function pokemon(){
   body=pkBody(team,list,types);
  }
  return `<div class="pk"><div class="pkt">${tabs}</div>
+ ${PKRET?`<div class="pkret"><span>Prépare ton équipe</span><a data-act="teamdone">Valider</a></div>`:''}
  ${body}${detail(sel)}${P.tab==='dex'?dexDetail(P.dx):''}</div>`;
 }
 function stub(){
@@ -1715,7 +1717,7 @@ function render(keep){
  if(keep)window.scrollTo(0,y);
  document.querySelectorAll('img').forEach(i=>i.addEventListener('error',()=>{i.style.visibility='hidden'},{once:true}));
 }
-function go(r){if(r==='explorer'&&route!=='explorer'){mapView=true;mapSel=null;E=null}fsStop();route=r;history.replaceState(null,'','#'+r);if(r==='explorer'&&E&&E.state==='done')newEnc();P.sel=P.sel;window.scrollTo(0,0);render()}
+function go(r){if(r==='explorer'&&route!=='explorer'){mapView=true;mapSel=null;E=null}fsStop();if(r!=='pokemon')PKRET=null;route=r;history.replaceState(null,'','#'+r);if(r==='explorer'&&E&&E.state==='done')newEnc();P.sel=P.sel;window.scrollTo(0,0);render()}
 document.addEventListener('click',e=>{
  const t=e.target.closest('[data-go],[data-act],[data-mode],[data-biome],[data-ball],[data-tab],[data-sel],[data-dex],[data-dx]');if(!t)return;
  if(t.dataset.go){go(t.dataset.go);return}
@@ -1787,6 +1789,8 @@ document.addEventListener('click',e=>{
  else if(a==='gacha')gachaPull();
  else if(a==='chest')openChest();
  else if(a==='teamedit')teamEdit();
+ else if(a==='teamgo'){PKRET=route;P.tab='box';PKREP=null;go('pokemon')}
+ else if(a==='teamdone'){const r=PKRET||'combat';PKRET=null;PKREP=null;go(r)}
  else if(a==='reset'){S=fresh();E=null;P.sel=null;save();render()}
 });
 document.addEventListener('input',e=>{if(e.target.id==='pkq'){P.q=e.target.value;const g=document.querySelector('.pkg');if(g)g.innerHTML=pkGrid(pkList())}});
@@ -2626,7 +2630,7 @@ function combat(){
  const t=S.box.filter(m=>m.team),off=t.length?'':'off',A=advS(),st=ADV[Math.min(A.step,ADV.length-1)],bs=bossStat(),done=A.step>=ADV.length;
  const opp=LOBBY.map((o,k)=>`<div class="panel opp" style="background-image:linear-gradient(90deg,#0b1030f2 40%,#0b103055),url(${BG_}${o.bg}.png)"><img src="${SP(o.id)}" width="84" height="84" style="image-rendering:pixelated" referrerpolicy="no-referrer" alt=""><div class="grow"><b>${o.name}</b><div style="color:var(--m);font-size:12px">${o.zone} · ${BY[o.id][1]} Niv. ${o.lvl}</div><div style="font-size:12px"><i class="ti ti-coin" style="color:var(--y)"></i> ${60+o.lvl*5} · +${30+o.lvl*4} XP · <i class="ti ti-arrow-up" style="color:var(--g)"></i> Niv. équipe</div></div><a class="btn y ${off}" data-b="duel" data-k="${k}"><i class="ti ti-swords"></i>Défier</a></div>`).join('');
  return `<div class="bag blue"><div class="bh"><h3><i class="ti ti-swords"></i>COMBAT</h3></div>
- <a class="panel cb-team" data-act="teamedit"><div class="cbi"><i class="ti ti-users"></i></div><div class="grow"><b>Équipe et équipement</b><small>${t.length}/6 Pokémon · objets tenus</small></div><i class="ti ti-chevron-right"></i></a>
+ <a class="panel cb-team" data-act="teamgo"><div class="cbi"><i class="ti ti-users"></i></div><div class="grow"><b>Équipe et équipement</b><small>${t.length}/6 Pokémon · objets tenus</small></div><i class="ti ti-chevron-right"></i></a>
  <div class="cb-tiles"><a class="cb-big cbl" data-go="ligue"><img src="${SPEC.PUNCH}" alt="" style="image-rendering:auto" referrerpolicy="no-referrer"><b class="px">Ligue</b><small>${done?'Terminée':st.name}</small></a><a class="cb-big cbb" data-go="boss"><img src="${SPEC.MASK}" alt="" style="image-rendering:auto" referrerpolicy="no-referrer"><b class="px">Boss</b><small>${(S.bossRecs||[]).length?'Récap disponible':fmtT(bs.left).replace(/ \d+s$/,'')}</small></a></div>
  <h4 class="px" style="font-size:11px;margin:4px 0">3 défis d'entraînement</h4><div class="list">${opp}</div></div>`;
 }
@@ -2705,7 +2709,7 @@ function boss(){
   <img class="bsp" src="${SP(bo.id)}" style="${SHADE}" referrerpolicy="no-referrer" alt="">
   <div class="bsi"><span class="px">${st.dead?bo.name:'? ? ?'}</span> <span class="chip">${st.dead?'Vaincu':'Niv. ??'}</span></div>
   <div class="bsh"><small>${st.dead?'Le boss est vaincu !':'Vie du boss · toute la communauté'}</small><div class="bar" style="height:14px"><i id="bh" style="width:${st.pct}%;background:var(--r)"></i></div><b id="bhp">${Math.ceil(st.pct)} %</b></div></div>
- <div class="panel" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><div style="flex:1;min-width:170px"><b>Ta contribution : ${fmtN(b.mine)} dégâts</b><div style="color:var(--m);font-size:12px">Un nouveau boss toutes les 2 h. Chaque tentative dure jusqu'à la défaite de toute ton équipe. 3 tentatives par boss. Le classement est révélé à la fin.</div></div><a class="btn" data-b="blots"><i class="ti ti-gift"></i>Lots <span class="ibtn">i</span></a><a class="btn" data-act="teamedit"><i class="ti ti-users"></i>Équipe</a><a class="btn r ${st.dead||b.tries<=0||!hasTeam?'off':''}" data-b="boss"><i class="ti ti-swords"></i>Attaquer · ${b.tries}/3</a></div>`;
+ <div class="panel" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><div style="flex:1;min-width:170px"><b>Ta contribution : ${fmtN(b.mine)} dégâts</b><div style="color:var(--m);font-size:12px">Un nouveau boss toutes les 2 h. Chaque tentative dure jusqu'à la défaite de toute ton équipe. 3 tentatives par boss. Le classement est révélé à la fin.</div></div><a class="btn" data-b="blots"><i class="ti ti-gift"></i>Lots <span class="ibtn">i</span></a><a class="btn" data-act="teamgo"><i class="ti ti-users"></i>Équipe</a><a class="btn r ${st.dead||b.tries<=0||!hasTeam?'off':''}" data-b="boss"><i class="ti ti-swords"></i>Attaquer · ${b.tries}/3</a></div>`;
 }
 async function bossThrow(i){
  const r=(S.bossRecs||[])[0],ball=BK3[i];if(!r||r.phase!=='cap'||r.busy||r.throws>=THROWS)return;
@@ -2774,7 +2778,7 @@ function ligue(){
   return `<div class="panel"><div class="zh"><div class="bgimg" style="background-image:url(${BG_}${z.bg}.png)"></div><b class="px" style="font-size:11px;position:relative">${z.name}</b><div style="position:relative;font-size:12px">${done}/${idx.length} combats</div></div><div class="list">${idx.map(i=>row(ADV[i],i)).join('')}</div></div>`}).join('');
  const h=Math.floor(msToMidnight()/36e5),mi=Math.floor(msToMidnight()/6e4)%60;
  return `<div class="title"><h3 class="px">Ligue · Kanto</h3></div>
- <div class="panel"><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">${badges}</div>${bar(pct,'var(--y)')}<div style="font-size:12px;color:var(--m);margin-top:4px">${A.step}/${ADV.length} combats · ${A.step>=ADV.length?'Tu es Maître de la Ligue !':'Prochain : '+ADV[A.step].name}</div><div style="font-size:12px;color:var(--m);margin-top:4px"><i class="ti ti-clock"></i> Chaque chef d'arène n'accepte qu'<b>un seul essai par jour</b> (nouveaux essais dans ${h} h ${String(mi).padStart(2,'0')}).</div></div><a class="labbtn" data-act="teamedit"><img class="oak" src="${TSP}oak.png" referrerpolicy="no-referrer" alt=""><div><b class="px">Former l'équipe</b><small>Labo du Prof. Chen · ${S.box.filter(m=>m.team).length}/6</small></div><i class="ti ti-chevron-right"></i></a>
+ <div class="panel"><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">${badges}</div>${bar(pct,'var(--y)')}<div style="font-size:12px;color:var(--m);margin-top:4px">${A.step}/${ADV.length} combats · ${A.step>=ADV.length?'Tu es Maître de la Ligue !':'Prochain : '+ADV[A.step].name}</div><div style="font-size:12px;color:var(--m);margin-top:4px"><i class="ti ti-clock"></i> Chaque chef d'arène n'accepte qu'<b>un seul essai par jour</b> (nouveaux essais dans ${h} h ${String(mi).padStart(2,'0')}).</div></div><a class="labbtn" data-act="teamgo"><img class="oak" src="${TSP}oak.png" referrerpolicy="no-referrer" alt=""><div><b class="px">Former l'équipe</b><small>Labo du Prof. Chen · ${S.box.filter(m=>m.team).length}/6</small></div><i class="ti ti-chevron-right"></i></a>
  ${zones}
  <div class="panel" style="border-style:dashed"><h4 class="px">Outils de test (prototype)</h4><div style="display:flex;gap:6px;flex-wrap:wrap"><a class="btn sm" data-act="nextday"><i class="ti ti-calendar-plus"></i>Passer au jour suivant</a><a class="btn sm" data-act="resetadv"><i class="ti ti-refresh"></i>Réinitialiser la Ligue</a></div></div>`;
 }
