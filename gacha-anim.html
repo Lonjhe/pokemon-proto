@@ -35,7 +35,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 <div class="hd" id="hd"><a class="bk" href="index.html#gacha">←</a><div class="tt"><b>Invocation</b><small>Tentez votre chance !</small></div><div class="gm"><i></i>2 350</div></div>
 <div class="bt" id="bt"><a class="b1" data-n="1"><i></i>×1</a><a class="b10" data-n="10"><i></i>×10</a></div>
 <div id="res"></div>
-<div class="ctl"><div class="r"><span id="lab">Plan 1/16</span><button id="rp">Rejouer</button><button id="pz">Pause</button><button id="rr">Tirage : aléatoire</button></div><div class="r"><input id="sc" type="range" min="0" max="1290" value="0"></div></div>
+<div class="ctl"><div class="r"><span id="lab">Plan 1/16</span><button id="rp">Rejouer</button><button id="pz">Pause</button><button id="sn">Son : oui</button><button id="rr">Tirage : aléatoire</button></div><div class="r"><input id="sc" type="range" min="0" max="1290" value="0"></div></div>
 </div>
 <script>
 const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
@@ -44,6 +44,22 @@ let dpr=Math.min(2,devicePixelRatio||1),sx=1,sy=1,ox=0,oy=0;
 function fit(){const r=cv.getBoundingClientRect();cv.width=r.width*dpr;cv.height=r.height*dpr;const s=Math.max(r.width/W,r.height/H);sx=sy=s*dpr;ox=(r.width*dpr-W*sx)/2;oy=(r.height*dpr-H*sy)/2}
 const R=i=>{const x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x)};
 const cl=(v,a=0,b=1)=>Math.max(a,Math.min(b,v)),sm=(t,a,b)=>{const u=cl((t-a)/(b-a));return u*u*(3-2*u)},lerp=(a,b,u)=>a+(b-a)*u;
+/* son : bande-son du film + effets synthétisés calés sur la chronologie */
+const AU=new Audio('gacha-bg.m4a');AU.preload='auto';let AC=null,MG=null,NB=null,snd=true,sprev=0,EV=[];
+function ac(){if(!AC){AC=new(window.AudioContext||window.webkitAudioContext)();MG=AC.createGain();MG.gain.value=.55;MG.connect(AC.destination);NB=AC.createBuffer(1,AC.sampleRate,AC.sampleRate);const d=NB.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1}if(AC.state==='suspended')AC.resume();return AC}
+function tone(f0,f1,dur,type,vol,d=0){const a=ac(),t=a.currentTime+d,o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(Math.max(20,f1),t+dur);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+Math.min(.04,dur/3));g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g);g.connect(MG);o.start(t);o.stop(t+dur+.05)}
+function nz(dur,f0,f1,vol,d=0,q=2){const a=ac(),t=a.currentTime+d,sr=a.createBufferSource(),f=a.createBiquadFilter(),g=a.createGain();sr.buffer=NB;sr.loop=true;f.type='bandpass';f.Q.value=q;f.frequency.setValueAtTime(f0,t);f.frequency.exponentialRampToValueAtTime(f1,t+dur);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+dur*.35);g.gain.exponentialRampToValueAtTime(.001,t+dur);sr.connect(f);f.connect(g);g.connect(MG);sr.start(t);sr.stop(t+dur+.05)}
+const swish=(k,d)=>{nz(.38,500,2600+k*900,.3,d,3);tone(800+k*260,1700+k*380,.22,'sine',.09,d+.04)};
+const riser=(d,L=.7)=>{nz(L,250,5200,.4,d,4);tone(160,760,L,'sawtooth',.05,d)};
+const boom=d=>{tone(120,36,.8,'sine',.8,d);nz(.6,2200,180,.35,d,1)};
+const chime=(k,d)=>{const n=[0,4,7,12,16,19].slice(0,3+k*1);n.forEach((x,i)=>tone(660*Math.pow(2,x/12),660*Math.pow(2,x/12),1.1,'triangle',.13,d+i*.09))};
+function buildEv(){const T=maxTier();EV=[
+ [7.0,()=>kinds.forEach((k,i)=>swish(k,i*.09))],[8.1,()=>{[0,1,2].forEach(i=>tone(1500+i*420,1500+i*420,.5,'sine',.07,i*.12))}],
+ [8.0,()=>riser(0,.7)],[8.65,()=>tone(90,90,.9,'sine',.35)],[9.4,()=>riser(0,.6)],[10.0,()=>{boom(0);chime(T,.05)}],
+ [10.3,()=>{for(let i=0;i<6;i++)tone(1800+Math.random()*1800,1200,.35,'sine',.05,i*.08)}],[11.9,()=>riser(0,.7)],[12.55,()=>{chime(3,0);boom(0)}]]}
+function fireSfx(a,b){if(!snd)return;EV.forEach(e=>{if(a<e[0]&&e[0]<=b)e[1]()})}
+function audioStart(){try{ac();buildEv();sprev=0;AU.currentTime=0;AU.muted=!snd;AU.play().catch(()=>{})}catch(e){}}
+function audioSeek(t){try{AU.pause();AU.currentTime=Math.min(t,AU.duration||12)}catch(e){}}
 /* fond : séquence d'images extraite de la vidéo (15 i/s, fondu entre images) */
 const NF=181,FPS=15,VF=[];let vloaded=0;
 let pend=0;for(let n=0;n<NF;n++){const im=new Image();im.onload=()=>{vloaded++;if(vloaded===NF||vloaded===1)frame(tcur);if(vloaded===NF&&pend){const q=pend;pend=0;start(q)}};im.src='img/gv/f'+String(n).padStart(3,'0')+'.webp';VF.push(im)}
@@ -155,14 +171,15 @@ function showRes(){
  r.style.display='flex';document.getElementById('again').onclick=()=>start(N);document.getElementById('back').onclick=idle;
 }
 function ui(on){const b=document.getElementById('bt');b.style.opacity=on?1:0;b.style.pointerEvents=on?'auto':'none';document.getElementById('hd').style.opacity=on?1:0}
-function idle(){document.getElementById('res').style.display='none';done=false;paused=true;tcur=0;frame(0);ui(true)}
-function start(n){if(vloaded<NF){pend=n;document.getElementById('lab').textContent='Chargement…';return}N=n;newPull();document.getElementById('res').style.display='none';done=false;paused=false;document.getElementById('pz').textContent='Pause';ui(false);t0=performance.now();tcur=0}
+function idle(){AU.pause();document.getElementById('res').style.display='none';done=false;paused=true;tcur=0;frame(0);ui(true)}
+function start(n){if(vloaded<NF){pend=n;document.getElementById('lab').textContent='Chargement…';return}N=n;newPull();document.getElementById('res').style.display='none';done=false;paused=false;document.getElementById('pz').textContent='Pause';ui(false);t0=performance.now();tcur=0;audioStart()}
 document.querySelectorAll('.bt a').forEach(a=>a.onclick=()=>start(+a.dataset.n));
 document.getElementById('rp').onclick=()=>start(N);
-document.getElementById('pz').onclick=e=>{paused=!paused;e.target.textContent=paused?'Reprendre':'Pause';if(!paused)t0=performance.now()-tcur*1000};
+document.getElementById('pz').onclick=e=>{paused=!paused;e.target.textContent=paused?'Reprendre':'Pause';if(paused)AU.pause();else{t0=performance.now()-tcur*1000;try{AU.currentTime=Math.min(tcur,AU.duration||12);AU.play().catch(()=>{})}catch(x){}}};
+document.getElementById('sn').onclick=e=>{snd=!snd;AU.muted=!snd;e.target.textContent='Son : '+(snd?'oui':'non')};
 document.getElementById('rr').onclick=e=>{rmode=rmode>=3?-1:rmode+1;e.target.textContent='Tirage : '+(rmode<0?'aléatoire':TN[rmode])}
-document.getElementById('sc').oninput=e=>{if(!pulls.length)newPull();paused=true;document.getElementById('pz').textContent='Reprendre';tcur=e.target.value/100;document.getElementById('res').style.display='none';done=false;ui(false);frame(tcur)};
-function loop(now){if(!paused){tcur=(now-t0)/1000;if(tcur>=END){tcur=END;frame(END);if(!done)showRes()}else frame(tcur)}else if(!loop.f){frame(tcur);if(vloaded>=NF)loop.f=1}requestAnimationFrame(loop)}
+document.getElementById('sc').oninput=e=>{if(!pulls.length)newPull();paused=true;document.getElementById('pz').textContent='Reprendre';tcur=e.target.value/100;audioSeek(tcur);document.getElementById('res').style.display='none';done=false;ui(false);frame(tcur)};
+function loop(now){if(!paused){const pv=tcur;tcur=(now-t0)/1000;fireSfx(pv,tcur);if(tcur>=END){tcur=END;frame(END);if(!done)showRes()}else frame(tcur)}else if(!loop.f){frame(tcur);if(vloaded>=NF)loop.f=1}requestAnimationFrame(loop)}
 addEventListener('resize',()=>{fit();frame(tcur)});
 fit();newPull();ui(true);requestAnimationFrame(loop);
 </script></body></html>
