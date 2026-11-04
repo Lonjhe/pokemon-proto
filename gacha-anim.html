@@ -5,7 +5,7 @@
 <style>
 *{box-sizing:border-box;margin:0}
 html,body{height:100%;background:#05071a;color:#fff;font-family:-apple-system,'Nunito',Arial,sans-serif;overflow:hidden;-webkit-tap-highlight-color:transparent}
-#st{position:relative;width:100%;max-width:520px;height:100%;margin:0 auto;overflow:hidden;background:#0b1236}
+#st{position:relative;width:100%;max-width:520px;height:100%;margin:0 auto;overflow:hidden;background:#3a5aa8 url(img/gv/f000.webp) center/cover no-repeat}
 canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .hd{position:absolute;left:0;right:0;top:0;padding:calc(10px + env(safe-area-inset-top)) 12px 0;display:flex;align-items:flex-start;justify-content:space-between;z-index:3;pointer-events:none;transition:opacity .4s}
 .hd>*{pointer-events:auto}
@@ -45,7 +45,7 @@ const R=i=>{const x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x)};
 const cl=(v,a=0,b=1)=>Math.max(a,Math.min(b,v)),sm=(t,a,b)=>{const u=cl((t-a)/(b-a));return u*u*(3-2*u)},lerp=(a,b,u)=>a+(b-a)*u;
 /* fond : séquence d'images extraite de la vidéo (15 i/s, fondu entre images) */
 const NF=181,FPS=15,VF=[];let vloaded=0;
-for(let n=0;n<NF;n++){const im=new Image();im.onload=()=>{vloaded++;if(vloaded===NF||vloaded===1)frame(tcur)};im.src='img/gv/f'+String(n).padStart(3,'0')+'.webp';VF.push(im)}
+let pend=0;for(let n=0;n<NF;n++){const im=new Image();im.onload=()=>{vloaded++;if(vloaded===NF||vloaded===1)frame(tcur);if(vloaded===NF&&pend){const q=pend;pend=0;start(q)}};im.src='img/gv/f'+String(n).padStart(3,'0')+'.webp';VF.push(im)}
 const vb=document.createElement('canvas');vb.width=24;vb.height=27;const vm=document.createElement('canvas');vm.width=540;vm.height=608;
 const vok=n=>VF[n]&&VF[n].complete&&VF[n].naturalWidth;
 function pick(n){while(n>0&&!vok(n))n--;return vok(n)?VF[n]:null}
@@ -104,7 +104,7 @@ function ballOld(x,y,r,tier,roll,yaw,openK){
 }
 const LAB=[[0,'Invocation'],[1.5,'Le cercle s\'allume'],[3,'Le portail s\'ouvre'],[5.5,'Les Poké Balls jaillissent'],[5.8,'Elles tournent sur la plateforme'],[6.4,'Fusion en une ball'],[7.1,'La ball descend dans la lumière'],[8.2,'La ball s\'ouvre'],[8.6,'Révélation des Pokémon'],[10.6,'Flash final']];
 function frame(t){
- ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cv.width,cv.height);ctx.fillStyle='#05071a';ctx.fillRect(0,0,cv.width,cv.height);
+ ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cv.width,cv.height);if(pick(0)){ctx.fillStyle='#05071a';ctx.fillRect(0,0,cv.width,cv.height)}
  ctx.setTransform(sx,0,0,sy,ox,oy);
  const zoom=1+.03*sm(t,0,END),dim=0;
  drawVideo(zoom,dim,t);
@@ -155,7 +155,7 @@ function showRes(){
 }
 function ui(on){const b=document.getElementById('bt');b.style.opacity=on?1:0;b.style.pointerEvents=on?'auto':'none';document.getElementById('hd').style.opacity=on?1:0}
 function idle(){document.getElementById('res').style.display='none';done=false;paused=true;tcur=0;frame(0);ui(true)}
-function start(n){N=n;newPull();document.getElementById('res').style.display='none';done=false;paused=false;document.getElementById('pz').textContent='Pause';ui(false);t0=performance.now();tcur=0}
+function start(n){if(vloaded<NF){pend=n;document.getElementById('lab').textContent='Chargement…';return}N=n;newPull();document.getElementById('res').style.display='none';done=false;paused=false;document.getElementById('pz').textContent='Pause';ui(false);t0=performance.now();tcur=0}
 document.querySelectorAll('.bt a').forEach(a=>a.onclick=()=>start(+a.dataset.n));
 document.getElementById('rp').onclick=()=>start(N);
 document.getElementById('pz').onclick=e=>{paused=!paused;e.target.textContent=paused?'Reprendre':'Pause';if(!paused)t0=performance.now()-tcur*1000};
