@@ -488,6 +488,15 @@ input{flex:1;min-width:140px}
 .pick-c{background:var(--p);border:3px solid var(--b);box-shadow:0 0 0 2px #0b1030;max-width:460px;width:100%;max-height:86vh;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
 .prows{display:flex;flex-direction:column;gap:8px}.prow{display:flex;align-items:center;gap:10px;background:var(--p2);border:2px solid var(--b);padding:6px 10px}.prow small{display:block;color:var(--m);font-size:12px}.prow .grow{flex:1}
 .pbt{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.app{position:relative;background-repeat:no-repeat;background-position:right top;background-size:140% 100%}
+.app[data-pal] .hud{position:relative;background:transparent;border:0}
+.app[data-pal] .hud .lv{color:#fff;text-shadow:0 2px 0 #0007}.app[data-pal] .hud .av{border-color:#fff}.app[data-pal] .hud .bar{background:#0004}
+.app[data-pal=amber] .hud .lv{color:#1b0f00;text-shadow:none}
+.app[data-pal] .title h3,.app[data-pal] h4.px{text-shadow:0 2px 0 #000a}
+.app[data-pal=amber] .bag h4.px{text-shadow:none}
+.bag,.bag.blue{background:none!important}.bag{padding-top:14px}
+.pm{background:none}.pm::before,.pm::after{display:none}
+.bag .empty{background:#0003;border:3px dashed #fff8;border-radius:22px;padding:22px 16px;text-align:center;font-weight:800;font-size:15px;color:#fff;text-shadow:0 1px 0 #0007;display:flex;flex-direction:column;gap:12px;align-items:center;margin-top:10px}
 .sl-ov{position:fixed;inset:0;z-index:300;background:#0000;transition:background .22s}.sl-ov.in{background:#0006}
 .sl{position:absolute;left:0;top:0;bottom:0;width:min(88vw,360px);background:linear-gradient(160deg,#fdeefa,#fff 60%);color:#000;padding:16px 12px;display:flex;flex-direction:column;gap:10px;transform:translateX(-102%);transition:transform .22s ease-out;box-shadow:6px 0 18px #0005;font-family:Nunito,sans-serif}.sl-ov.in .sl{transform:none}
 .slt{font-weight:900;font-size:17px;padding:4px 6px}
@@ -509,9 +518,6 @@ input{flex:1;min-width:140px}
 .bag.blue .bh h3{color:#fff;text-shadow:0 3px 0 #0006}.bag.blue h4.px{color:#fff;text-shadow:0 2px 0 #000a,0 0 4px #0008}.bag.blue .sbl{background:#1f4fa8}
 .hud{background:var(--bg);border-bottom:0}
 .hud .bar{background:#ffffff26;border:0;height:6px}.pinfo .bar{height:6px!important}.hud .bar i,.pinfo .bar i{background:#ff8a1a!important}
-.bagpg .hud{position:absolute;left:0;right:0;top:0;background:transparent;width:100%;max-width:1180px}
-.bagpg .hud .lv{color:#1b0f00}.bagpg .hud .bar{background:#0004}.bagpg .hud .av{border-color:#fff}
-.bagpg .bag{padding-top:68px}.bagpg .pm{padding-top:62px}.plusp .hud .lv{color:#fff}.plusp .hud .av{border-color:#fff}
 .app{position:relative}
 .bag{padding-bottom:0}
 .bag .bl{display:flex;flex-direction:column;gap:2px;flex:1}
@@ -1581,6 +1587,7 @@ const esc=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'
 const STARTERS=[[1,'Plante'],[4,'Feu'],[7,'Eau']];
 function intro(){
  if(document.querySelector('.intro'))return;
+ {const A=document.getElementById('app');delete A.dataset.pal;A.style.backgroundColor='';A.style.backgroundImage=''}
  const old=S.box.length>0,st={n:S.name||'',p:old?0:null};
  const draw=()=>{
   $('#app').innerHTML=`<div class="intro"><h1 class="px">Bienvenue, Dresseur !</h1><p>Comment t'appelles-tu ?</p>
@@ -1596,11 +1603,16 @@ function intro(){
  };
  draw();
 }
+const PAL={amber:['#edb31e','#e3a202','#efc524'],red:['#c8203c','#b01a33','#e0405a'],blue:['#3a7be0','#2a5fc0','#5a97ee'],orange:['#e8731c','#c95a10','#f59a50'],green:['#2f9e5e','#237a49','#4fbf7e'],pink:['#d44a8c','#b03273','#ec72ad'],violet:['#7a4ad8','#5a32b0','#9a6cf0'],teal:['#1f9aa8','#167a86','#40bccb'],night:['#3a1f6e','#2a1352','#5a3796']};
+const ROUTEPAL={hub:'green',explorer:'teal',elevage:'pink',gacha:'violet',manoir:'night',ligue:'orange',boss:'orange',combat:'blue',sac:'amber',boutique:'amber',plus:'red'};
+const PALU={};
+const bgUri=n=>PALU[n]||(PALU[n]='data:image/svg+xml,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="none"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0fbfa"/><stop offset=".5" stop-color="#fcd6ee"/><stop offset="1" stop-color="#fde4ff"/></linearGradient><clipPath id="c"><path d="M0 0H857L375 1080H0Z"/></clipPath><filter id="b"><feGaussianBlur stdDeviation="14"/></filter></defs><rect width="1920" height="1080" fill="${PAL[n][0]}"/><g fill="none" stroke="${PAL[n][2]}" stroke-width="70" opacity=".7"><circle cx="1500" cy="720" r="240"/><circle cx="1500" cy="720" r="400"/><circle cx="1500" cy="720" r="560"/></g><path d="M857 0H1077L595 1080H375Z" fill="${PAL[n][1]}"/><path d="M0 0H857L375 1080H0Z" fill="url(#g)"/><g clip-path="url(#c)"><path d="M857 0L375 1080" stroke="#d3d8e4" stroke-width="44" opacity=".75" filter="url(#b)"/></g></svg>`).replace(/'/g,'%27'));
+function setPal(){const A=document.getElementById('app'),n=ROUTEPAL[route];if(n){A.dataset.pal=n;A.style.backgroundColor=PAL[n][0];A.style.backgroundImage=`url("${bgUri(n)}")`}else{delete A.dataset.pal;A.style.backgroundColor='';A.style.backgroundImage=''}}
 function render(keep){
  if(!S.name||!S.box.length){intro();return}
  const c=route==='hub'?hub():route==='explorer'?explorer():route==='pokemon'?pokemon():route==='combat'?combat():route==='boss'?boss():route==='ligue'?ligue():route==='boutique'?boutique():route==='sac'?sac():route==='elevage'?elevageView():route==='gacha'?gachaView():route==='manoir'?manoirView():route==='plus'?plusView():route==='admin'?adminView():stub();
  const y=window.scrollY;
- $('#app').innerHTML=shell(c);$('#app').classList.toggle('bagpg',route==='sac'||route==='boutique'||route==='plus'||(route==='combat'&&!(B&&B.mode==='duel')));$('#app').classList.toggle('plusp',route==='plus');capTick();drawZone();zScroll();if(document.getElementById('bzc')||document.getElementById('czc')||document.getElementById('gzc')||document.getElementById('hwc'))bzStart();if(document.getElementById('fa')){fsInit();}
+ $('#app').innerHTML=shell(c);setPal();capTick();drawZone();zScroll();if(document.getElementById('bzc')||document.getElementById('czc')||document.getElementById('gzc')||document.getElementById('hwc'))bzStart();if(document.getElementById('fa')){fsInit();}
  if(keep)window.scrollTo(0,y);
  document.querySelectorAll('img').forEach(i=>i.addEventListener('error',()=>{i.style.visibility='hidden'},{once:true}));
 }
@@ -3207,23 +3219,24 @@ document.addEventListener('keyup',e=>{if(e.code==='Space'&&fsPtr.get('kS')==='C'
 const BAGSEL={};
 function bagRows(tab,items){
  let sel=items.find(x=>x.k===BAGSEL[tab])||items[0];
- const rows=items.map(x=>`<div class="br ${x===sel?'sel':''} ${x.dim?'dim':''}" data-act="bsel" data-t="${tab}" data-k="${x.k}"><span class="ic">${x.ic}</span><b>${x.n}</b><span class="q">${x.q||''}</span></div>`).join('')||'<div style="padding:10px">Rien ici pour le moment.</div>';
+ const rows=items.map(x=>`<div class="br ${x===sel?'sel':''} ${x.dim?'dim':''}" data-act="bsel" data-t="${tab}" data-k="${x.k}"><span class="ic">${x.ic}</span><b>${x.n}</b><span class="q">${x.q||''}</span></div>`).join('')||'<div class="empty"><span>Tu ne possèdes rien ici pour le moment.<br>Rends-toi à la boutique pour t\'équiper !</span><a class="shp" data-go="boutique"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px"><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/><path d="M2 3h3l2.6 12.2a1.5 1.5 0 0 0 1.5 1.2h9.1a1.5 1.5 0 0 0 1.5-1.1L21.5 7H6"/></svg>Boutique</a></div>';
  return{rows,det:sel?`<div class="bdet"><div class="bdh">${sel.n}</div><div class="bdt"><span>${sel.d||''}</span>${sel.btn||''}</div></div>`:''};
 }
 const itemD=k=>{const x=SHOP.find(q=>q.i===k);return x?x.d:''};
 function sac(){
  const o=S.rod||0,eq=rodLv(),bait=(S.eq&&S.eq.bait)||'none',it=itm();
  const eqb=(kind,v)=>`<a class="btn sm y" data-act="eq" data-k="${kind}" data-v="${v}">Équiper</a>`;
- const balls=Object.entries(BALLS).map(([k,b])=>({k,n:b.n,ic:`<img src="${BI(k)}" alt="">`,q:'×'+(S.balls[k]||0),d:'Capture ×'+b.m+' par rapport à une Poké Ball.'}));
- const rods=[1,2,3].map(lv=>{const own=o>=lv,on=own&&eq===lv;return{k:'rod'+lv,n:ROD[lv].n,ic:`<i class="ti ti-rod${lv}"></i>`,q:on?'Équipée':own?'':'—',dim:!own,d:own?(SHOP.find(x=>x.k==='rod'+lv).d):'À acheter à la boutique.',btn:own&&!on?eqb('rod',lv):''}});
- const baits=[['none','Aucun appât','Pêche normale',null],...Object.entries(BAIT).map(([k,b])=>[k,b.n,b.d,it[k]||0])].map(([k,n,d,c])=>{const own=c===null||c>0,on=bait===k||(k==='none'&&(bait==='none'||!(it[bait]>0)));return{k:'b'+k,n,ic:`<i class="ti ti-${k==='none'?'ban':BAIT[k].ic}"></i>`,q:c===null?(on?'Équipé':''):'×'+c,dim:!own,d,btn:own&&!on?eqb('bait',k):''}});
+ const balls=Object.entries(BALLS).filter(([k])=>(S.balls[k]||0)>0).map(([k,b])=>({k,n:b.n,ic:`<img src="${BI(k)}" alt="">`,q:'×'+(S.balls[k]||0),d:'Capture ×'+b.m+' par rapport à une Poké Ball.'}));
+ const rods=[1,2,3].filter(lv=>o>=lv).map(lv=>{const own=o>=lv,on=own&&eq===lv;return{k:'rod'+lv,n:ROD[lv].n,ic:`<i class="ti ti-rod${lv}"></i>`,q:on?'Équipée':own?'':'—',dim:!own,d:own?(SHOP.find(x=>x.k==='rod'+lv).d):'À acheter à la boutique.',btn:own&&!on?eqb('rod',lv):''}});
+ const baits=[['none','Aucun appât','Pêche normale',null],...Object.entries(BAIT).map(([k,b])=>[k,b.n,b.d,it[k]||0])].filter(x=>x[3]===null?Object.keys(BAIT).some(q=>(it[q]||0)>0):x[3]>0).map(([k,n,d,c])=>{const own=c===null||c>0,on=bait===k||(k==='none'&&(bait==='none'||!(it[bait]>0)));return{k:'b'+k,n,ic:`<i class="ti ti-${k==='none'?'ban':BAIT[k].ic}"></i>`,q:c===null?(on?'Équipé':''):'×'+c,dim:!own,d,btn:own&&!on?eqb('bait',k):''}});
  const ub=(k,l)=>(it[k]||0)>0?`<a class="btn sm y" data-act="useitem" data-k="${k}">${l||'Utiliser'}</a>`:'';
- const mk=(k,n,ic,d,x)=>({k,n,ic:`<i class="ti ti-${ic}"></i>`,q:'×'+(it[k]||0),d:d||itemD(k),btn:x||''});
+ const mk=(k,n,ic,d,x)=>({k,n,ic:`<i class="ti ti-${ic}"></i>`,q:'×'+(it[k]||0),d:d||itemD(k),btn:x||'',own:(it[k]||0)>0});
  const bon=[...(((it.bonbonxp||0)>0)?[mk('bonbonxp','Super Bonbon XP',xn('Rare Candy'),"Donne de l'XP au dresseur.",`<a class="btn sm y" data-act="xpcandy">Utiliser</a>`)]:[]),...Object.entries(CANDY).map(([k,c])=>mk(k,c.n,xn(ITEMICO[k]),'+'+c.lv+' niveau'+(c.lv>1?'x':'')+' au Pokémon.',ub(k))),...VIT.map(v=>mk(v[0],v[1],v[2],'',ub(v[0])))];
  const tenu=Object.entries(HELD).map(([k,h])=>mk(k,h.n,h.ic,h.d,ub(k,'Donner')));
  const evo=[...Object.entries(STONE).map(([n,k])=>mk(k,n,xn(ITEMICO[k]),'Fait évoluer certains Pokémon.',ub(k))),...Object.entries(CAPS).map(([k,c])=>mk(k,c.n,c.ic,c.d,ub(k)))];
  const div=[...(((it.botte||0)>0)?[mk('botte','Vieille Botte','boot-item','Un vieil objet trouvé en pêchant.')]:[]),mk('baie','Baie',xn(ITEMICO.baie)),mk('dodo','Dodo',xn(ITEMICO.dodo)),mk('appat','Appât',xn(ITEMICO.appat))];
- const TABS=[['balls','Balls',balls,'ball'],['peche','Pêche',[...rods,...baits],'key'],['bonbons','Bonbons et vitamines',bon,'candy'],['tenus','Objets tenus',tenu,'other'],['evo','Pierres et capsules',evo,'battle'],['div','Divers',div,'berry']];
+ const ow=l=>l.filter(x=>x.own!==false&&(x.own===undefined||x.own));
+ const TABS=[['balls','Balls',balls,'ball'],['peche','Pêche',[...rods,...baits],'key'],['bonbons','Bonbons et vitamines',ow(bon),'candy'],['tenus','Objets tenus',ow(tenu),'other'],['evo','Pierres et capsules',ow(evo),'battle'],['div','Divers',ow(div),'berry']];
  if(!TABS.some(t=>t[0]===SACTAB))SACTAB='balls';
  const cur=TABS.find(t=>t[0]===SACTAB),r=bagRows(cur[0],cur[2]);
  return `<div class="bag"><div class="bh"><h3><i class="ti ti-backpack"></i>SAC</h3><a class="shp" data-go="boutique"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/><path d="M2 3h3l2.6 12.2a1.5 1.5 0 0 0 1.5 1.2h9.1a1.5 1.5 0 0 0 1.5-1.1L21.5 7H6"/></svg>Boutique</a></div>
