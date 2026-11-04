@@ -95,11 +95,7 @@ function rhy(){const a=ac();if(RB){RB.gain.cancelScheduledValues(0);RB.gain.valu
  m.forEach(([st,_,f,L])=>horn(T2+st*S2,f,L,.09));
  horn(T2+10*S2,293.7,.9,.07)}
 function rhyStop(){if(RB){try{RB.gain.cancelScheduledValues(0);RB.gain.value=0}catch(e){}RB=null}}
-function buildEv(){const T=maxTier();EV=[
- [7.0,()=>{rhy();kinds.forEach((k,i)=>swish(k,i*.09))}],[8.1,()=>{[0,1,2].forEach(i=>bell([880,1108.7,1318.5][i],i*.25,.04,2.4))}],
- [8.0,()=>{air(1.2,.12,0,true);pad([73.4,110,146.8],3,.04,0,.5);strings([73.4,110,146.8],2.4,.012,0,.6)}],[8.65,()=>tone(73.4,73.4,1.2,'sine',.3)],[9.3,()=>{air(.75,.18,0,true);strings([293.7,440,587.3],.85,.016,0,.9,[587.3,880,1174.7])}],
- [10.0,()=>reveal(T)],[10.2,()=>nz(2,260,60,.22,0,1)],[11.7,()=>{air(.85,.07,0,true);strings([146.8,220,293.7,370],.9,.016,0,.9,[293.7,440,587.3,740])}],
- [12.55,()=>{reveal(3,0,false);pad([73.4,110,146.8,220],3.6,.05)}]]}
+function buildEv(){EV=[[7.0,()=>rhy()]]}
 function fireSfx(a,b){if(!snd)return;EV.forEach(e=>{if(a<e[0]&&e[0]<=b)e[1]()})}
 function audioStart(){try{ac();buildEv();sprev=0;AU.currentTime=0;AU.muted=!snd;AU.play().catch(()=>{})}catch(e){}}
 function audioSeek(t){rhyStop();try{AU.pause();AU.currentTime=Math.min(t,AU.duration||12)}catch(e){}}
