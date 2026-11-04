@@ -134,7 +134,7 @@ function newPull(){pulls=[];const cnt=N===1?1:10;
  for(let i=0;i<cnt;i++){const p=POOL[Math.floor(Math.random()*POOL.length)],r=Math.random();let tier=r<.6?0:r<.85?1:r<.97?2:3;if(rmode>=0)tier=Math.min(tier,rmode);pulls.push({id:p[0],n:p[1],tier})}
  if(rmode>=0)pulls[Math.floor(Math.random()*cnt)].tier=rmode;
  pulls.forEach(p=>p.rare=p.tier>=2);
- kinds=N===1?[pulls[0].tier,0,0,0,0,0]:pulls.map(p=>p.tier);
+ kinds=N===1?[pulls[0].tier]:pulls.map(p=>p.tier);
  for(let i=kinds.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[kinds[i],kinds[j]]=[kinds[j],kinds[i]]}}
 const maxTier=()=>Math.max(...pulls.map(p=>p.tier));
 /* Poké Balls dessinées : 4 modèles selon la rareté */
