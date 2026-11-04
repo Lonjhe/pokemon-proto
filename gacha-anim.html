@@ -109,10 +109,12 @@ const LAB=[[0,'Plan 1 · Invocation'],[1,'Plan 2 · Le cercle s\'allume'],[2.2,'
 function frame(t){
  ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cv.width,cv.height);ctx.fillStyle='#05071a';ctx.fillRect(0,0,cv.width,cv.height);
  ctx.setTransform(sx,0,0,sy,ox,oy);
- const seq=SEQ(),X=.4;let k=0;for(let i=0;i<seq.length;i++)if(t>=seq[i][0])k=i;
+ const seq=SEQ(),X=.8;let k=0;for(let i=0;i<seq.length;i++)if(t>=seq[i][0])k=i;
  const zoom=1+.1*sm(t,0,END)+.015*Math.sin(t*2),dim=.35*(1-sm(t,.8,2));
- if(k>0)drawFrame(seq[k-1][1],1,zoom,dim);
- drawFrame(seq[k][1],k>0?sm(t,seq[k][0],seq[k][0]+X):1,zoom,dim);
+ const tu=k>0?cl((t-seq[k][0])/X):1,te=tu*tu*tu*(tu*(tu*6-15)+10);
+ if(k>0&&te<1)drawFrame(seq[k-1][1],1-te*.35,zoom*(1+.07*te),dim);
+ drawFrame(seq[k][1],k>0?te:1,zoom*(1+.09*(1-te)),dim);
+ if(k>0&&tu<1){const b=Math.sin(tu*Math.PI);add(()=>{glow(W/2,FY,330,'rgba(190,215,255,A)',.28*b)})}
  let sh=0;if(t>2.6&&t<5)sh=1.5*sm(t,2.6,3.4);if(t>9.5&&t<12)sh=2.5*sm(t,9.5,10.3);
  /* lueurs animées par-dessus */
  add(()=>{
