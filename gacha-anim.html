@@ -81,7 +81,18 @@ const maxTier=()=>Math.max(...pulls.map(p=>p.tier));
 /* Poké Balls dessinées : 4 modèles selon la rareté */
 const BT=[{top:['#ff5348','#a81d1d'],aura:'255,170,100'},{top:['#4f90f2','#1c3f9a'],aura:'110,170,255'},{top:['#454545','#101010'],aura:'255,215,90'},{top:['#b878f5','#5a1f9a'],aura:'rainbow'}];
 function aura(x,y,r,tier,t){const c=tier===3?`${Math.round(150+105*Math.sin(t*3))},${Math.round(150+105*Math.sin(t*3+2))},${Math.round(150+105*Math.sin(t*3+4))}`:BT[tier].aura;add(()=>{glow(x,y,r*(2+tier*.7),`rgba(${c},A)`,.35+tier*.12)})}
+const BI=[0,1,2,3].map(i=>{const im=new Image();im.src='img/gball_'+i+'.png';return im});
 function ball(x,y,r,tier,roll,yaw,openK){
+ const im=BI[tier];if(!im.complete||!im.naturalWidth)return ballOld(x,y,r,tier,roll,yaw,openK);
+ const d=r*2.1,sq=1-.1*Math.abs(Math.sin(yaw*.5)),S=256,cut=S*.56;
+ ctx.save();ctx.translate(x,y);ctx.rotate(roll);ctx.scale(sq,1);
+ if(openK>0){
+  ctx.save();ctx.translate(0,-r*.95*openK);ctx.rotate(-.5*openK);ctx.drawImage(im,0,0,S,cut,-d/2,-d/2,d,d*cut/S);ctx.restore();
+  ctx.save();ctx.translate(0,r*.4*openK);ctx.rotate(.15*openK);ctx.drawImage(im,0,cut,S,S-cut,-d/2,-d/2+d*cut/S,d,d*(S-cut)/S);ctx.restore();
+ }else ctx.drawImage(im,-d/2,-d/2,d,d);
+ ctx.restore()
+}
+function ballOld(x,y,r,tier,roll,yaw,openK){
  const m=BT[tier];ctx.save();ctx.translate(x,y);ctx.rotate(roll);
  const half=top=>{ctx.save();ctx.beginPath();ctx.arc(0,0,r,top?Math.PI:0,top?2*Math.PI:Math.PI);ctx.closePath();const g=ctx.createLinearGradient(0,top?-r:0,0,top?0:r);if(top){g.addColorStop(0,m.top[0]);g.addColorStop(1,m.top[1])}else{g.addColorStop(0,'#fff');g.addColorStop(1,'#b9c3ea')}ctx.fillStyle=g;ctx.fill();
   if(top){ctx.clip();if(tier===1){ctx.fillStyle='#e03030';[-1,1].forEach(d=>{ctx.beginPath();ctx.ellipse(d*r*.62,-r*.28,r*.2,r*.32,d*.5,0,7);ctx.fill()})}
