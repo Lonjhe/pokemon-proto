@@ -2973,14 +2973,14 @@ function dexBody(){
  const row=x=>{const id=x[0],st=S.dex[id],n=String(id),t=x[2][0],c=tyc(t),AR_=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
   if(!st)return `<div class="dxk u"><span class="dxn">${n}</span><b>? ? ?</b></div>`;
   const cc=st==='c'?c:'#8f9190';
-  return `<div class="dxk" data-dx="${id}" style="background:linear-gradient(100deg,color-mix(in srgb,${cc} 78%,#fff),color-mix(in srgb,${cc} 78%,#000))"><img class="dxl" src="${tyi(t)}" alt=""><span class="dxn">${n}</span><b>${x[1]}</b><span class="dxc"><img src="${AR_}" alt="" referrerpolicy="no-referrer" style="${st==='c'?'':'filter:brightness(0) opacity(.55)'}"></span></div>`};
+  return `<div class="dxk" data-dx="${id}" style="background:linear-gradient(100deg,color-mix(in srgb,${cc} 78%,#fff),color-mix(in srgb,${cc} 78%,#000))"><img class="dxl" src="${tyi(t)}" alt=""><span class="dxn">${n}</span><b>${x[1]}</b><span class="dxc"><img src="${AR_}" alt="" referrerpolicy="no-referrer" style=""></span></div>`};
  return `<div class="dxh"><span><i class="dxb"></i>${got}<i class="dxb s"></i>${seen}</span><b>Pokédex</b><input id="q" placeholder="Rechercher" value="${esc(P.q||'')}" autocomplete="off"></div>
  <div class="dxw">${dl.map(row).join('')||'<div class="pke">Aucun résultat.</div>'}</div>`;
 }
 function dexDetail(id){
  if(!id)return '';
  const s=BY[id],st=S.dex[id],t0=s[2][0],AR_=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/`;
- const circ=(i,sz)=>`<span class="dxc ${sz||''}"><img src="${AR_}${i}.png" alt="" referrerpolicy="no-referrer" style="${S.dex[i]?'':'filter:brightness(0) opacity(.55)'}"></span>`;
+ const circ=(i,sz)=>`<span class="dxc ${sz||''}"><img src="${AR_}${i}.png" alt="" referrerpolicy="no-referrer" style="${S.dex[i]?'':'filter:brightness(0) drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff) drop-shadow(0 1px 0 #fff) drop-shadow(0 -1px 0 #fff)'}"></span>`;
  const zones=Object.keys(ZP).map(z=>{const m=ZMODE(z),pool=zPool(z,m);if(!pool.includes(id))return'';const r=rar(id);return `<div class="dxr"><i style="background:${ZKIND[z]==='water'?'#3a86e0':'#5b9f3d'}"></i>${ZP[z].name}<b>${r[0]}</b></div>`}).join('')||`<div class="dxr"><i style="background:#8a8a7a"></i>Introuvable à l'état sauvage<b>Évolution, événement ou gacha</b></div>`;
  const evr=(i,txt)=>`<div class="dxe" data-dx="${i}">${circ(i,'sm')}<div><b>${S.dex[i]?BY[i][1]:'? ? ?'}</b><small>${txt}</small></div></div>`;
  const evs=[...(EVP[id]?[evr(EVP[id],'Forme précédente')]:[]),...(EVO[id]||[]).map(([to,c])=>evr(to,evTxt(c)))].join('')||`<div class="dxr"><i style="background:#8a8a7a"></i>Ce Pokémon n'évolue pas<b></b></div>`;
@@ -2988,8 +2988,8 @@ function dexDetail(id){
  return `<div class="dxo"><div class="dxhd"><span class="dxi">▤</span><b>Pokédex</b><span class="dxs"></span></div>
  <div class="dxdt"><div class="dxtt">Habitat</div>
  <div class="dxid">N° ${String(id).padStart(3,'0')} <i class="dxb ${st==='c'?'':'s'}"></i></div><div class="dxnm">${st?s[1]:'? ? ?'}</div>
- <div class="dxrow"><div class="dxlf"><hr>${s[2].map(t=>`<span class="dxtp" style="background:${tyc(t)}"><img src="${tyi(t)}" alt="">${t.toUpperCase()}</span>`).join('')}</div><span class="dxc big"><img src="${AR_}${id}.png" alt="" referrerpolicy="no-referrer" style="${st?'':'filter:brightness(0) opacity(.55)'}"></span></div>
- <div class="dxbx">${desc}<div class="dxdots"></div></div>
+ <div class="dxrow"><div class="dxlf"><hr>${s[2].map(t=>`<span class="dxtp" style="background:${tyc(t)}"><img src="${tyi(t)}" alt="">${t.toUpperCase()}</span>`).join('')}</div><span class="dxc big"><img src="${AR_}${id}.png" alt="" referrerpolicy="no-referrer" style="${st?'':'filter:brightness(0) drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff) drop-shadow(0 1px 0 #fff) drop-shadow(0 -1px 0 #fff)'}"></span></div>
+ <div class="dxbx">${st==='c'?desc:`<span style="opacity:.75">Capture ce Pokémon pour débloquer sa description.</span>`}<div class="dxdots"></div></div>
  <div class="dxsec"><h5>🔍 Où le trouver</h5>${zones}</div>
  <div class="dxsec dx2"><h5>✨ Évolution</h5>${evs}</div></div>
  <div class="dxft"><a data-act="dxclose"><i>B</i>Retour</a></div></div>`;
