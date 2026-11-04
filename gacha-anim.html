@@ -34,7 +34,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 <div class="hd" id="hd"><a class="bk" href="index.html#gacha">←</a><div class="tt"><b>Invocation</b><small>Tentez votre chance !</small></div><div class="gm"><i></i>2 350</div></div>
 <div class="bt" id="bt"><a class="b1" data-n="1"><i></i>×1</a><a class="b10" data-n="10"><i></i>×10</a></div>
 <div id="res"></div>
-<div class="ctl"><div class="r"><span id="lab">Plan 1/16</span><button id="rp">Rejouer</button><button id="pz">Pause</button><button id="rr">Tirage : aléatoire</button></div><div class="r"><input id="sc" type="range" min="0" max="1260" value="0"></div></div>
+<div class="ctl"><div class="r"><span id="lab">Plan 1/16</span><button id="rp">Rejouer</button><button id="pz">Pause</button><button id="rr">Tirage : aléatoire</button></div><div class="r"><input id="sc" type="range" min="0" max="1410" value="0"></div></div>
 </div>
 <script>
 const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
@@ -68,7 +68,7 @@ const POOL=[[25,'Pikachu'],[6,'Dracaufeu'],[9,'Tortank'],[3,'Florizarre'],[94,'E
 const AR='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/';
 const SIL={};
 POOL.forEach(([id])=>{const im=new Image();im.crossOrigin='anonymous';im.onload=()=>{const c=document.createElement('canvas');c.width=c.height=256;const g=c.getContext('2d');g.drawImage(im,0,0,256,256);g.globalCompositeOperation='source-in';g.fillStyle='#12082a';g.fillRect(0,0,256,256);SIL[id]=c};im.src=AR+id+'.png'});
-let N=1,rmode=-1,pulls=[],kinds=[],t0=0,paused=true,tcur=0,done=false;const END=12.6;
+let N=1,rmode=-1,pulls=[],kinds=[],t0=0,paused=true,tcur=0,done=false;const END=14.1;
 const TN=['Poké Ball','Super Ball','Hyper Ball','Master Ball'];
 function newPull(){pulls=[];const cnt=N===1?1:10;
  for(let i=0;i<cnt;i++){const p=POOL[Math.floor(Math.random()*POOL.length)],r=Math.random();let tier=r<.6?0:r<.85?1:r<.97?2:3;if(rmode>=0)tier=Math.min(tier,rmode);pulls.push({id:p[0],n:p[1],tier})}
@@ -107,7 +107,7 @@ function frame(t){
  ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cv.width,cv.height);if(pick(0)){ctx.fillStyle='#05071a';ctx.fillRect(0,0,cv.width,cv.height)}
  ctx.setTransform(sx,0,0,sy,ox,oy);
  const zoom=1+.03*sm(t,0,END),dim=0;
- drawVideo(zoom,dim,t);
+ drawVideo(zoom,dim,t);const V=t;t=t<5.5?t:t<7?5.5:t-1.5;
  let sh=0;if(t>2.6&&t<5)sh=0;if(t>9.5&&t<12)sh=2.5*sm(t,9.5,10.3);
  /* lueurs animées par-dessus */
  add(()=>{
@@ -143,10 +143,10 @@ function frame(t){
   pulls.slice(0,N===1?1:6).forEach((p,i)=>{const c=SIL[p.id];if(!c)return;const main=i===0,a=cl(sil*1.4-(main?0:.2)),dx=main?0:(i%2?1:-1)*(62+i*22),dy=main?0:24+i*10,s=(main?230:130)*(.7+.3*sil);ctx.globalAlpha=a;ctx.drawImage(c,P.x+dx-s/2,P.y-96+dy-s*.55+(1-sil)*40,s,s);ctx.globalAlpha=1});
   sparks(P.x,P.y-96,8.6,t,60,260,['rgba(255,235,150,A)','rgba(255,255,255,A)','rgba(150,220,255,A)','rgba(255,170,230,A)'])
  }
- const pf=Math.max(0,1-Math.abs(t-6.95)/.35);if(pf>0){add(()=>{ctx.fillStyle=`rgba(255,255,255,${pf*.35})`;ctx.fillRect(-20,-20,W+40,H+40)})}
+ const pf=Math.max(0,1-Math.abs(V-6.95)/.35);if(pf>0){add(()=>{ctx.fillStyle=`rgba(255,255,255,${pf*.35})`;ctx.fillRect(-20,-20,W+40,H+40)})}
  const fl=sm(t,10.5,11.1)*(1-sm(t,11.4,END));ctx.fillStyle=`rgba(255,250,235,${fl})`;ctx.fillRect(-20,-20,W+40,H+40);
  ctx.setTransform(1,0,0,1,0,0);
- const l=LAB.filter(x=>t>=x[0]).pop();document.getElementById('lab').textContent=l[1];document.getElementById('sc').value=Math.round(t*100);
+ const l=LAB.filter(x=>t>=x[0]).pop();document.getElementById('lab').textContent=l[1];document.getElementById('sc').value=Math.round(V*100);
 }
 function showRes(){
  const r=document.getElementById('res');done=true;
