@@ -813,6 +813,23 @@ input{flex:1;min-width:140px}
 .pm-t .rd img{width:64%;height:64%;object-fit:contain;image-rendering:auto}
 .pm-t .bd{position:absolute;right:calc(50% - 50px);top:-2px;background:#ef5350;border:2px solid #fff;border-radius:10px;font-style:normal;font-size:11px;padding:0 6px;font-weight:900;text-shadow:none}
 .pm-i{margin-top:auto;background:#2a2a30;border:2px solid #0008;padding:12px 14px;font-size:13px;font-weight:700;text-align:center;color:#fff}
+
+.bcard{position:relative;display:grid;grid-template-columns:1.05fr 1fr;border:3px solid #0b1030;overflow:hidden;color:#2a2412;background:linear-gradient(115deg,#f3ecc4 0 58%,var(--bc) 58%);box-shadow:0 4px 0 #0006}
+.bcard.gold{--bc:#f2b705}.bcard.ora{--bc:#f2662e}
+.bcl{padding:12px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.bct{display:flex;flex-direction:column;line-height:1.1}.bct small{font-size:11px;font-weight:700}.bct b{font-size:26px;font-weight:900}
+.bctt{font-size:13px;margin:4px 0;color:#2a2412}
+.bmn{display:flex;align-items:center;gap:8px;padding:8px 10px;font-weight:800;color:#2a2412;border-radius:4px;cursor:pointer}.bmn.sel{background:#ffcb05;box-shadow:0 2px 0 #b38a00}.bmn.off{opacity:.45;pointer-events:none}
+.bpt{font-size:11px;font-weight:800;border-bottom:2px solid #2a2412;margin-top:6px}
+.bpr{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;border-bottom:1px dotted #2a241266;padding:2px 0}.bpr img{width:30px;height:30px;image-rendering:pixelated;object-fit:contain}.bpr.me{color:#7a3a00}
+.bcr{position:relative;min-height:230px;color:#fff}
+.bty{position:absolute;top:10px;right:10px;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;border:3px solid #0b1030;font-size:10px;font-weight:900;color:#fff;text-shadow:0 1px 0 #000a}
+.bsil{position:absolute;left:50%;top:44%;width:42%;height:42%;transform:translate(-50%,-50%);object-fit:contain}
+.bstr{position:absolute;left:0;right:0;top:60%;text-align:center;font-size:20px;color:#fff;text-shadow:0 2px 0 #0008;letter-spacing:2px}.bstr span{color:#0000002e}
+.bobj{position:absolute;left:8px;right:8px;bottom:8px;background:#efe9ff;color:#2a2412;padding:6px 8px;font-size:12px;box-shadow:0 2px 0 #0004}.bobj small{display:block;font-weight:800;color:#6a4c93}.bobj b{display:block;line-height:1.2}
+.bbar{grid-column:1/-1;padding:6px 12px 10px;background:#0b1030;color:#fff;display:flex;align-items:center;gap:8px;flex-wrap:wrap}.bbar .bar{flex:1;min-width:120px}
+.bsp2{display:flex;gap:8px;align-items:flex-start;margin:4px 0;font-size:13px}.bsp2 i{font-size:20px;color:var(--y)}
+@media(max-width:520px){.bcard{grid-template-columns:1fr;background:linear-gradient(180deg,#f3ecc4 0 56%,var(--bc) 56%)}.bcr{min-height:250px}}
 </style>
 </head>
 <body>
@@ -1003,7 +1020,7 @@ const BG='https://play.pokemonshowdown.com/fx/bg-';
 const BIOMES={herbe:[['meadow','Prairie'],['forest','Forêt'],['mountain','Montagne'],['desert','Désert'],['beach','Plage'],['city','Ville']],peche:[['river','Rivière'],['beach','Plage'],['deepsea','Mer profonde']]};
 const TR='https://play.pokemonshowdown.com/sprites/trainers/ethan.png';
 const ITEMS={baie:['Baie Framby','apple','Calme le Pokémon · capture ×1,3'],dodo:['Poudre Dodo','zzz','Endort le Pokémon · capture ×1,5'],appat:['Appât Parfumé','wind','Ignore le malus de niveau · ×1,2']};
-const itm=()=>{const it=S.items||(S.items={baie:5,dodo:3,appat:2});if(!it.v2){it.v2=1;Object.assign(it,{bonbon:5,bonbonm:3,bonbonxl:1,capargent:2,capor:1,captal:2,capoeuf:2,restes:1,orbe:1,sitrus:2,ceinture:1,pfeu:1,peau:1,pfoudre:1,plune:1,pfeuille:1})}return it};
+const itm=()=>{const it=S.items||(S.items={baie:5,dodo:3,appat:2});if(!it.v2){it.v2=1;Object.assign(it,{bonbon:5,bonbonm:3,bonbonxl:1,capargent:2,capor:1,captal:2,capoeuf:2,restes:1,orbe:1,sitrus:2,ceinture:1,pfeu:1,peau:1,pfoudre:1,plune:1,pfeuille:1})}if(!it.v3){it.v3=1;it.bcap1=(it.bcap1||0)+3;it.bcap2=(it.bcap2||0)+1}return it};
 const actsHTML=()=>`<a class="btn y" data-act="throw"><i class="ti ti-circle-dot"></i>Lancer</a><a class="btn" data-act="weaken"><i class="ti ti-attack-x"></i>Attaquer</a><a class="btn" data-act="items"><i class="ti ti-flask"></i>Objet</a><a class="btn" data-act="flee"><i class="ti ti-run"></i>Fuir</a>`;
 const chipsHTML=()=>[E.sleep&&'Endormi',E.bonus>1&&'Calmé',E.nopen&&'Attiré',E.hp<100&&'Affaibli'].filter(Boolean).map(x=>`<span>${x}</span>`).join('');
 const zback=()=>`<div class="title"><a class="btn sm" data-act="zmap"><i class="ti ti-map-2"></i>Carte</a><h3 class="px">${mode==='camp'?'Camp':ZP[biome[mode]].name}</h3><span class="chip" id="capt"></span></div>`;
@@ -1316,8 +1333,8 @@ gw(6,'n',{k:'coin',q:500});gw(2,'r',{k:'coin',q:2000});gw(8,'n',{k:'mon'});
 GZF.forEach((f,i)=>gw(.3,'ur',{k:'feat',i}));
 GZW=GZE.reduce((a,e)=>a+e.w,0);
 }
-const ITN=k=>CANDY[k]?CANDY[k].n:CAPS[k]?CAPS[k].n:HELD[k]?HELD[k].n:(VIT.find(x=>x[0]===k)||[])[1]||(Object.entries(STONE).find(([n,v])=>v===k)||[k])[0];
-const ITI=k=>ITEMICO[k]?xn(ITEMICO[k]):CANDY[k]?'candy':CAPS[k]?CAPS[k].ic:HELD[k]?HELD[k].ic:(VIT.find(x=>x[0]===k)||[])[2]||'diamond';
+const ITN=k=>BCI[k]?BCI[k].n:CANDY[k]?CANDY[k].n:CAPS[k]?CAPS[k].n:HELD[k]?HELD[k].n:(VIT.find(x=>x[0]===k)||[])[1]||(Object.entries(STONE).find(([n,v])=>v===k)||[k])[0];
+const ITI=k=>BCI[k]?BCI[k].ic:ITEMICO[k]?xn(ITEMICO[k]):CANDY[k]?'candy':CAPS[k]?CAPS[k].ic:HELD[k]?HELD[k].ic:(VIT.find(x=>x[0]===k)||[])[2]||'diamond';
 const gzPick=()=>{gzInit();let r=Math.random()*GZW;for(const e of GZE){r-=e.w;if(r<=0)return e}return GZE[0]};
 const LEGS=[144,145,146,150,151];
 function gzDo(e){
@@ -1763,12 +1780,12 @@ document.addEventListener('click',e=>{
  else if(a==='sactab'){SACTAB=t.dataset.k;render(true)}
  else if(a==='smenu')saveMenu();else if(a==='sexp')saveIO('exp');else if(a==='simp')saveIO('imp');else if(a==='pinfo'){PINFO=!PINFO;render(true)}
  else if(a==='evoff')modalOv('<h4 class="px">Événement indisponible</h4><div class="svnote" style="margin:0">Cet événement est désactivé pour le moment. Reviens bientôt !</div><div class="pbt"><a class="btn y" data-m="x">OK</a></div>');
- else if(a==='afnew'){AF={idx:null,id:0,q:'',lvl:60,sh:false,bg:'meadow',moves:[]};render(true)}
- else if(a==='afedit'){const bi=+t.dataset.i,b=BOSSES[bi];AF={idx:bi-BASEN,id:b.id,q:'',lvl:b.lvl,sh:!!b.sh,bg:b.bg,moves:[...b.moves]};render(true)}
+ else if(a==='afnew'){AF={idx:null,id:0,q:'',lvl:60,sh:false,bg:'meadow',moves:[],stars:3,sp:['',''],immT:''};render(true)}
+ else if(a==='afedit'){const bi=+t.dataset.i,b=BOSSES[bi];AF={idx:bi-BASEN,id:b.id,q:'',lvl:b.lvl,sh:!!b.sh,bg:b.bg,moves:[...b.moves],stars:b.stars||3,sp:[(b.spec||[])[0]||'',(b.spec||[])[1]||''],immT:b.immT||''};render(true)}
  else if(a==='afpick'){AF.id=+t.dataset.i;if(!AF.moves.some(Boolean))AF.moves=[];render(true)}
  else if(a==='afsh'){AF.sh=!AF.sh;render(true)}
  else if(a==='afcancel'){AF=null;render(true)}
- else if(a==='afsave'){if(!AF.id)return;const f=AF,mv=f.moves.filter(Boolean),b={id:f.id,name:BY[f.id][1],lvl:f.lvl,sh:f.sh,bg:f.bg,custom:1,moves:mv.length?mv:movesOf(f.id,f.lvl).map(m=>({n:m.n,t:m.t,p:m.p}))};const c=CFG();(c.custom||(c.custom=[]));if(f.idx!=null)c.custom[f.idx]=b;else{c.custom.push(b);c.rot.push(BASEN+c.custom.length-1)}syncB();AF=null;save();render(true)}
+ else if(a==='afsave'){if(!AF.id)return;const f=AF,mv=f.moves.filter(Boolean),b={id:f.id,name:BY[f.id][1],lvl:f.lvl,sh:f.sh,bg:f.bg,custom:1,stars:f.stars||3,spec:[...new Set(f.sp.filter(Boolean))],immT:f.immT||BY[f.id][2][0],moves:mv.length?mv:movesOf(f.id,f.lvl).map(m=>({n:m.n,t:m.t,p:m.p}))};const c=CFG();(c.custom||(c.custom=[]));if(f.idx!=null)c.custom[f.idx]=b;else{c.custom.push(b);c.rot.push(BASEN+c.custom.length-1)}syncB();AF=null;save();render(true)}
  else if(a==='afdel'){const c=CFG(),bi=BASEN+AF.idx;c.custom.splice(AF.idx,1);c.rot=c.rot.filter(x=>x!==bi).map(x=>x>bi?x-1:x);if(!c.rot.length)c.rot=[0];syncB();AF=null;save();render(true)}
  else if(a==='alogin'){const v=($('#apin')||{}).value;if(v===CFG().pin){window.ADM=true;render(true)}else{const e=$('#aerr');if(e)e.textContent='Code incorrect'}}
  else if(a==='alogout'){window.ADM=false;go('hub')}
@@ -1832,11 +1849,16 @@ const fmtN=n=>Math.round(n).toLocaleString('fr-FR');
 const fmtT=ms=>{const s=Math.floor(ms/1000);return `${Math.floor(s/3600)}h ${String(Math.floor(s/60)%60).padStart(2,'0')}m ${String(s%60).padStart(2,'0')}s`};
 
 /* --- boss de monde (communauté simulée) --- */
-const RAID=60,TOT=5000000,BSLOT=2*36e5,CHN=.10,THROWS=5,BCAP={poke:.10,super:.15,hyper:.20},BK3=['poke','super','hyper'];
+const RAID=60,TOT=5000000,BSLOT=2*36e5,CHN=.10,BCAP={poke:.10,super:.15,hyper:.20},BK3=['poke','super','hyper'];
 const BOSSES=[
- {id:150,name:'Mewtwo',lvl:90,bg:'mountain',moves:[{n:'Psyko',t:'Psy',p:90},{n:'Ball\'Ombre',t:'Spectre',p:80},{n:'Choc Mental',t:'Psy',p:50}]},
- {id:149,name:'Dracolosse',lvl:80,bg:'beach',moves:[{n:'Dracogriffe',t:'Dragon',p:80},{n:'Ouragan',t:'Vol',p:70},{n:'Tonnerre',t:'Électrik',p:90}]},
- {id:34,name:'Nidoking',lvl:75,sh:true,bg:'desert',moves:[{n:'Détricanon',t:'Poison',p:90},{n:'Séisme',t:'Sol',p:100},{n:'Mégacorne',t:'Insecte',p:75}]}];
+ {id:150,name:'Mewtwo',lvl:90,stars:7,spec:['immun','shield'],immT:'Psy',bg:'mountain',moves:[{n:'Psyko',t:'Psy',p:90},{n:'Ball\'Ombre',t:'Spectre',p:80},{n:'Choc Mental',t:'Psy',p:50}]},
+ {id:149,name:'Dracolosse',lvl:80,stars:5,spec:['shield','fury'],bg:'beach',moves:[{n:'Dracogriffe',t:'Dragon',p:80},{n:'Ouragan',t:'Vol',p:70},{n:'Tonnerre',t:'Électrik',p:90}]},
+ {id:34,name:'Nidoking',lvl:75,stars:3,spec:['immun'],immT:'Poison',sh:true,bg:'desert',moves:[{n:'Détricanon',t:'Poison',p:90},{n:'Séisme',t:'Sol',p:100},{n:'Mégacorne',t:'Insecte',p:75}]}];
+/* rareté (étoiles) : lancers de Ball avant fuite et difficulté de capture */
+const STAR_THR=[0,12,11,10,8,6,4,3],STAR_CAP=[0,1.4,1.2,1,.8,.6,.45,.35];
+const stars=bo=>Math.max(1,Math.min(7,bo.stars||3)),thr=bo=>STAR_THR[stars(bo)],bHas=(bo,k)=>!!(bo&&(bo.spec||[]).includes(k)),immT=bo=>bo.immT||BY[bo.id][2][0];
+const SPECS={immun:{n:"Aura d'immunité",ic:'shield-off',d:bo=>`Immunisé aux attaques de type ${immT(bo)}`},shield:{n:'Bouclier cristal',ic:'shield',d:()=>'−70 % de dégâts tant que ses 6 charges de bouclier tiennent (un coup super efficace en brise 2)'},shift:{n:'Changement de type',ic:'refresh',d:()=>'Change de type toutes les 5 tours'},fury:{n:'Fureur',ic:'flame',d:()=>'Attaques ×1,3 à partir du 5e tour'}};
+const BCI={bcap1:{n:'Appât Boss',d:'Capture du boss +50 % (1 lancer)',ic:'bug'},bcap2:{n:'Super Appât Boss',d:'Capture du boss +100 % (1 lancer)',ic:'sparkles'}};
 const BASEN=BOSSES.length,syncB=()=>{BOSSES.length=BASEN;((S.cfg&&S.cfg.custom)||[]).forEach(b=>BOSSES.push(b))};syncB();
 let AF=null;
 const EVTS=[['manoir','Manoir hanté (Halloween)'],['boss','Boss de monde']];
@@ -2455,7 +2477,7 @@ function begin(cfg){
 }
 function startBoss(){
  const b=bossS(),st=bossStat();if(st.dead||b.tries<=0||!S.box.some(m=>m.team))return;b.tries--;const bo=st.bo;
- begin({mode:'boss',bg:bo.bg,maxTurns:1e9,foe:(f=>(f.atk=Math.round(f.atk*1.3),f.def=Math.round(f.def*1.3),f))(fighter(bo.id,bo.lvl,{hp:1e9,dmgMul:.8,sh:!!bo.sh,moves:bo.moves}))});
+ begin({mode:'boss',bg:bo.bg,maxTurns:1e9,bo,shc:bHas(bo,'shield')?6:0,foe:(f=>(f.atk=Math.round(f.atk*1.3),f.def=Math.round(f.def*1.3),f))(fighter(bo.id,bo.lvl,{hp:1e9,dmgMul:.8,sh:!!bo.sh,moves:bo.moves}))});
 }
 function foeMove(){
  const me=B.team[B.i],F=B.foe,ms=F.moves,ai=B.ai??1,sc=m=>m.stat?(me.st||F.hp/F.max<.35?0:55):m.p*eff(m.t,me.types)*(F.types.includes(m.t)?1.5:1);
@@ -2499,9 +2521,9 @@ async function act(who,mv){
  if(mv.acc&&Math.random()>mv.acc){say('Mais l\'attaque échoue !');await sleep(600);return true}
  try{await playFx(who,mv)}catch(e){}
  if(mv.stat){await tryStatus(D,mv.stat,D===B.foe?'foe':'me',true);return true}
- const heavy=B.mode==='boss'&&who==='foe'&&B.turn%3===2;if(heavy){A.dmgMul=1.5;say('Le boss se déchaîne : attaque puissante !');await sleep(500)}const r=calc(A,D,mv);if(heavy)A.dmgMul=1;if(A.st==='brn')r.d=Math.max(1,Math.round(r.d*.5));
- if(!r.e){say(`Ça n'affecte pas ${D.name}...`);await sleep(900);return true}
- const boss=B.mode==='boss'&&D===B.foe,shield=boss?Math.max(.25,Math.min(1,Math.pow(A.lvl/D.lvl,2))):1,raid=r.d*RAID*shield;
+ const bm=B.mode==='boss',heavy=bm&&who==='foe'&&B.turn%3===2,fury=bm&&who==='foe'&&bHas(B.bo,'fury')&&B.turn>=5,base=A.dmgMul||1;if(heavy){say('Le boss se déchaîne : attaque puissante !');await sleep(500)}A.dmgMul=base*(heavy?1.5:1)*(fury?1.3:1);const r=calc(A,D,mv);A.dmgMul=base;const imm=bm&&who==='me'&&bHas(B.bo,'immun')&&mv.t===immT(B.bo);if(imm){r.e=0;r.d=0}if(A.st==='brn')r.d=Math.max(1,Math.round(r.d*.5));
+ if(!r.e){say(imm?`${D.name} est protégé par son aura : les attaques ${immT(B.bo)} sont sans effet !`:`Ça n'affecte pas ${D.name}...`);await sleep(900);return true}
+ const boss=B.mode==='boss'&&D===B.foe,shield=boss?Math.max(.25,Math.min(1,Math.pow(A.lvl/D.lvl,2))):1,raid=r.d*RAID*shield*(B.shc>0?.3:1);if(boss&&B.shc>0){const was=B.shc;B.shc=Math.max(0,B.shc-(r.e>1?2:1));if(was>0&&B.shc===0)say('Le bouclier cristal du boss se brise !')}
  if(boss){bossS().mine+=raid;B.dealt+=raid;save();const d=$('#dealt');if(d)d.textContent=fmtN(B.dealt)}else{let nh=D.hp-r.d;if(D.held==='ceinture'&&!D.cons&&D.hp===D.max&&nh<=0){nh=1;D.cons=1;say(`${D.name} tient bon grâce à sa Ceinture Force !`)}D.hp=Math.max(0,nh)}
  const tgt=$(D===B.foe?'#foe':'#me'),ar=$('#arena');
  if(r.crit||r.e>1)shk(1.5);
@@ -2528,7 +2550,8 @@ async function endRound(){
   return finish(true)}
  if(me.hp<=0){if(B.team.some(t=>t.hp>0)){B.pick=true;B.busy=false;say('Choisis ton prochain Pokémon.');render(true);return}return finish(false)}
  {const q=B.team[B.i];if(q&&q.hp>0&&q.held==='restes'&&q.hp<q.max){q.hp=Math.min(q.max,q.hp+Math.max(1,Math.round(q.max/16)));setHp('me');say(`${q.name} récupère des PV grâce aux Restes.`)}if(q&&q.hp>0&&q.held==='sitrus'&&!q.cons&&q.hp<=q.max/2){q.cons=1;q.hp=Math.min(q.max,q.hp+Math.round(q.max/4));setHp('me');say(`${q.name} mange sa Baie Sitrus !`)}}
- B.turn++;if(B.mode==='boss'&&B.turn>B.maxTurns)return finish(null);
+ B.turn++;if(B.mode==='boss'&&bHas(B.bo,'shift')&&B.turn%5===0){const tl=['Feu','Eau','Plante','Électrik','Psy','Roche','Glace','Combat'].filter(t=>!B.foe.types.includes(t)),nt=tl[Math.floor(Math.random()*tl.length)];B.foe.types=[nt];say(`Le boss change de type : ${nt} !`)}
+ if(B.mode==='boss'&&B.turn>B.maxTurns)return finish(null);
  B.busy=false;say(`Que fait ${me.name} ?`);render(true);
 }
 async function useMove(k){
@@ -2571,7 +2594,7 @@ function battleView(){
  if(B.res)ctl=`<div class="panel"><h4 class="px">${B.res.win?'Victoire !':boss?(B.team.every(t=>t.hp<=0)?'Équipe K.O.':'Temps écoulé'):'Défaite...'}</h4>${B.res.lines.map(l=>`<div style="margin:3px 0">${l}</div>`).join('')}<div style="margin-top:10px"><a class="btn y" data-b="leave"><i class="ti ti-check"></i>Continuer</a></div></div>`;
  else if(B.pick)ctl=`<div class="panel" style="border-color:var(--y)"><h4 class="px">Choisis ton prochain Pokémon</h4><div class="tstrip">${strip}</div></div>`;
  else ctl=`<div class="mvg">${mvs}</div>${B.showSw?`<div class="panel"><h4 class="px" style="margin-bottom:6px">Changer de Pokémon <small style="font-family:Nunito;color:var(--m);font-weight:700">· coûte ton tour</small></h4><div class="tstrip">${strip}</div></div>`:''}<div class="acts" style="grid-template-columns:1fr 1fr"><a class="btn ${B.busy?'off':''}" data-b="toggle"><i class="ti ti-users"></i>Pokémon</a><a class="btn ${B.busy?'off':''}" data-b="leave"><i class="ti ti-run"></i>Fuir</a></div>`;
- const head=boss?`<div class="panel" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><b class="px" style="font-size:10px;color:var(--r)">BOSS DE MONDE</b><span class="chip">Tour ${B.turn}</span><span class="chip"><i class="ti ti-shield"></i>Bouclier : <b>${Math.round((1-Math.max(.25,Math.min(1,Math.pow(B.team[B.i].lvl/B.foe.lvl,2))))*100)} %</b></span><span class="chip"><i class="ti ti-swords"></i>Dégâts : <b id="dealt">${fmtN(B.dealt)}</b></span></div>`:`<div class="title"><h3 class="px">${B.title}</h3></div>`;
+ const head=boss?`<div class="panel" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><b class="px" style="font-size:10px;color:var(--r)">BOSS DE MONDE</b><span class="chip">Tour ${B.turn}</span><span class="chip"><i class="ti ti-shield"></i>Bouclier : <b>${Math.round((1-Math.max(.25,Math.min(1,Math.pow(B.team[B.i].lvl/B.foe.lvl,2))))*100)} %</b></span>${B.shc>0?`<span class="chip"><i class="ti ti-shield-half"></i>Cristal : <b>${'●'.repeat(B.shc)}${'○'.repeat(6-B.shc)}</b></span>`:''}${(B.bo&&B.bo.spec||[]).map(k=>`<span class="chip"><i class="ti ti-${SPECS[k].ic}"></i>${k==='immun'?'Immunité '+immT(B.bo):SPECS[k].n}</span>`).join('')}<span class="chip"><i class="ti ti-swords"></i>Dégâts : <b id="dealt">${fmtN(B.dealt)}</b></span></div>`:`<div class="title"><h3 class="px">${B.title}</h3></div>`;
  return `${head}${arena}<div class="dialog" id="bmsg">${B.msg}</div>${ctl}`;
 }
 let PINFO=false;
@@ -2640,14 +2663,14 @@ function combat(){
 }
 function bossLots(){
  const t=BTIER.map(([lo,hi,n,r])=>`<div class="svnote" style="margin:0"><b>${n}</b><br>${r.map(rewTxt).join(' · ')}</div>`).join('');
- modalOv(`<h4 class="px">Lots du boss</h4><div class="svnote" style="margin:0">Les lots sont remis à la fin du chrono (ou à la défaite du boss), selon ton classement parmi tous les dresseurs.</div>${t}<div class="svnote" style="margin:0"><b>Boss vaincu avant la fin</b><br>+ ${rewTxt(BDEAD[0])} pour chaque participant</div><div class="svnote" style="margin:0"><b>Capture</b><br>${Math.round(CHN*100)} % de chance d'obtenir ${THROWS} lancers pour capturer le boss. Réussite selon la Ball : Poké ${BCAP.poke*100} %, Super ${BCAP.super*100} %, Hyper ${BCAP.hyper*100} % par lancer. Sinon, il s'enfuit.</div><div class="pbt"><a class="btn y" data-m="x">Fermer</a></div>`);
+ modalOv(`<h4 class="px">Lots du boss</h4><div class="svnote" style="margin:0">Les lots sont remis à la fin du chrono (ou à la défaite du boss), selon ton classement parmi tous les dresseurs.</div>${t}<div class="svnote" style="margin:0"><b>Boss vaincu avant la fin</b><br>+ ${rewTxt(BDEAD[0])} pour chaque participant</div><div class="svnote" style="margin:0"><b>Capture</b><br>${Math.round(CHN*100)} % de chance de pouvoir tenter la capture du boss, ramené à ton niveau. Plus il est rare, plus c'est dur : 3★ = 10 lancers, 5★ = 6, 7★ = 3. Réussite de base par Ball : Poké ${BCAP.poke*100} %, Super ${BCAP.super*100} %, Hyper ${BCAP.hyper*100} %, multipliée selon les étoiles. Les Appâts Boss (boutique) augmentent la chance d'un lancer.</div><div class="pbt"><a class="btn y" data-m="x">Fermer</a></div>`);
 }
 function bossRecapView(r){
  const bo=BOSSES[r.bi]||bossOf(r.slot),img=`<img class="bsp" id="bcimg" src="${bo.sh?SH(bo.id):SP(bo.id)}" referrerpolicy="no-referrer" alt="">`,sc=(txt)=>`<div class="bsc" id="bcs"><div class="bgimg" style="background-image:url(${BG_}${bo.bg}.png)"></div><div class="aura"></div>${img}<img id="bcb" class="bcb" alt="" style="display:none"><div class="bsi"><span class="px">${bo.name}${bo.sh?' ✦':''}</span> <span class="chip">${txt}</span></div></div>`;
  const head=`<div class="title"><h3 class="px">Boss de monde</h3></div>`;
  if(r.phase==='cap'){
-  const left=THROWS-r.throws,balls=BK3.map((k,i)=>`<a class="btn ${(S.balls[k]||0)<=0||r.busy?'off':''}" data-b="bthrow" data-k="${i}"><img src="${BI(k)}" width="22" height="22" alt="">${BALLS[k].n} · ${S.balls[k]||0}<small>${BCAP[k]*100} %</small></a>`).join('');
-  return `${head}${sc('Capture')}<div class="panel"><h4 class="px">Une chance de capture !</h4><div id="bcm" style="margin:6px 0">${r.msg||`${bo.name} est à ta portée ! Lancers restants : <b>${left}/${THROWS}</b>.`}</div><div class="mvg">${balls}</div></div>`;
+  const T=thr(bo),left=T-r.throws,mu=r.use?BCI[r.use]&&(r.use==='bcap1'?1.5:2):1,pc=k=>Math.min(95,Math.round(BCAP[k]*STAR_CAP[stars(bo)]*(mu||1)*1000)/10),balls=BK3.map((k,i)=>`<a class="btn ${(S.balls[k]||0)<=0||r.busy?'off':''}" data-b="bthrow" data-k="${i}"><img src="${BI(k)}" width="22" height="22" alt="">${BALLS[k].n} · ${S.balls[k]||0}<small>${pc(k)} %</small></a>`).join(''),its=['bcap1','bcap2'].map(k=>`<a class="btn sm ${(itm()[k]||0)<=0||r.busy?'off':''} ${r.use===k?'y':''}" data-b="buse" data-k="${k}"><i class="ti ti-${BCI[k].ic}"></i>${BCI[k].n} · ${itm()[k]||0}</a>`).join('');
+  return `${head}${sc('Capture')}<div class="panel"><h4 class="px">Une chance de capture !</h4><div id="bcm" style="margin:6px 0">${r.msg||`${bo.name} est à ta portée ! Lancers restants : <b>${left}/${T}</b>.`}</div><div style="color:var(--m);font-size:12px">Rareté ${'★'.repeat(stars(bo))} : capture plus difficile. Objet à utiliser sur le prochain lancer :</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0">${its}</div><div class="mvg">${balls}</div></div>`;
  }
  if(r.phase==='won')return `${head}${sc('Capturé !')}<div class="panel"><h4 class="px">${bo.name}${bo.sh?' ✦':''} capturé !</h4><div>Il rejoint ta boîte (Niv. ${r.capLv||'—'}, ramené à ton niveau).</div><div style="margin-top:10px"><a class="btn y" data-b="bend"><i class="ti ti-check"></i>Continuer</a></div></div>`;
  if(r.phase==='fled')return `${head}${sc('En fuite')}<div class="panel"><h4 class="px">${bo.name} s'est enfui…</h4><div>Plus de lancers. Une prochaine fois !</div><div style="margin-top:10px"><a class="btn y" data-b="bend"><i class="ti ti-check"></i>Continuer</a></div></div>`;
@@ -2677,8 +2700,11 @@ function adminForm(){
   const mx=hpMax(f.id,f.lvl),ms=[0,1,2,3].map(i=>`<select class="ain" data-af="m${i}" style="margin-bottom:4px">${opt(f.moves[i]&&f.moves[i].n)}</select>`).join('');
   body+=`<div class="panel"><h4 class="px">${sp[1]}${f.sh?' ✦':''}</h4>
   <div class="arow" style="margin-top:8px"><img src="${f.sh?SH(f.id):SP(f.id)}" referrerpolicy="no-referrer" alt="" style="width:64px;height:64px"><div class="grow"><b>PV : ${fmtN(mx)}</b><div class="bar" style="height:10px;background:#080c26;border:1px solid var(--b);margin:4px 0"><i style="display:block;height:100%;width:100%;background:var(--g)"></i></div><small>Att ${atkOf(f.id,f.lvl)} · Déf ${defOf(f.id,f.lvl)} · Vit ${spdOf(f.id,f.lvl)}</small></div></div>
-  <div style="color:var(--m);font-size:12px;margin:2px 0 8px">Raid communautaire : environ ${nPlay(curSlot())} dresseurs se partagent une barre de ${fmtN(TOT)} PV. Seul, tu ne peux pas le vaincre : chaque dégât compte pour ton classement.</div>
+  <div style="color:var(--m);font-size:12px;margin:2px 0 8px">Raid communautaire : barre de ${fmtN(TOT)} PV partagée par 50 à 100 dresseurs ; le boss ne peut pas être vaincu en solo.</div>
   <div class="arow"><div class="grow"><b>Niveau</b></div><input class="ain" type="number" min="1" max="100" value="${f.lvl}" data-af="lvl" style="width:80px"></div>
+  <div class="arow"><div class="grow"><b>Rareté</b><br><small>Orange : 1 à 4★ · Doré : 5 à 7★ · capture plus dure et moins de lancers</small></div><select class="ain" data-af="stars" style="width:90px">${[1,2,3,4,5,6,7].map(n=>`<option value="${n}" ${n===f.stars?'selected':''}>${n}★ (${STAR_THR[n]} lancers)</option>`).join('')}</select></div>
+  ${[0,1].map(i=>`<div class="arow"><div class="grow"><b>Spécificité ${i+1}</b></div><select class="ain" data-af="sp${i}" style="width:170px"><option value="">— aucune —</option>${Object.entries(SPECS).map(([k,v])=>`<option value="${k}" ${f.sp[i]===k?'selected':''}>${v.n}</option>`).join('')}</select></div>`).join('')}
+  ${f.sp.includes('immun')?`<div class="arow"><div class="grow"><b>Type immunisé</b></div><select class="ain" data-af="immT" style="width:130px">${[...new Set(Object.values(BY).flatMap(x=>x[2]))].sort().map(t=>`<option ${(f.immT||sp[2][0])===t?'selected':''}>${t}</option>`).join('')}</select></div>`:''}
   <div class="arow"><div class="grow"><b>Shiny ✦</b></div><div class="sw ${f.sh?'on':''}" data-act="afsh"></div></div>
   <div class="arow"><div class="grow"><b>Décor</b></div><select class="ain" data-af="bg" style="width:130px">${BIOMES.herbe.map(([k,n])=>`<option value="${k}" ${k===f.bg?'selected':''}>${n}</option>`).join('')}</select></div>
   <h4 class="px" style="font-size:11px;margin:8px 0 4px">Attaques (4 max)</h4>${ms}<div style="color:var(--m);font-size:12px">Vide = attaques naturelles du Pokémon à ce niveau.</div></div>`;
@@ -2687,14 +2713,14 @@ function adminForm(){
 }
 document.addEventListener('input',e=>{if(e.target.id==='afq'&&AF){AF.q=e.target.value;const l=$('#afl');if(l)l.innerHTML=afList()}});
 document.addEventListener('change',e=>{const k=e.target.dataset&&e.target.dataset.af;if(!k||!AF)return;const v=e.target.value;
- if(k==='lvl')AF.lvl=Math.max(1,Math.min(100,+v||1));else if(k==='bg')AF.bg=v;else if(/^m\d$/.test(k)){const i=+k[1];AF.moves[i]=v?{n:v,t:MD[v][0],p:MD[v][2]}:null}
+ if(k==='lvl')AF.lvl=Math.max(1,Math.min(100,+v||1));else if(k==='stars')AF.stars=+v;else if(k==='sp0')AF.sp[0]=v;else if(k==='sp1')AF.sp[1]=v;else if(k==='immT')AF.immT=v;else if(k==='bg')AF.bg=v;else if(/^m\d$/.test(k)){const i=+k[1];AF.moves[i]=v?{n:v,t:MD[v][0],p:MD[v][2]}:null}
  render(true)});
 function rewIco(e){return e.k==='coin'?'<i class="ti ti-coin" style="color:var(--y)"></i>':e.k==='gem'?'<i class="ti ti-diamond" style="color:#ff7ad9"></i>':e.k==='ball'?`<img src="${BI(e.v)}" alt="">`:e.k==='egg'?eggImg(e.v,46):`<i class="ti ti-${ITI(e.v)}"></i>`}
 function adminView(){
  if(!window.ADM)return `<div class="title"><h3 class="px">Administration</h3></div><div class="panel"><h4 class="px">Accès réservé</h4><div style="color:var(--m);margin:6px 0 8px">Code administrateur requis.</div><input id="apin" class="ain" type="password" inputmode="numeric" placeholder="Code" autocomplete="off"><div id="aerr" style="color:var(--r);min-height:18px;margin-top:4px"></div><div style="display:flex;gap:8px"><a class="btn y" data-act="alogin">Entrer</a><a class="btn" data-go="hub">Retour</a></div></div>`;
  if(AF)return adminForm();
  const c=CFG(),cur=bossIdx(curSlot());
- const rot=c.rot.map((bi,i)=>{const b=BOSSES[bi];return `<div class="arow"><img src="${b.sh?SH(b.id):SP(b.id)}" referrerpolicy="no-referrer" alt=""><div class="grow"><b>${i+1}. ${b.name}</b>${bi===cur?' <span class="chip">en cours</span>':''}<br><small>Niv. ${b.lvl}</small></div>${b.custom?`<a class="btn sq" data-act="afedit" data-i="${bi}">✎</a>`:''}<a class="btn sq" data-act="arot" data-i="${i}" data-d="-1">↑</a><a class="btn sq" data-act="arot" data-i="${i}" data-d="1">↓</a><a class="btn sq" data-act="arot" data-i="${i}" data-d="0">✕</a></div>`}).join('')||'<div style="color:var(--m)">Aucun boss : la rotation par défaut s\'applique.</div>';
+ const rot=c.rot.map((bi,i)=>{const b=BOSSES[bi];return `<div class="arow"><img src="${b.sh?SH(b.id):SP(b.id)}" referrerpolicy="no-referrer" alt=""><div class="grow"><b>${i+1}. ${b.name}</b>${bi===cur?' <span class="chip">en cours</span>':''}<br><small>Niv. ${b.lvl} · ${b.stars||3}★${(b.spec||[]).length?' · '+b.spec.map(k=>SPECS[k].n).join(', '):''}</small></div>${b.custom?`<a class="btn sq" data-act="afedit" data-i="${bi}">✎</a>`:''}<a class="btn sq" data-act="arot" data-i="${i}" data-d="-1">↑</a><a class="btn sq" data-act="arot" data-i="${i}" data-d="1">↓</a><a class="btn sq" data-act="arot" data-i="${i}" data-d="0">✕</a></div>`}).join('')||'<div style="color:var(--m)">Aucun boss : la rotation par défaut s\'applique.</div>';
  const out=BOSSES.map((b,bi)=>c.rot.includes(bi)?'':`<div class="arow"><img src="${b.sh?SH(b.id):SP(b.id)}" referrerpolicy="no-referrer" alt=""><div class="grow"><b>${b.name}</b><br><small>Niv. ${b.lvl} · hors rotation</small></div>${b.custom?`<a class="btn sq" data-act="afedit" data-i="${bi}">✎</a>`:''}<a class="btn" data-act="aradd" data-i="${bi}">+ Ajouter</a></div>`).join('');
  const ev=EVTS.map(([k,n])=>`<div class="arow"><div class="grow"><b>${n}</b><br><small>${evOn(k)?'Actif':'Désactivé'}</small></div><div class="sw ${evOn(k)?'on':''}" data-act="aev" data-k="${k}"></div></div>`).join('');
  return `<div class="title"><h3 class="px">Administration</h3><a class="btn" data-act="alogout">Quitter</a></div>
@@ -2708,30 +2734,40 @@ function boss(){
  const b=bossS(),st=bossStat(),hasTeam=S.box.some(m=>m.team),r=(S.bossRecs||[])[0];window.BSL=b.slot;
  if(r)return bossRecapView(r);
  const bo=st.bo;
- return `<div class="title"><h3 class="px">Boss de monde</h3><span class="chip"><i class="ti ti-clock"></i><span id="bt">${fmtT(st.left)}</span></span></div>
- <div class="bsc"><div class="bgimg" style="background-image:url(${BG_}${bo.bg}.png)"></div><div class="aura"></div><div class="fog"></div>
-  <img class="bsp" src="${SP(bo.id)}" style="${SHADE}" referrerpolicy="no-referrer" alt="">
-  <div class="bsi"><span class="px">${st.dead?bo.name:'? ? ?'}</span> <span class="chip">${st.dead?'Vaincu':'Niv. ??'}</span></div>
-  <div class="bsh"><small>${st.dead?'Le boss est vaincu !':'Vie du boss · toute la communauté'}</small><div class="bar" style="height:14px"><i id="bh" style="width:${st.pct}%;background:var(--r)"></i></div><b id="bhp">${Math.ceil(st.pct)} %</b></div></div>
- <div class="panel" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><div style="flex:1;min-width:170px"><b>Ta contribution : ${fmtN(b.mine)} dégâts</b><div style="color:var(--m);font-size:12px">Un nouveau boss toutes les 2 h. Chaque tentative dure jusqu'à la défaite de toute ton équipe. 3 tentatives par boss. Le classement est révélé à la fin.</div></div><a class="btn" data-b="blots"><i class="ti ti-gift"></i>Lots <span class="ibtn">i</span></a><a class="btn" data-act="teamgo"><i class="ti ti-users"></i>Équipe</a><a class="btn r ${st.dead||b.tries<=0||!hasTeam?'off':''}" data-b="boss"><i class="ti ti-swords"></i>Attaquer · ${b.tries}/3</a></div>`;
+ const nst=stars(bo),warm=nst>=5,ty=BY[bo.id][2][0],tc=TC[ty]||'#888',prep=S.box.filter(m=>m.team),dis=st.dead||b.tries<=0||!hasTeam;
+ const part=[[S.name||'Toi',prep[0]?prep[0].id:null,1],...FAKEALL.slice(3,6).map((n,i)=>[n,[25,6,94][i],0])].map(([n,id,me])=>`<div class="bpr ${me?'me':''}">${id?`<img src="${SP(id)}" referrerpolicy="no-referrer" alt="">`:'<i class="ti ti-user"></i>'}<span>${esc(n)}</span></div>`).join('');
+ const sp=(bo.spec||[]).map(k=>`<div class="bsp2"><i class="ti ti-${SPECS[k].ic}"></i><span><b>${SPECS[k].n}</b><br>${SPECS[k].d(bo)}</span></div>`).join('');
+ return `<div class="bcard ${warm?'gold':'ora'}"><div class="bcl">
+  <div class="bct"><small>Temps restant</small><b id="bt">${fmtT(st.left)}</b></div>
+  <h3 class="px bctt">Boss mondial</h3>
+  <a class="bmn ${dis?'off':''}" data-act="teamgo"><i class="ti ti-users"></i>Préparer l'équipe</a>
+  <a class="bmn sel ${dis?'off':''}" data-b="boss"><i class="ti ti-swords"></i>Lancer le combat · ${b.tries}/3</a>
+  <a class="bmn" data-b="blots"><i class="ti ti-gift"></i>Lots et capture</a>
+  <div class="bpt">Participants · environ ${nPlay(b.slot)} dresseurs</div>${part}</div>
+ <div class="bcr"><span class="bty" style="background:${tc}" title="Type ${ty}"><b>${ty.slice(0,4).toUpperCase()}</b></span>
+  <img class="bsil" src="${SP(bo.id)}" style="${SHADE}" referrerpolicy="no-referrer" alt="">
+  <div class="bstr" title="Rareté">${'★'.repeat(nst)}<span>${'★'.repeat(7-nst)}</span></div>
+  <div class="bobj"><small>Objectif</small><b>Infliger un maximum de dégâts avant la fin du temps imparti</b></div></div>
+ <div class="bbar"><small>Vie du boss · toute la communauté</small><div class="bar" style="height:12px"><i id="bh" style="width:${st.pct}%;background:var(--r)"></i></div><b id="bhp">${Math.ceil(st.pct)} %</b></div></div>
+ <div class="panel"><h4 class="px" style="font-size:11px;margin-bottom:6px">Spécificités du boss</h4>${sp||'<div style="color:var(--m)">Aucune.</div>'}<div style="color:var(--m);font-size:12px;margin-top:6px">Ta contribution : <b>${fmtN(b.mine)}</b> dégâts. Un nouveau boss toutes les 2 h, 3 tentatives, classement révélé à la fin. Capture : ${thr(bo)} lancers si tu as la chance de la tenter.</div></div>`;
 }
 async function bossThrow(i){
- const r=(S.bossRecs||[])[0],ball=BK3[i];if(!r||r.phase!=='cap'||r.busy||r.throws>=THROWS)return;
+ const r=(S.bossRecs||[])[0],ball=BK3[i];if(!r||r.phase!=='cap'||r.busy||r.throws>=thr(bossOf(r.slot)))return;
  if((S.balls[ball]||0)<=0)return;
- r.busy=true;S.balls[ball]--;r.throws++;save();const bo=bossOf(r.slot);
+ r.busy=true;S.balls[ball]--;r.throws++;const bo=BOSSES[r.bi]||bossOf(r.slot);let mu=1;if(r.use&&(itm()[r.use]||0)>0){itm()[r.use]--;mu=r.use==='bcap1'?1.5:2;r.use=null}save();
  const bi=$('#bcimg'),bl=$('#bcb'),m=$('#bcm');if(!bi||!bl){r.busy=false;return}
  document.querySelectorAll('[data-b=bthrow]').forEach(x=>x.classList.add('off'));
  bl.src=BI(ball);bl.style.display='block';if(m)m.textContent=`Tu lances une ${BALLS[ball].n} !`;
  await anim(bl,[{bottom:'-8%',transform:'scale(1.3)'},{bottom:'46%',transform:'scale(.9)'}],{duration:650,easing:'ease-out'});
  bi.style.transition='opacity .3s,transform .3s';bi.style.opacity=0;bi.style.transform='scale(.2)';await sleep(350);
  await anim(bl,[{bottom:'46%'},{bottom:'14%'}],{duration:450,easing:'ease-in'});
- const ok=Math.random()<BCAP[ball],sh=ok?3:Math.floor(Math.random()*3);
+ const ok=Math.random()<Math.min(.95,BCAP[ball]*STAR_CAP[stars(bo)]*mu),sh=ok?3:Math.floor(Math.random()*3);
  if(m)m.textContent='…';
  for(let k=0;k<sh;k++){await sleep(250);await anim(bl,[{transform:'rotate(0)'},{transform:'rotate(-25deg)'},{transform:'rotate(25deg)'},{transform:'rotate(0)'}],{duration:600});await sleep(200)}
  await sleep(350);
  if(ok){const tl=Math.min(capLv(),Math.max(5,...S.box.filter(m=>m.team).map(m=>m.lvl))),mon=mk(bo.id,tl,!!bo.sh);r.capLv=tl;S.box.push(mon);S.dex[bo.id]='c';r.phase='won'}
- else if(r.throws>=THROWS)r.phase='fled';
- else r.msg=`Il s'est libéré ! Lancers restants : <b>${THROWS-r.throws}/${THROWS}</b>.`;
+ else if(r.throws>=thr(bo))r.phase='fled';
+ else r.msg=`Il s'est libéré ! Lancers restants : <b>${thr(bo)-r.throws}/${thr(bo)}</b>.`;
  r.busy=false;save();render(true);
 }
 /* --- LIGUE (mode histoire) : dresseurs de Pokémon Rouge Feu, dans l'ordre de l'aventure --- */
@@ -3382,6 +3418,8 @@ const SHOP=[
  {k:'vit3',g:'Vitamines',t:'Calcium',d:'+10 EV Atq. Spé.',p:500,ty:'item',i:'vit3',n:1,ic:'wand'},
  {k:'vit4',g:'Vitamines',t:'Zinc',d:'+10 EV Déf. Spé.',p:500,ty:'item',i:'vit4',n:1,ic:'diamond'},
  {k:'vit5',g:'Vitamines',t:'Carbone',d:'+10 EV Vitesse',p:500,ty:'item',i:'vit5',n:1,ic:'bolt'},
+ {k:'bcap1',g:'Capture boss',t:'Appât Boss',d:'+50 % de capture sur un lancer de boss',p:500,ty:'item',i:'bcap1',n:1,ic:'bug'},
+ {k:'bcap2',g:'Capture boss',t:'Super Appât Boss',d:'+100 % de capture sur un lancer de boss',p:1200,ty:'item',i:'bcap2',n:1,ic:'sparkles'},
  {k:'bonbon3',g:'Bonbons',t:'Bonbon Rare ×3',d:'+1 niveau chacun',p:300,ty:'item',i:'bonbon',n:3,ic:'candy'},
  {k:'bonbonm3',g:'Bonbons',t:'Bonbon EXP M ×3',d:'+3 niveaux chacun',p:450,ty:'item',i:'bonbonm',n:3,ic:'candy'},
  {k:'bxp1',g:'Bonbons',t:'Super Bonbon XP',d:'+500 XP joueur · 3 par jour',p:1500,ty:'item',i:'bonbonxp',n:1,ic:'candy'},
@@ -3510,6 +3548,7 @@ document.addEventListener('click',e=>{
  else if(a==='boss')startBoss();
  else if(a==='blots')bossLots();
  else if(a==='bthrow')bossThrow(k);
+ else if(a==='buse'){const r=(S.bossRecs||[])[0];if(r&&!r.busy&&(itm()[t.dataset.k]||0)>0){r.use=r.use===t.dataset.k?null:t.dataset.k;render(true)}}
  else if(a==='bend'){S.bossRecs.shift();save();render()}
  else if(a==='brank')bossRank();
  else if(a==='bclaim'){const r=S.bossRecs[0];if(!r)return;const got=r.rew.map(bossGive);if(r.chance){r.phase='cap';save();render()}else{S.bossRecs.shift();save();render();modalOv(`<h4 class="px">Lots récupérés</h4><div class="list">${got.map(c=>`<div class="li"><div class="grow"><b>${c.n}</b></div></div>`).join('')}</div><div class="svnote" style="margin:0">Pas de chance de capture cette fois-ci (${Math.round(CHN*100)} %). À la prochaine !</div><div class="pbt"><a class="btn y" data-m="x">OK</a></div>`)}}
