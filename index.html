@@ -1812,7 +1812,8 @@ add('se','Combat',['Normal','Glace','Roche']);add('se','Sol',['Feu','Électrik',
 add('nv','Combat',['Poison','Vol','Psy','Insecte','Fée']);add('nv','Sol',['Plante','Insecte']);add('nv','Roche',['Combat','Sol']);add('nv','Glace',['Feu','Eau','Glace']);add('nv','Feu',['Roche']);add('nv','Normal',['Roche']);add('nv','Poison',['Sol','Roche']);add('nv','Insecte',['Combat']);add('nv','Vol',['Roche']);
 add('im','Électrik',['Sol']);add('im','Sol',['Vol']);add('im','Combat',['Spectre']);})();
 const eff=(a,d)=>d.reduce((m,x)=>m*((TE.im[a]||[]).includes(x)?0:(TE.se[a]||[]).includes(x)?2:(TE.nv[a]||[]).includes(x)?.5:1),1);
-const hpMax=(id,l)=>stats(id)[0][1]+l*4+20,atkOf=(id,l)=>stats(id)[1][1]+l*2+10,defOf=(id,l)=>stats(id)[2][1]+l*2+10,spdOf=(id,l)=>stats(id)[3][1]+l;
+/* formules des jeux officiels (IV 15 neutres) : les stats suivent proportionnellement le niveau */
+const sc_=(b,l)=>Math.floor((2*b+15)*l/100),hpMax=(id,l)=>sc_(stats(id)[0][1],l)+l+10,atkOf=(id,l)=>sc_(stats(id)[1][1],l)+5,defOf=(id,l)=>sc_(stats(id)[2][1],l)+5,spdOf=(id,l)=>sc_(stats(id)[3][1],l)+5;
 function movesOf(id,lvl=30){
  const ls=learnset(id).filter(x=>x[0]<=lvl),ms=ls.slice(-4).map(x=>mvObj(x[1]));
  {const sm=ls.find(x=>STMOVE[x[1]]);if(sm&&!ms.some(m=>m.stat)){if(ms.length>=4)ms[0]=mvObj(sm[1]);else ms.push(mvObj(sm[1]))}}
@@ -1821,8 +1822,8 @@ function movesOf(id,lvl=30){
 }
 function fighter(id,lvl,x={}){const mx=x.hp||hpMax(id,lvl);return{id,lvl,name:BY[id][1],types:BY[id][2],hp:mx,max:mx,atk:atkOf(id,lvl),def:defOf(id,lvl),spd:spdOf(id,lvl),moves:movesOf(id,lvl),...x}}
 function calc(A,D,mv){
- const e=eff(mv.t,D.types),stab=A.types.includes(mv.t)?1.5:1,crit=Math.random()<.0625,r=.85+Math.random()*.15;
- const d=e?Math.max(1,Math.round(((2*A.lvl/5+2)*mv.p*A.atk/D.def/50+2)*stab*e*r*(crit?1.5:1)*(A.dmgMul||1))):0;
+ const e=eff(mv.t,D.types),stab=A.types.includes(mv.t)?1.5:1,crit=Math.random()<(A.lvl<20?.125:.0625),r=.85+Math.random()*.15,low=A.lvl<30?1+(30-Math.max(5,A.lvl))/25:1;
+ const d=e?Math.max(1,Math.round(((2*A.lvl/5+2)*mv.p*A.atk/D.def/50+2)*stab*e*r*(crit?2:1)*low*.5*(A.dmgMul||1))):0;
  return{d,e,crit};
 }
 const BG_='https://play.pokemonshowdown.com/fx/bg-';
@@ -1831,11 +1832,11 @@ const fmtN=n=>Math.round(n).toLocaleString('fr-FR');
 const fmtT=ms=>{const s=Math.floor(ms/1000);return `${Math.floor(s/3600)}h ${String(Math.floor(s/60)%60).padStart(2,'0')}m ${String(s%60).padStart(2,'0')}s`};
 
 /* --- boss de monde (communauté simulée) --- */
-const RAID=40,TOT=250000,BSLOT=2*36e5,CHN=.10,THROWS=5,BCAP={poke:.10,super:.15,hyper:.20},BK3=['poke','super','hyper'];
+const RAID=60,TOT=250000,BSLOT=2*36e5,CHN=.10,THROWS=5,BCAP={poke:.10,super:.15,hyper:.20},BK3=['poke','super','hyper'];
 const BOSSES=[
  {id:150,name:'Mewtwo',lvl:90,bg:'mountain',moves:[{n:'Psyko',t:'Psy',p:90},{n:'Ball\'Ombre',t:'Spectre',p:80},{n:'Choc Mental',t:'Psy',p:50}]},
  {id:149,name:'Dracolosse',lvl:80,bg:'beach',moves:[{n:'Dracogriffe',t:'Dragon',p:80},{n:'Ouragan',t:'Vol',p:70},{n:'Tonnerre',t:'Électrik',p:90}]},
- {id:34,name:'Nidoking',lvl:75,sh:true,bg:'desert',moves:[{n:'Détricanon',t:'Poison',p:90},{n:'Séisme',t:'Normal',p:100},{n:'Mégacorne',t:'Insecte',p:75}]}];
+ {id:34,name:'Nidoking',lvl:75,sh:true,bg:'desert',moves:[{n:'Détricanon',t:'Poison',p:90},{n:'Séisme',t:'Sol',p:100},{n:'Mégacorne',t:'Insecte',p:75}]}];
 const BASEN=BOSSES.length,syncB=()=>{BOSSES.length=BASEN;((S.cfg&&S.cfg.custom)||[]).forEach(b=>BOSSES.push(b))};syncB();
 let AF=null;
 const EVTS=[['manoir','Manoir hanté (Halloween)'],['boss','Boss de monde']];
@@ -2451,7 +2452,7 @@ function begin(cfg){
 }
 function startBoss(){
  const b=bossS(),st=bossStat();if(st.dead||b.tries<=0||!S.box.some(m=>m.team))return;b.tries--;const bo=st.bo;
- begin({mode:'boss',bg:bo.bg,maxTurns:1e9,foe:fighter(bo.id,bo.lvl,{hp:1e9,dmgMul:.3,sh:!!bo.sh,moves:bo.moves})});
+ begin({mode:'boss',bg:bo.bg,maxTurns:1e9,foe:(f=>(f.atk=Math.round(f.atk*1.3),f.def=Math.round(f.def*1.3),f))(fighter(bo.id,bo.lvl,{hp:1e9,dmgMul:.8,sh:!!bo.sh,moves:bo.moves}))});
 }
 function foeMove(){
  const me=B.team[B.i],F=B.foe,ms=F.moves,ai=B.ai??1,sc=m=>m.stat?(me.st||F.hp/F.max<.35?0:55):m.p*eff(m.t,me.types)*(F.types.includes(m.t)?1.5:1);
@@ -2495,9 +2496,9 @@ async function act(who,mv){
  if(mv.acc&&Math.random()>mv.acc){say('Mais l\'attaque échoue !');await sleep(600);return true}
  try{await playFx(who,mv)}catch(e){}
  if(mv.stat){await tryStatus(D,mv.stat,D===B.foe?'foe':'me',true);return true}
- const r=calc(A,D,mv);if(A.st==='brn')r.d=Math.max(1,Math.round(r.d*.5));
+ const heavy=B.mode==='boss'&&who==='foe'&&B.turn%3===2;if(heavy){A.dmgMul=1.5;say('Le boss se déchaîne : attaque puissante !');await sleep(500)}const r=calc(A,D,mv);if(heavy)A.dmgMul=1;if(A.st==='brn')r.d=Math.max(1,Math.round(r.d*.5));
  if(!r.e){say(`Ça n'affecte pas ${D.name}...`);await sleep(900);return true}
- const boss=B.mode==='boss'&&D===B.foe,raid=r.d*RAID;
+ const boss=B.mode==='boss'&&D===B.foe,shield=boss?Math.max(.25,Math.min(1,Math.pow(A.lvl/D.lvl,2))):1,raid=r.d*RAID*shield;
  if(boss){bossS().mine+=raid;B.dealt+=raid;save();const d=$('#dealt');if(d)d.textContent=fmtN(B.dealt)}else{let nh=D.hp-r.d;if(D.held==='ceinture'&&!D.cons&&D.hp===D.max&&nh<=0){nh=1;D.cons=1;say(`${D.name} tient bon grâce à sa Ceinture Force !`)}D.hp=Math.max(0,nh)}
  const tgt=$(D===B.foe?'#foe':'#me'),ar=$('#arena');
  if(r.crit||r.e>1)shk(1.5);
@@ -2567,7 +2568,7 @@ function battleView(){
  if(B.res)ctl=`<div class="panel"><h4 class="px">${B.res.win?'Victoire !':boss?(B.team.every(t=>t.hp<=0)?'Équipe K.O.':'Temps écoulé'):'Défaite...'}</h4>${B.res.lines.map(l=>`<div style="margin:3px 0">${l}</div>`).join('')}<div style="margin-top:10px"><a class="btn y" data-b="leave"><i class="ti ti-check"></i>Continuer</a></div></div>`;
  else if(B.pick)ctl=`<div class="panel" style="border-color:var(--y)"><h4 class="px">Choisis ton prochain Pokémon</h4><div class="tstrip">${strip}</div></div>`;
  else ctl=`<div class="mvg">${mvs}</div>${B.showSw?`<div class="panel"><h4 class="px" style="margin-bottom:6px">Changer de Pokémon <small style="font-family:Nunito;color:var(--m);font-weight:700">· coûte ton tour</small></h4><div class="tstrip">${strip}</div></div>`:''}<div class="acts" style="grid-template-columns:1fr 1fr"><a class="btn ${B.busy?'off':''}" data-b="toggle"><i class="ti ti-users"></i>Pokémon</a><a class="btn ${B.busy?'off':''}" data-b="leave"><i class="ti ti-run"></i>Fuir</a></div>`;
- const head=boss?`<div class="panel" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><b class="px" style="font-size:10px;color:var(--r)">BOSS DE MONDE</b><span class="chip">Tour ${B.turn}</span><span class="chip"><i class="ti ti-swords"></i>Dégâts : <b id="dealt">${fmtN(B.dealt)}</b></span></div>`:`<div class="title"><h3 class="px">${B.title}</h3></div>`;
+ const head=boss?`<div class="panel" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><b class="px" style="font-size:10px;color:var(--r)">BOSS DE MONDE</b><span class="chip">Tour ${B.turn}</span><span class="chip"><i class="ti ti-shield"></i>Bouclier : <b>${Math.round((1-Math.max(.25,Math.min(1,Math.pow(B.team[B.i].lvl/B.foe.lvl,2))))*100)} %</b></span><span class="chip"><i class="ti ti-swords"></i>Dégâts : <b id="dealt">${fmtN(B.dealt)}</b></span></div>`:`<div class="title"><h3 class="px">${B.title}</h3></div>`;
  return `${head}${arena}<div class="dialog" id="bmsg">${B.msg}</div>${ctl}`;
 }
 let PINFO=false;
