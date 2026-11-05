@@ -814,7 +814,7 @@ input{flex:1;min-width:140px}
 .pm-t .bd{position:absolute;right:calc(50% - 50px);top:-2px;background:#ef5350;border:2px solid #fff;border-radius:10px;font-style:normal;font-size:11px;padding:0 6px;font-weight:900;text-shadow:none}
 .pm-i{margin-top:auto;background:#2a2a30;border:2px solid #0008;padding:12px 14px;font-size:13px;font-weight:700;text-align:center;color:#fff}
 
-.bcard{position:relative;display:grid;grid-template-columns:1.05fr 1fr;border:3px solid #0b1030;overflow:hidden;color:#2a2412;background:linear-gradient(115deg,#f3ecc4 0 58%,var(--bc) 58%);box-shadow:0 4px 0 #0006}
+.bcard{position:relative;display:grid;grid-template-columns:1.05fr 1fr;border:3px solid #0b1030;overflow:hidden;color:#2a2412;background:linear-gradient(115deg,#f3ecc4 0 58%,var(--bc) 58.4%);box-shadow:0 4px 0 #0006}
 .bcard.gold{--bc:#f2b705}.bcard.ora{--bc:#f2662e}
 .bcl{padding:12px;display:flex;flex-direction:column;gap:6px;min-width:0}
 .bct{display:flex;flex-direction:column;line-height:1.1}.bct small{font-size:11px;font-weight:700}.bct b{font-size:26px;font-weight:900}
@@ -829,7 +829,7 @@ input{flex:1;min-width:140px}
 .bobj{position:absolute;left:8px;right:8px;bottom:8px;background:#efe9ff;color:#2a2412;padding:6px 8px;font-size:12px;box-shadow:0 2px 0 #0004}.bobj small{display:block;font-weight:800;color:#6a4c93}.bobj b{display:block;line-height:1.2}
 .bbar{grid-column:1/-1;padding:6px 12px 10px;background:#0b1030;color:#fff;display:flex;align-items:center;gap:8px;flex-wrap:wrap}.bbar .bar{flex:1;min-width:120px}
 .bsp2{display:flex;gap:8px;align-items:flex-start;margin:4px 0;font-size:13px}.bsp2 i{font-size:20px;color:var(--y)}
-@media(max-width:520px){.bcard{grid-template-columns:1fr;background:linear-gradient(180deg,#f3ecc4 0 56%,var(--bc) 56%)}.bcr{min-height:250px}}
+@media(max-width:520px){.bcard{grid-template-columns:1fr;background:linear-gradient(168deg,#f3ecc4 0 40%,var(--bc) 40.5%)}.bcr{min-height:270px}.bcl{padding-bottom:36px}}
 
 .bty img{width:26px;height:26px;object-fit:contain}.bty{background-clip:padding-box}
 .bi{position:absolute;top:14px;right:56px;width:24px;height:24px;border-radius:50%;background:#efe9ff;color:#2a2412;font-weight:900;font-style:italic;display:grid;place-items:center;border:2px solid #0b1030;cursor:pointer}
@@ -2743,14 +2743,13 @@ function boss(){
  if(r)return bossRecapView(r);
  const bo=st.bo;
  const nst=stars(bo),warm=nst>=5,ty=BY[bo.id][2][0],tc=tyc(ty),prep=S.box.filter(m=>m.team),dis=st.dead||b.tries<=0||!hasTeam;
- const sp=(bo.spec||[]).map(k=>`<div class="bspc"><i class="ti ti-${SPECS[k].ic}"></i><span>${k==='immun'?'Immunité '+immT(bo):SPECS[k].n}</span></div>`).join('')||'<div class="bspc" style="opacity:.6">Aucune spécificité</div>';
  return `<div class="bcard ${warm?'gold':'ora'}"><div class="bcl">
   <div class="bct"><small>Temps restant</small><b id="bt">${fmtT(st.left)}</b></div>
   <h3 class="px bctt">Boss mondial</h3>
   <a class="bmn ${dis?'off':''}" data-act="teamgo"><i class="ti ti-users"></i>Préparer l'équipe</a>
   <a class="bmn sel ${dis?'off':''}" data-b="boss"><i class="ti ti-swords"></i>Lancer le combat · ${b.tries}/3</a>
   <a class="bmn" data-b="blots"><i class="ti ti-gift"></i>Lots et capture</a>
-  <div class="bpt">Spécificités</div>${sp}</div>
+  </div>
  <div class="bcr"><span class="bty" style="background:${tc}" title="Type ${ty}"><img src="${tyi(ty)}" alt="${ty}"></span><a class="bi" data-b="binfo" title="Informations">i</a>
   <img class="bsil" src="${SP(bo.id)}" style="${SHADE}" referrerpolicy="no-referrer" alt="">
   <div class="bstr" title="Rareté">${'★'.repeat(nst)}<span>${'★'.repeat(7-nst)}</span></div>
