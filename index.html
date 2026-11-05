@@ -843,6 +843,10 @@ input{flex:1;min-width:140px}
 .cream{background:#f3ecc4!important;color:#2a2412!important;border-color:#2a2412!important;border-radius:20px!important}
 .cream .px{color:#2a2412!important}.cream .svnote{background:#fffaf0!important;color:#2a2412!important;border:1px solid #d8c9a0!important;border-radius:12px}.cream .bsp2 i{color:#7a3a00}.cream .bsp2 b{color:#2a2412}
 @media(min-width:521px){.bossv .bcard{grid-template-rows:1fr auto}}
+
+.app[data-pal=orange] .hud .lv{color:#000;text-shadow:none}
+.bcrm .panel{background:#f3ecc4;color:#2a2412;border-color:#2a2412;border-radius:18px}.bcrm .panel .px,.bcrm .panel b{color:#2a2412}.bcrm .panel small{color:#6b5a2a!important}.bcrm .rwg .li{background:#fffaf0;color:#2a2412;border:1px solid #d8c9a0;border-radius:12px}.bcrm .rwi{color:#2a2412}
+.bcrm .lb{background:#fffaf0;color:#2a2412}
 </style>
 </head>
 <body>
@@ -2749,7 +2753,7 @@ function boss(){
  if(B&&B.mode==='boss')return battleView();
  if(!evOn('boss'))return closedView('Boss de monde');
  const b=bossS(),st=bossStat(),hasTeam=S.box.some(m=>m.team),r=(S.bossRecs||[])[0];window.BSL=b.slot;
- if(r)return bossRecapView(r);
+ if(r)return '<div class="bcrm">'+bossRecapView(r)+'</div>';
  const bo=st.bo;
  const nst=stars(bo),warm=nst>=5,ty=BY[bo.id][2][0],tc=tyc(ty),prep=S.box.filter(m=>m.team),dis=st.dead||b.tries<=0||!hasTeam;
  return `<div class="bossv"><div class="bcard ${warm?'gold':'ora'}"><div class="bcl">
@@ -3566,7 +3570,7 @@ document.addEventListener('click',e=>{
  else if(a==='buse'){const r=(S.bossRecs||[])[0];if(r&&!r.busy&&(itm()[t.dataset.k]||0)>0){r.use=r.use===t.dataset.k?null:t.dataset.k;render(true)}}
  else if(a==='bend'){S.bossRecs.shift();save();render()}
  else if(a==='brank')bossRank();
- else if(a==='bclaim'){const r=S.bossRecs[0];if(!r)return;const got=r.rew.map(bossGive);if(r.chance){r.phase='cap';save();render()}else{S.bossRecs.shift();save();render();modalOv(`<h4 class="px">Lots récupérés</h4><div class="list">${got.map(c=>`<div class="li"><div class="grow"><b>${c.n}</b></div></div>`).join('')}</div><div class="svnote" style="margin:0">Pas de chance de capture cette fois-ci (${Math.round(CHN*100)} %). À la prochaine !</div><div class="pbt"><a class="btn y" data-m="x">OK</a></div>`)}}
+ else if(a==='bclaim'){const r=S.bossRecs[0];if(!r)return;const got=r.rew.map(bossGive);if(r.chance){r.phase='cap';save();render()}else{S.bossRecs.shift();save();render();const po=modalOv(`<h4 class="px">Lots récupérés</h4><div class="list">${got.map(c=>`<div class="li"><div class="grow"><b>${c.n}</b></div></div>`).join('')}</div><div class="svnote" style="margin:0">Pas de chance de capture cette fois-ci (${Math.round(CHN*100)} %). À la prochaine !</div><div class="pbt"><a class="btn y" data-m="x">OK</a></div>`);if(po&&po.firstChild)po.firstChild.classList.add('cream')}}
  else if(a==='adv')startAdv(k);
  else if(a==='mv')useMove(k);
  else if(a==='sw')swTo(k);
