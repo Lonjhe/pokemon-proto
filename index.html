@@ -830,6 +830,10 @@ input{flex:1;min-width:140px}
 .bbar{grid-column:1/-1;padding:6px 12px 10px;background:#0b1030;color:#fff;display:flex;align-items:center;gap:8px;flex-wrap:wrap}.bbar .bar{flex:1;min-width:120px}
 .bsp2{display:flex;gap:8px;align-items:flex-start;margin:4px 0;font-size:13px}.bsp2 i{font-size:20px;color:var(--y)}
 @media(max-width:520px){.bcard{grid-template-columns:1fr;background:linear-gradient(180deg,#f3ecc4 0 56%,var(--bc) 56%)}.bcr{min-height:250px}}
+
+.bty img{width:26px;height:26px;object-fit:contain}.bty{background-clip:padding-box}
+.bi{position:absolute;top:14px;right:56px;width:24px;height:24px;border-radius:50%;background:#efe9ff;color:#2a2412;font-weight:900;font-style:italic;display:grid;place-items:center;border:2px solid #0b1030;cursor:pointer}
+.bspc{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13px;padding:3px 0}.bspc i{font-size:18px;color:#7a3a00}
 </style>
 </head>
 <body>
@@ -2661,6 +2665,10 @@ function combat(){
  <div class="cb-tiles"><a class="cb-big cbl" data-go="ligue"><img src="${SPEC.PUNCH}" alt="" style="image-rendering:auto" referrerpolicy="no-referrer"><b class="px">Ligue</b><small>${done?'Terminée':st.name}</small></a><a class="cb-big cbb" data-go="boss"><img src="${SPEC.MASK}" alt="" style="image-rendering:auto" referrerpolicy="no-referrer"><b class="px">Boss</b><small>${(S.bossRecs||[]).length?'Récap disponible':fmtT(bs.left).replace(/ \d+s$/,'')}</small></a></div>
  <h4 class="px" style="font-size:11px;margin:4px 0">3 défis d'entraînement</h4><div class="list">${opp}</div></div>`;
 }
+function bossInfo(){
+ const st=bossStat(),bo=st.bo,n=stars(bo),ty=BY[bo.id][2],sp=(bo.spec||[]).map(k=>`<div class="bsp2"><i class="ti ti-${SPECS[k].ic}"></i><span><b>${SPECS[k].n}</b><br>${SPECS[k].d(bo)}</span></div>`).join('')||'<div style="color:var(--m)">Aucune spécificité.</div>';
+ modalOv(`<h4 class="px">Infos du boss</h4><div class="svnote" style="margin:0;display:flex;gap:8px;align-items:center">${ty.map(t=>`<img src="${tyi(t)}" width="28" height="28" alt="${t}"><b>${t}</b>`).join(' ')}<span style="margin-left:auto">${'★'.repeat(n)}<span style="opacity:.3">${'★'.repeat(7-n)}</span></span></div><div class="svnote" style="margin:0"><b>Spécificités</b>${sp}</div><div class="svnote" style="margin:0"><b>Capture</b><br>Rareté ${n}★ : ${thr(bo)} lancers avant fuite, chance de base ×${STAR_CAP[n]}. Les Appâts Boss augmentent la chance d'un lancer.</div><div class="pbt"><a class="btn y" data-m="x">Fermer</a></div>`);
+}
 function bossLots(){
  const t=BTIER.map(([lo,hi,n,r])=>`<div class="svnote" style="margin:0"><b>${n}</b><br>${r.map(rewTxt).join(' · ')}</div>`).join('');
  modalOv(`<h4 class="px">Lots du boss</h4><div class="svnote" style="margin:0">Les lots sont remis à la fin du chrono (ou à la défaite du boss), selon ton classement parmi tous les dresseurs.</div>${t}<div class="svnote" style="margin:0"><b>Boss vaincu avant la fin</b><br>+ ${rewTxt(BDEAD[0])} pour chaque participant</div><div class="svnote" style="margin:0"><b>Capture</b><br>${Math.round(CHN*100)} % de chance de pouvoir tenter la capture du boss, ramené à ton niveau. Plus il est rare, plus c'est dur : 3★ = 10 lancers, 5★ = 6, 7★ = 3. Réussite de base par Ball : Poké ${BCAP.poke*100} %, Super ${BCAP.super*100} %, Hyper ${BCAP.hyper*100} %, multipliée selon les étoiles. Les Appâts Boss (boutique) augmentent la chance d'un lancer.</div><div class="pbt"><a class="btn y" data-m="x">Fermer</a></div>`);
@@ -2734,22 +2742,21 @@ function boss(){
  const b=bossS(),st=bossStat(),hasTeam=S.box.some(m=>m.team),r=(S.bossRecs||[])[0];window.BSL=b.slot;
  if(r)return bossRecapView(r);
  const bo=st.bo;
- const nst=stars(bo),warm=nst>=5,ty=BY[bo.id][2][0],tc=TC[ty]||'#888',prep=S.box.filter(m=>m.team),dis=st.dead||b.tries<=0||!hasTeam;
- const part=[[S.name||'Toi',prep[0]?prep[0].id:null,1],...FAKEALL.slice(3,6).map((n,i)=>[n,[25,6,94][i],0])].map(([n,id,me])=>`<div class="bpr ${me?'me':''}">${id?`<img src="${SP(id)}" referrerpolicy="no-referrer" alt="">`:'<i class="ti ti-user"></i>'}<span>${esc(n)}</span></div>`).join('');
- const sp=(bo.spec||[]).map(k=>`<div class="bsp2"><i class="ti ti-${SPECS[k].ic}"></i><span><b>${SPECS[k].n}</b><br>${SPECS[k].d(bo)}</span></div>`).join('');
+ const nst=stars(bo),warm=nst>=5,ty=BY[bo.id][2][0],tc=tyc(ty),prep=S.box.filter(m=>m.team),dis=st.dead||b.tries<=0||!hasTeam;
+ const sp=(bo.spec||[]).map(k=>`<div class="bspc"><i class="ti ti-${SPECS[k].ic}"></i><span>${k==='immun'?'Immunité '+immT(bo):SPECS[k].n}</span></div>`).join('')||'<div class="bspc" style="opacity:.6">Aucune spécificité</div>';
  return `<div class="bcard ${warm?'gold':'ora'}"><div class="bcl">
   <div class="bct"><small>Temps restant</small><b id="bt">${fmtT(st.left)}</b></div>
   <h3 class="px bctt">Boss mondial</h3>
   <a class="bmn ${dis?'off':''}" data-act="teamgo"><i class="ti ti-users"></i>Préparer l'équipe</a>
   <a class="bmn sel ${dis?'off':''}" data-b="boss"><i class="ti ti-swords"></i>Lancer le combat · ${b.tries}/3</a>
   <a class="bmn" data-b="blots"><i class="ti ti-gift"></i>Lots et capture</a>
-  <div class="bpt">Participants · environ ${nPlay(b.slot)} dresseurs</div>${part}</div>
- <div class="bcr"><span class="bty" style="background:${tc}" title="Type ${ty}"><b>${ty.slice(0,4).toUpperCase()}</b></span>
+  <div class="bpt">Spécificités</div>${sp}</div>
+ <div class="bcr"><span class="bty" style="background:${tc}" title="Type ${ty}"><img src="${tyi(ty)}" alt="${ty}"></span><a class="bi" data-b="binfo" title="Informations">i</a>
   <img class="bsil" src="${SP(bo.id)}" style="${SHADE}" referrerpolicy="no-referrer" alt="">
   <div class="bstr" title="Rareté">${'★'.repeat(nst)}<span>${'★'.repeat(7-nst)}</span></div>
   <div class="bobj"><small>Objectif</small><b>Infliger un maximum de dégâts avant la fin du temps imparti</b></div></div>
  <div class="bbar"><small>Vie du boss · toute la communauté</small><div class="bar" style="height:12px"><i id="bh" style="width:${st.pct}%;background:var(--r)"></i></div><b id="bhp">${Math.ceil(st.pct)} %</b></div></div>
- <div class="panel"><h4 class="px" style="font-size:11px;margin-bottom:6px">Spécificités du boss</h4>${sp||'<div style="color:var(--m)">Aucune.</div>'}<div style="color:var(--m);font-size:12px;margin-top:6px">Ta contribution : <b>${fmtN(b.mine)}</b> dégâts. Un nouveau boss toutes les 2 h, 3 tentatives, classement révélé à la fin. Capture : ${thr(bo)} lancers si tu as la chance de la tenter.</div></div>`;
+ <div class="panel"><div style="color:var(--m);font-size:12px">Ta contribution : <b>${fmtN(b.mine)}</b> dégâts. Un nouveau boss toutes les 2 h, 3 tentatives, classement révélé à la fin.</div></div>`;
 }
 async function bossThrow(i){
  const r=(S.bossRecs||[])[0],ball=BK3[i];if(!r||r.phase!=='cap'||r.busy||r.throws>=thr(bossOf(r.slot)))return;
@@ -3548,6 +3555,7 @@ document.addEventListener('click',e=>{
  else if(a==='boss')startBoss();
  else if(a==='blots')bossLots();
  else if(a==='bthrow')bossThrow(k);
+ else if(a==='binfo')bossInfo();
  else if(a==='buse'){const r=(S.bossRecs||[])[0];if(r&&!r.busy&&(itm()[t.dataset.k]||0)>0){r.use=r.use===t.dataset.k?null:t.dataset.k;render(true)}}
  else if(a==='bend'){S.bossRecs.shift();save();render()}
  else if(a==='brank')bossRank();
