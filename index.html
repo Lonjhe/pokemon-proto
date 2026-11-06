@@ -719,6 +719,7 @@ input{flex:1;min-width:140px}
 .gz-bar .btn{position:relative}.gz-bar .btn,.gz-bar .btn.y,.gz-bar .btn.sm{background:#1b0f00aa;color:#fff;border:3px solid #fff;border-radius:30px;font-weight:900;text-shadow:0 1px 0 #0006;box-shadow:0 2px 0 #0004}.gz-bar .bd{position:absolute;right:-6px;top:-8px;background:var(--r);border-radius:9px;padding:0 6px;font-size:11px;color:#fff}
 .gemi{color:#ff7ad9}.chip.gem b{font-size:14px}
 .rt{display:flex;justify-content:space-between;gap:10px;background:var(--p2);border:2px solid var(--b);padding:5px 10px;font-size:13px}.rt span{color:var(--y);font-weight:800;white-space:nowrap}.rt.feat{border-color:#ffd24a}
+.cream .rt{background:#fffaf0;border:1px solid #d8c9a0;border-radius:12px;color:#2a2412}.cream .rt b{color:#2a2412}.cream .rt span{color:#9a5a00}.cream .rt.feat{border-color:#d8a800;background:#fff3c2}.cream .pick-c,.cream{max-height:88vh;overflow:auto}
 .gz-ov{position:fixed;inset:0;z-index:400;background:radial-gradient(circle at 50% 40%,#3a1f8a,#07041c 75%);display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:12px;padding:16px;overflow:auto}
 .gzs{position:relative;width:200px;height:260px;display:grid;place-items:center}
 .gzdna{width:200px;height:260px;image-rendering:pixelated;filter:drop-shadow(0 0 14px var(--rc))}
@@ -1421,11 +1422,11 @@ function gzRates(){
  gzInit();
  const pc=w=>(w/GZW*100).toFixed(w/GZW*100<1?2:1).replace('.',',')+' %';
  const grp=(t,fn)=>{const l=GZE.filter(fn);return l.length?`<div class="rt"><b>${t}</b><span>${pc(l.reduce((a,e)=>a+e.w,0))}</span></div>`:''};
- modalOv(`<h4 class="px">Taux et récompenses</h4>
+ const po=modalOv(`<h4 class="px">Taux et récompenses</h4>
  <div class="rt feat"><b><i class="ti ti-star-filled"></i> Vedettes : ${GZF.map(f=>f.n).join(', ')}</b><span>${pc(GZF.length*.3)}</span></div>
  ${grp('Œufs communs / peu communs / rares',e=>e.k==='egg'&&['a','b','c'].includes(e.v))}${grp('Œuf légendaire / fabuleux',e=>e.k==='egg'&&['l','f'].includes(e.v))}
  ${grp('Bonbons',e=>e.k==='item'&&CANDY[e.v])}${grp('Vitamines',e=>e.k==='item'&&VIT.some(v=>v[0]===e.v))}${grp('Objets à tenir',e=>e.k==='item'&&HELD[e.v])}${grp('Pierres',e=>e.k==='item'&&Object.values(STONE).includes(e.v))}${grp('Capsules',e=>e.k==='item'&&CAPS[e.v])}${grp('Poké Balls',e=>e.k==='ball')}${grp('Pokédollars',e=>e.k==='coin')}${grp('Pokémon aléatoire (niv. 5 à 15)',e=>e.k==='mon')}
- <div class="svnote" style="margin:0">Pitié : une vedette est garantie au plus tard au tirage n° ${GZ_PITY}. Un ×10 contient toujours au moins un objet Rare ou mieux.</div><div class="pbt"><a class="btn y" data-m="x">Fermer</a></div>`);
+ <div class="svnote" style="margin:0">Pitié : une vedette est garantie au plus tard au tirage n° ${GZ_PITY}. Un ×10 contient toujours au moins un objet Rare ou mieux.</div><div class="pbt"><a class="btn y" data-m="x">Fermer</a></div>`);if(po.firstChild)po.firstChild.classList.add('cream');
 }
 function gachaView(){
  gzPre();
