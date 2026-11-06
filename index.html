@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
+<meta charset="utf-8"><meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <title>Prototype — Explorer et Mes Pokémon</title>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
@@ -709,6 +709,7 @@ input{flex:1;min-width:140px}
 .cinfo .btn{font-size:clamp(8px,2.2cqw,11px);padding:2px 6px;min-height:0}
 .cinfo.idle{font-size:clamp(8px,2.2cqw,11px);background:#0b1030cc;border:2px dashed #fff6;padding:3px 6px;font-weight:800}
 
+.gzbg{position:absolute;inset:0;background:linear-gradient(#0006,#0000 30%,#0000 70%,#0007),#3a5aa8 url(img/gv/f000.webp) center/cover no-repeat;animation:gzz 14s ease-in-out infinite alternate}@keyframes gzz{from{transform:scale(1)}to{transform:scale(1.07)}}
 .gz-feat{position:absolute;left:3%;right:3%;top:4%;display:flex;gap:8px;justify-content:center;z-index:3}
 .gf{flex:1;max-width:30%;background:#0b1030d0;border:2px solid #ffd24a;box-shadow:0 0 12px #ffd24a55;padding:4px;display:flex;flex-direction:column;align-items:center;text-align:center;min-width:0}
 .gf-sp{height:clamp(44px,12cqw,84px);width:auto;max-width:100%;object-fit:contain}
@@ -1208,7 +1209,7 @@ function bzLayout(){
 function czFrame(cv,t){const x=cv.getContext('2d');x.drawImage(czBG(),0,0)}
 function bzStart(){bzLayout();setTimeout(()=>{if(document.querySelector('.bz.hw'))bzLayout()},350);if(window.bzAnim)clearTimeout(window.bzAnim);
  const loop=()=>{const a=document.getElementById('bzc')||document.getElementById('gzc')||document.getElementById('hwc');if(!a){window.bzAnim=0;return}
-  if(a.id==='hwc')hwFrame(a,performance.now());else if(a.id==='gzc')gzFrame(a,performance.now());else bzFrame(a,performance.now());window.bzAnim=setTimeout(()=>requestAnimationFrame(loop),a.id==='gzc'?45:120)};
+  if(a.id==='hwc')hwFrame(a,performance.now());else if(a.id==='gzc'){}else bzFrame(a,performance.now());window.bzAnim=setTimeout(()=>requestAnimationFrame(loop),a.id==='gzc'?45:120)};
  requestAnimationFrame(loop)}
 window.addEventListener('resize',()=>{if(document.querySelector('.bz'))bzLayout()});
 document.addEventListener('load',e=>{const t=e.target;if(t&&t.tagName==='IMG'&&t.classList.contains('bz-sp')&&t.naturalWidth){const n=Math.max(t.naturalWidth,t.naturalHeight),bw=(t.closest('.bz')||{}).clientWidth||360,k=Math.min(1.6,bw/520);t.style.width=Math.round(t.naturalWidth*k)+'px'}},true);
@@ -1395,7 +1396,7 @@ function gzPlay(res,n){
  const TI={n:0,r:1,sr:2,ur:3};
  const o=document.createElement('div');o.className='gz-ov';
  const cards=res.map((c,i)=>`<div class="gzc r-${c.r}" style="--i:${i};--rc:${RC[c.r]}"><span class="gzr">${RN[c.r]}</span><div class="gzv">${c.vis}</div><b>${c.n}</b><small>${c.sub}</small></div>`).join('');
- o.innerHTML=`<iframe class="gzif" src="gacha-anim.html?embed=1" allow="autoplay" title="Invocation"></iframe><div class="gzfl"></div><div class="gzpan" hidden><h4 class="px">${n===1?'Tu obtiens':'Résultat du ×10'}</h4><div class="gzres n${n}">${cards}</div><div class="gzbt"><a class="btn y" data-m="ok">OK</a><a class="btn" data-m="again" data-n="${n}">Encore ×${n}</a></div></div><a class="gzskip" data-m="skip">Passer</a>`;
+ o.innerHTML=`<iframe class="gzif" src="gacha-anim.html?embed=1&v=${Date.now()}" allow="autoplay" title="Invocation"></iframe><div class="gzfl"></div><div class="gzpan" hidden><h4 class="px">${n===1?'Tu obtiens':'Résultat du ×10'}</h4><div class="gzres n${n}">${cards}</div><div class="gzbt"><a class="btn y" data-m="ok">OK</a><a class="btn" data-m="again" data-n="${n}">Encore ×${n}</a></div></div><a class="gzskip" data-m="skip">Passer</a>`;
  document.body.appendChild(o);
  const fr=o.querySelector('.gzif'),fl=o.querySelector('.gzfl'),rs=o.querySelector('.gzpan'),sk=o.querySelector('.gzskip');
  /* musique : lecture débloquée par le geste du joueur, lancée quand l'animation démarre */
@@ -1430,7 +1431,7 @@ function gachaView(){
  const d=dayS(),z=S.gz||(S.gz={n:0,tot:0}),left=GZ_PITY-z.n,free=!d.gacha;
  const feat=GZF.map(f=>`<div class="gf"><img class="gf-sp" src="${f.sh?SH(f.id):SP(f.id)}" referrerpolicy="no-referrer" alt=""><b>${f.n}</b><small><i class="ti ti-star-filled"></i> 0,3 %</small></div>`).join('');
  const gi='<i class="ti ti-diamond gemi"></i>';
- return `<div class="bz gz"><canvas id="gzc" width="200" height="125"></canvas><div class="gz-feat">${feat}</div><div class="bz-b">Vedette garantie dans ${left} tirage${left>1?'s':''}</div></div>
+ return `<div class="bz gz"><div class="gzbg"></div><canvas id="gzc" width="200" height="125" style="display:none"></canvas><div class="gz-feat">${feat}</div><div class="bz-b">Vedette garantie dans ${left} tirage${left>1?'s':''}</div></div>
  <div class="bz-bar gz-bar"><span class="chip gem">${gi}<b id="gemc">${gems()}</b></span><a class="btn y" data-act="gzpull" data-v="1">${free?'Tirage gratuit':'Tirer ×1 · '+GZ_C1+' '+gi}${free?'<span class="bd">1</span>':''}</a><a class="btn y" data-act="gzpull" data-v="10">Tirer ×10 · ${GZ_C10} ${gi}</a><a class="btn sm" data-act="gzrates"><i class="ti ti-info-circle"></i>Taux</a><a class="btn sm" data-act="gzbuy">+100 (démo)</a></div>`;
 }
 let GZB=null;
