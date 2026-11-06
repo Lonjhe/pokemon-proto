@@ -736,6 +736,7 @@ input{flex:1;min-width:140px}
 .gzv{height:76px;display:grid;place-items:center;font-size:44px;color:var(--rc)}.gzv .gcs{max-height:76px;max-width:100%}.gzv .eggi{transform:scale(1.2)}
 .gzc.r-ur{background:linear-gradient(180deg,#4a3a0a,#0b1030);animation-name:gzin,gzglow;animation-duration:.45s,1.4s;animation-iteration-count:1,infinite;animation-delay:calc(var(--i)*.13s),calc(var(--i)*.13s + .5s)}
 @keyframes gzglow{50%{box-shadow:0 0 26px var(--rc),inset 0 0 0 2px #0b1030}}
+.gzif{position:fixed;inset:0;width:100%;height:100%;border:0;background:#05071a}.gzfl{z-index:2}.gzres,.gzbt{position:relative;z-index:3}.gzskip{z-index:4}
 .gzbt{display:flex;gap:10px}.gzskip{position:absolute;right:14px;top:14px;color:var(--m);font-weight:800;cursor:pointer;border:2px solid var(--b);padding:2px 10px;background:#0b1030}
 .gz .bz-b{top:auto;bottom:8px;left:8px}
 .tm img.pmi,.mon img.pmi{width:auto;height:auto;max-width:100%;image-rendering:auto}.tm .pmi{min-height:48px;object-fit:contain}.mon img.pmi{min-height:60px;object-fit:contain}
@@ -1360,8 +1361,8 @@ function gzDo(e){
  else if(e.k==='item'){it[e.v]=(it[e.v]||0)+(e.q||1);c.n=ITN(e.v)+((e.q||1)>1?' ×'+e.q:'');c.sub='Dans le Sac';c.vis=`<i class="ti ti-${ITI(e.v)}"></i>`}
  else if(e.k==='ball'){S.balls[e.v]=(S.balls[e.v]||0)+e.q;c.n=BALLS[e.v].n+' ×'+e.q;c.sub='Dans le Sac';c.vis=`<img src="${BI(e.v)}" style="width:56px;image-rendering:pixelated" alt="">`}
  else if(e.k==='coin'){S.coins+=e.q;c.n=e.q+' P$';c.sub='Pokédollars';c.vis='<i class="ti ti-coin"></i>'}
- else if(e.k==='mon'){const pool=SPECIES.map(s=>s[0]).filter(i=>!LEGS.includes(i)),id=pool[Math.floor(Math.random()*pool.length)],sh=Math.random()<SHINY,m=mk(id,5+Math.floor(Math.random()*11),sh);S.box.push(m);if(!S.dex[id]||S.dex[id]==='s')S.dex[id]='c';c.n=BY[id][1]+(sh?' ✦':'');c.sub='Niv. '+m.lvl+' · dans la boîte';c.vis=`<img class="gcs" src="${sh?SH(id):SP(id)}" referrerpolicy="no-referrer" alt="">`}
- else if(e.k==='feat'){const f=GZF[e.i],m=mk(f.id,f.lv,!!f.sh);S.box.push(m);S.dex[f.id]='c';c.n=f.n;c.sub='Pokémon vedette · Niv. '+f.lv;c.vis=`<img class="gcs" src="${f.sh?SH(f.id):SP(f.id)}" referrerpolicy="no-referrer" alt="">`}
+ else if(e.k==='mon'){const pool=SPECIES.map(s=>s[0]).filter(i=>!LEGS.includes(i)),id=pool[Math.floor(Math.random()*pool.length)],sh=Math.random()<SHINY,m=mk(id,5+Math.floor(Math.random()*11),sh);S.box.push(m);if(!S.dex[id]||S.dex[id]==='s')S.dex[id]='c';c.sid=id;c.n=BY[id][1]+(sh?' ✦':'');c.sub='Niv. '+m.lvl+' · dans la boîte';c.vis=`<img class="gcs" src="${sh?SH(id):SP(id)}" referrerpolicy="no-referrer" alt="">`}
+ else if(e.k==='feat'){const f=GZF[e.i],m=mk(f.id,f.lv,!!f.sh);S.box.push(m);S.dex[f.id]='c';c.sid=f.id;c.n=f.n;c.sub='Pokémon vedette · Niv. '+f.lv;c.vis=`<img class="gcs" src="${f.sh?SH(f.id):SP(f.id)}" referrerpolicy="no-referrer" alt="">`}
  return c;
 }
 function gzPull(n){
@@ -1385,28 +1386,31 @@ function modalOv(html){
  const o=document.createElement('div');o.className='pick-ov';o.innerHTML=`<div class="pick-c">${html}</div>`;document.body.appendChild(o);
  o.addEventListener('click',e=>{const b=e.target.closest('[data-m]');if(b){const f=o._h&&o._h(b);if(f!==false){o.remove();render(true)}}else if(e.target===o){o.remove()}});return o;
 }
+let GZPRE=null;
+function gzPre(){if(GZPRE)return;GZPRE=[];for(let n=0;n<181;n++){const im=new Image();im.src='img/gv/f'+String(n).padStart(3,'0')+'.webp';GZPRE.push(im)}}
 function gzPlay(res,n){
- const best=['n','r','sr','ur'].reduce((a,r)=>res.some(c=>c.r===r)?r:a,'n'),col=RC[best];
+ const TI={n:0,r:1,sr:2,ur:3};
  const o=document.createElement('div');o.className='gz-ov';
  const cards=res.map((c,i)=>`<div class="gzc r-${c.r}" style="--i:${i};--rc:${RC[c.r]}"><span class="gzr">${RN[c.r]}</span><div class="gzv">${c.vis}</div><b>${c.n}</b><small>${c.sub}</small></div>`).join('');
- o.innerHTML=`<div class="gzs"><canvas class="gzdna" width="100" height="130" style="--rc:${col}"></canvas><div class="gzfl"></div></div><div class="gzres n${n}" hidden>${cards}</div><div class="gzbt" hidden><a class="btn y" data-m="ok">OK</a><a class="btn" data-m="again" data-n="${n}">Encore ×${n}</a></div><a class="gzskip" data-m="skip">Passer</a>`;
+ o.innerHTML=`<iframe class="gzif" src="gacha-anim.html?embed=1" allow="autoplay" title="Invocation"></iframe><div class="gzfl"></div><div class="gzres n${n}" hidden>${cards}</div><div class="gzbt" hidden><a class="btn y" data-m="ok">OK</a><a class="btn" data-m="again" data-n="${n}">Encore ×${n}</a></div><a class="gzskip" data-m="skip">Passer</a>`;
  document.body.appendChild(o);
- const cap=o.querySelector('.gzdna'),fl=o.querySelector('.gzfl'),rs=o.querySelector('.gzres'),bt=o.querySelector('.gzbt'),sk=o.querySelector('.gzskip'),st=o.querySelector('.gzs');
- const TM=[];const T=(f,ms)=>TM.push(setTimeout(f,ms));
- const dx=cap.getContext('2d'),t0=performance.now(),TOT=3000;let raf=0,done=false;
- const cols={n:'#8fa0d8',r:'#4dd0e1',sr:'#c084fc',ur:'#ffd24a'};
- const frame=()=>{const e=performance.now()-t0,u=Math.min(1,e/TOT);dx.clearRect(0,0,100,130);
-  const sp=u*u*5+.6,ph=e/1000*sp*3+u*u*u*14,k=u<.72?0:Math.pow((u-.72)/.28,2),amp=17+Math.sin(u*9)*1.5*u,c=u<.35?'#ffd24a':u<.6?cols.r:cols[best];
-  dnaDraw(dx,50,10,122,ph,amp,u<.5?'#ffd24a':col,k,u);
-  if(u>.4){dx.globalAlpha=.7;for(let i=0;i<10;i++){const a=i*.628+e/300,r=(1-u)*34+8+i%3*4;PX(dx,Math.round(50+Math.cos(a)*r),Math.round(66+Math.sin(a)*r*1.6),2,2,i%2?'#fff':col)}dx.globalAlpha=1}
-  if(u<1&&!done)raf=requestAnimationFrame(frame)};
- frame();
- const reveal=()=>{done=true;cancelAnimationFrame(raf);TM.forEach(clearTimeout);fl.classList.add('on');sk.hidden=true;setTimeout(()=>{st.style.display='none';rs.hidden=false;bt.hidden=false},350)};
- T(reveal,TOT+100);
+ const fr=o.querySelector('.gzif'),fl=o.querySelector('.gzfl'),rs=o.querySelector('.gzres'),bt=o.querySelector('.gzbt'),sk=o.querySelector('.gzskip');
+ /* musique : lecture débloquée par le geste du joueur, lancée quand l'animation démarre */
+ const A=new Audio('gacha-musique.m4a');let go=false,done=false;A.preload='auto';A.muted=true;
+ try{A.play().then(()=>{if(!go){A.pause();A.currentTime=0}}).catch(()=>{})}catch(e){}
+ const send=()=>{try{fr.contentWindow.postMessage({t:'gz',pulls:res.map(c=>({tier:TI[c.r],id:c.sid||0}))},'*')}catch(e){}};
+ const reveal=()=>{if(done)return;done=true;clearTimeout(fb);removeEventListener('message',onm);try{A.pause()}catch(e){}
+  fl.classList.add('on');sk.hidden=true;setTimeout(()=>{fr.remove();rs.hidden=false;bt.hidden=false},350)};
+ const onm=e=>{if(e.source!==fr.contentWindow)return;const t=e.data&&e.data.t;
+  if(t==='gzhello')send();
+  else if(t==='gzgo'){clearTimeout(fb);go=true;A.muted=false;A.currentTime=0;A.play().catch(()=>{})}
+  else if(t==='gzdone')reveal()};
+ addEventListener('message',onm);
+ const fb=setTimeout(reveal,15000);
  o.addEventListener('click',e=>{const b=e.target.closest('[data-m]');if(!b)return;const m=b.dataset.m;
   if(m==='skip'){reveal();return}
-  if(m==='ok'){o.remove();render(true)}
-  if(m==='again'){o.remove();render(true);gzPull(+b.dataset.n)}});
+  if(m==='ok'){try{A.pause()}catch(x){}o.remove();render(true)}
+  if(m==='again'){try{A.pause()}catch(x){}o.remove();render(true);gzPull(+b.dataset.n)}});
 }
 function gzRates(){
  gzInit();
@@ -1419,6 +1423,7 @@ function gzRates(){
  <div class="svnote" style="margin:0">Pitié : une vedette est garantie au plus tard au tirage n° ${GZ_PITY}. Un ×10 contient toujours au moins un objet Rare ou mieux.</div><div class="pbt"><a class="btn y" data-m="x">Fermer</a></div>`);
 }
 function gachaView(){
+ gzPre();
  const d=dayS(),z=S.gz||(S.gz={n:0,tot:0}),left=GZ_PITY-z.n,free=!d.gacha;
  const feat=GZF.map(f=>`<div class="gf"><img class="gf-sp" src="${f.sh?SH(f.id):SP(f.id)}" referrerpolicy="no-referrer" alt=""><b>${f.n}</b><small><i class="ti ti-star-filled"></i> 0,3 %</small></div>`).join('');
  const gi='<i class="ti ti-diamond gemi"></i>';
