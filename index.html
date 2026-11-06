@@ -715,7 +715,7 @@ input{flex:1;min-width:140px}
 .gf-sp{height:clamp(44px,12cqw,84px);width:auto;max-width:100%;object-fit:contain}
 .gf b{font-size:clamp(9px,2.5cqw,12px);line-height:1.15}.gf small{font-size:clamp(8px,2.2cqw,11px);color:#ffd24a;font-weight:800}
 .gz.wide .gz-feat{left:auto;right:3%;top:6%;width:26%;flex-direction:column;gap:6px}.gz.wide .gf{max-width:none;flex-direction:row;gap:8px;text-align:left;padding:3px 6px}.gz.wide .gf-sp{height:clamp(34px,7cqw,60px)}
-.gz-bar .btn{position:relative}.gz-bar .bd{position:absolute;right:-6px;top:-8px;background:var(--r);border-radius:9px;padding:0 6px;font-size:11px;color:#fff}
+.gz-bar .btn{position:relative}.gz-bar .btn,.gz-bar .btn.y,.gz-bar .btn.sm{background:#1b0f00aa;color:#fff;border:3px solid #fff;border-radius:30px;font-weight:900;text-shadow:0 1px 0 #0006;box-shadow:0 2px 0 #0004}.gz-bar .bd{position:absolute;right:-6px;top:-8px;background:var(--r);border-radius:9px;padding:0 6px;font-size:11px;color:#fff}
 .gemi{color:#ff7ad9}.chip.gem b{font-size:14px}
 .rt{display:flex;justify-content:space-between;gap:10px;background:var(--p2);border:2px solid var(--b);padding:5px 10px;font-size:13px}.rt span{color:var(--y);font-weight:800;white-space:nowrap}.rt.feat{border-color:#ffd24a}
 .gz-ov{position:fixed;inset:0;z-index:400;background:radial-gradient(circle at 50% 40%,#3a1f8a,#07041c 75%);display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:12px;padding:16px;overflow:auto}
@@ -1360,7 +1360,7 @@ const ITI=k=>BCI[k]?BCI[k].ic:ITEMICO[k]?xn(ITEMICO[k]):CANDY[k]?'candy':CAPS[k]
 const gzPick=()=>{gzInit();let r=Math.random()*GZW;for(const e of GZE){r-=e.w;if(r<=0)return e}return GZE[0]};
 const LEGS=[144,145,146,150,151];
 function gzDo(e){
- const it=itm(),c={r:e.r};
+ const it=itm(),c={r:e.r};c.sk=e.k==='egg'?'egg':e.k==='ball'?'ball':e.k==='coin'?'coin':e.k==='item'?(CANDY[e.v]?'candy':VIT.some(v=>v[0]===e.v)?'bottle':Object.values(STONE).includes(e.v)?'stone':CAPS[e.v]?'caps':'held'):'';
  if(e.k==='egg'){breed();S.eggs.push({k:e.v,id:pickEgg(e.v)});c.n=EGGT[e.v].n;c.sub='En réserve (Élevage)';c.vis=eggImg(e.v,72)}
  else if(e.k==='item'){it[e.v]=(it[e.v]||0)+(e.q||1);c.n=ITN(e.v)+((e.q||1)>1?' ×'+e.q:'');c.sub='Dans le Sac';c.vis=`<i class="ti ti-${ITI(e.v)}"></i>`}
  else if(e.k==='ball'){S.balls[e.v]=(S.balls[e.v]||0)+e.q;c.n=BALLS[e.v].n+' ×'+e.q;c.sub='Dans le Sac';c.vis=`<img src="${BI(e.v)}" style="width:56px;image-rendering:pixelated" alt="">`}
@@ -1402,7 +1402,7 @@ function gzPlay(res,n){
  /* musique : lecture débloquée par le geste du joueur, lancée quand l'animation démarre */
  const A=new Audio('gacha-musique.m4a');let go=false,done=false;A.preload='auto';A.muted=true;
  try{A.play().then(()=>{if(!go){A.pause();A.currentTime=0}}).catch(()=>{})}catch(e){}
- const send=()=>{try{fr.contentWindow.postMessage({t:'gz',pulls:res.map(c=>({tier:TI[c.r],id:c.sid||0}))},'*')}catch(e){}};
+ const send=()=>{try{fr.contentWindow.postMessage({t:'gz',pulls:res.map(c=>({tier:TI[c.r],id:c.sid||0,sk:c.sk||''}))},'*')}catch(e){}};
  const reveal=()=>{if(done)return;done=true;clearTimeout(fb);removeEventListener('message',onm);try{A.pause()}catch(e){}
   fl.classList.add('on');sk.hidden=true;setTimeout(()=>{fr.remove();rs.hidden=false},350)};
  const onm=e=>{if(e.source!==fr.contentWindow)return;const t=e.data&&e.data.t;
