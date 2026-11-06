@@ -140,9 +140,9 @@ input{flex:1;min-width:140px}
 .boss-hero .info{position:absolute;left:0;right:0;top:0;padding:10px 12px;background:linear-gradient(#0b1030ee,transparent)}
 .lb{display:grid;grid-template-columns:24px 1fr auto;gap:8px;font-size:13px;padding:5px 8px;background:#0b1030;border:2px solid var(--b);margin-bottom:4px}
 .lb.me{border-color:var(--y);color:var(--y)}
-#stage{position:absolute;inset:0}
-#dim{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(0,0,12,.2),rgba(0,0,18,.78));opacity:0;transition:opacity .25s;pointer-events:none;z-index:2}
-#fxc{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:4}
+#stage{position:absolute;inset:0;z-index:1}
+#dim{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(0,0,12,.2),rgba(0,0,18,.78));opacity:0;transition:opacity .25s;pointer-events:none;z-index:1}
+#fxc{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
 #fx{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:5}
 .arena .tag{z-index:3}
 .tstrip{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:6px}
@@ -886,8 +886,8 @@ body{margin:0;background:var(--bg);color:var(--t);font-family:Nunito,sans-serif}
  <div style="font-size:12px;color:var(--m)">Lance chaque attaque, puis marque <b>✓ validée</b> ou <b>✎ à ajuster</b> (avec une note). Ton avancement est gardé dans ce navigateur. « Copier le récap » me donne la liste à reprendre.</div>
  <div class="top"><div class="arena" id="arena"><div id="stage"><div class="sky"></div><div class="gr"></div><div class="gr2"></div><div class="bgimg" id="bg"></div>
   <img class="sp" id="foe" style="right:12%;top:10%;width:clamp(90px,24cqw,170px)" referrerpolicy="no-referrer" alt="">
-  <img class="sp" id="me" style="left:8%;bottom:4%;width:clamp(110px,30cqw,220px)" referrerpolicy="no-referrer" alt=""></div>
-  <div id="dim"></div><canvas id="fxc"></canvas><div id="fx"></div></div>
+  <img class="sp" id="me" style="left:8%;bottom:4%;width:clamp(110px,30cqw,220px)" referrerpolicy="no-referrer" alt=""><div id="dim"></div><canvas id="fxc"></canvas></div>
+  <div id="fx"></div></div>
   <div class="ctl"><span id="now" style="font-weight:900;min-width:140px">—</span>
    <label>Décor <select id="selbg"></select></label>
    <label>Lanceur <select id="selme"></select></label>
@@ -1581,10 +1581,10 @@ const MOVEFX={
 async function castFx(aEl,dEl,mv){
  const ar=$('#arena');if(!ar||!aEl||!dEl||!fxInit())return;
  const a=ctr(aEl,ar),d=ctr(dEl,ar),dir=Math.sign(d.x-a.x)||1,pw=mv.p>=70?1:.65;
- banner(mv);dim(.9);await sleep(260);
+ banner(mv);dim(.9);aEl.style.zIndex=4;await sleep(260);
  await ghostLunge(aEl,dir);
  try{await (MOVEFX[mv.n]||FX[mv.t]||FX.Normal)(a,d,pw,{aEl,dEl,dir})}catch(e){console.error(e)}
- dim(0);
+ dim(0);aEl.style.zIndex='';
 }
 const playFx=(who,mv)=>castFx($(who==='me'?'#me':'#foe'),$(who==='me'?'#foe':'#me'),mv);
 

@@ -144,9 +144,9 @@ input{flex:1;min-width:140px}
 .boss-hero .info{position:absolute;left:0;right:0;top:0;padding:10px 12px;background:linear-gradient(#0b1030ee,transparent)}
 .lb{display:grid;grid-template-columns:24px 1fr auto;gap:8px;font-size:13px;padding:5px 8px;background:#0b1030;border:2px solid var(--b);margin-bottom:4px}
 .lb.me{border-color:var(--y);color:var(--y)}
-#stage{position:absolute;inset:0}
-#dim{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(0,0,12,.2),rgba(0,0,18,.78));opacity:0;transition:opacity .25s;pointer-events:none;z-index:2}
-#fxc{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:4}
+#stage{position:absolute;inset:0;z-index:1}
+#dim{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(0,0,12,.2),rgba(0,0,18,.78));opacity:0;transition:opacity .25s;pointer-events:none;z-index:1}
+#fxc{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
 #fx{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:5}
 .arena .tag{z-index:3}
 .tstrip{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:6px}
@@ -1072,9 +1072,9 @@ function explorer(){
  <img class="sp in" id="wild" src="${E.sh?SH(E.id):SP(E.id)}" style="right:12%;top:10%;width:clamp(90px,30cqw,200px);${E.sleep?'filter:brightness(.7)':''}" referrerpolicy="no-referrer" alt="">
  <img class="sp idle" id="tr" src="${TR}" style="left:7%;bottom:5%;width:clamp(110px,26cqw,190px)" referrerpolicy="no-referrer" alt="">
  <img class="sp" id="lead" src="" style="left:8%;bottom:4%;width:clamp(110px,36cqw,220px);display:none" referrerpolicy="no-referrer" alt="">
- <div class="ball" id="ball"></div></div><div id="dim"></div>
+ <div class="ball" id="ball"></div><div id="dim"></div><canvas id="fxc"></canvas></div>
  <div class="tag" style="left:3%;top:5%"><span class="px" style="font-size:10px">${E.sh?'<i class="ti ti-sparkles"></i> ':''}${s[1]}</span> ${infoBtn}<div style="font-size:12px">Niv. ${E.lvl} · ${s[2].join(' / ')}</div><div class="bar"><i id="wildHp" style="width:${E.hp}%;background:${hpc(E.hp/100)}"></i></div><div class="chips" id="wst">${chipsHTML()}</div></div>
- <canvas id="fxc"></canvas><div id="fx"></div></div>
+ <div id="fx"></div></div>
  <div class="dialog" id="msg">${E.msg}</div>
  <div class="acts" id="acts" style="grid-template-columns:repeat(4,1fr)">${actsHTML()}</div></div>
  <div style="display:flex;flex-direction:column;gap:10px"><div class="panel"><h4 class="px">Balls <small style="font-family:Nunito;color:var(--m)">taux de capture</small></h4><div class="list" id="balls">${bl}</div></div></div></div>`}`;
@@ -2586,10 +2586,10 @@ const MOVEFX={
 async function castFx(aEl,dEl,mv){
  const ar=$('#arena');if(!ar||!aEl||!dEl||!fxInit())return;
  const a=ctr(aEl,ar),d=ctr(dEl,ar),dir=Math.sign(d.x-a.x)||1,pw=mv.p>=70?1:.65;
- banner(mv);dim(.9);await sleep(260);
+ banner(mv);dim(.9);aEl.style.zIndex=4;await sleep(260);
  await ghostLunge(aEl,dir);
  try{await (MOVEFX[mv.n]||FX[mv.t]||FX.Normal)(a,d,pw,{aEl,dEl,dir})}catch(e){console.error(e)}
- dim(0);
+ dim(0);aEl.style.zIndex='';
 }
 const playFx=(who,mv)=>castFx($(who==='me'?'#me':'#foe'),$(who==='me'?'#foe':'#me'),mv);
 /*FX-END*/
@@ -2724,11 +2724,10 @@ function battleView(){
  const strip=B.team.map((t,k)=>{const r=t.hp/t.max;return `<div class="tm ${k===B.i?'sel':''} ${t.hp<=0?'ko':''} ${B.busy&&!B.pick?'off':''}" data-b="sw" data-k="${k}"><img class="pmi" src="${t.sh?SH(t.id):SP(t.id)}" referrerpolicy="no-referrer" alt=""><b>${t.name}</b><div class="bar"><i style="width:${r*100}%;background:${hpc(r)}"></i></div><small>${t.hp}/${t.max}</small></div>`}).join('');
  const arena=`<div class="arena" id="arena"><div id="stage"><div class="sky"></div><div class="gr"></div><div class="gr2"></div><div class="bgimg" style="background-image:url(${BG_}${B.bg}.png)"></div>${boss?'<div class="aura"></div>':''}
  <img class="sp${inn}" id="foe" ${boss?'data-boss=1':''} src="${f.sh?SH(f.id):SP(f.id)}" style="right:12%;top:${boss?2:10}%;width:${boss?'clamp(130px,34cqw,250px)':'clamp(90px,24cqw,170px)'}" referrerpolicy="no-referrer" alt="">
- <img class="sp${inn}" id="me" src="${m.sh?BKS(m.id):BK(m.id)}" style="left:8%;bottom:4%;width:clamp(110px,30cqw,220px)" referrerpolicy="no-referrer" alt=""></div>
- <div id="dim"></div>
+ <img class="sp${inn}" id="me" src="${m.sh?BKS(m.id):BK(m.id)}" style="left:8%;bottom:4%;width:clamp(110px,30cqw,220px)" referrerpolicy="no-referrer" alt=""><div id="dim"></div><canvas id="fxc"></canvas></div>
  <div class="tag" style="left:3%;top:5%"><span class="px" style="font-size:10px">${f.name}</span><span id="foeSt">${stBadge(f)}</span><div style="font-size:12px">Niv. ${f.lvl}${boss?` · <span id="foeTxt">${fmtN(st.hp)}</span> PV`:''}</div>${B.fteam?`<div style="font-size:11px;color:var(--m)">${B.fname} · ${B.fteam.filter(x=>x.hp>0).length}/${B.fteam.length} Pokémon</div>`:''}<div class="bar"><i id="foeHp" style="width:${fr*100}%;background:${boss?'var(--r)':hpc(fr)}"></i></div></div>
  <div class="tag" style="right:3%;bottom:5%"><span class="px" style="font-size:10px">${m.name}</span><span id="meSt">${stBadge(m)}</span><div style="font-size:12px">Niv. ${m.lvl} · <span id="meTxt">${m.hp}/${m.max}</span></div><div class="bar"><i id="meHp" style="width:${mr*100}%;background:${hpc(mr)}"></i></div></div>
- <canvas id="fxc"></canvas><div id="fx"></div></div>`;
+ <div id="fx"></div></div>`;
  let ctl;
  if(B.res)ctl=`<div class="panel"><h4 class="px">${B.res.win?'Victoire !':boss?(B.team.every(t=>t.hp<=0)?'Équipe K.O.':'Temps écoulé'):'Défaite...'}</h4>${B.res.lines.map(l=>`<div style="margin:3px 0">${l}</div>`).join('')}<div style="margin-top:10px"><a class="btn y" data-b="leave"><i class="ti ti-check"></i>Continuer</a></div></div>`;
  else if(B.pick)ctl=`<div class="panel" style="border-color:var(--y)"><h4 class="px">Choisis ton prochain Pokémon</h4><div class="tstrip">${strip}</div></div>`;
