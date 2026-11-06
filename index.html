@@ -1430,7 +1430,7 @@ function gzRates(){
 function gachaView(){
  gzPre();
  const d=dayS(),z=S.gz||(S.gz={n:0,tot:0}),left=GZ_PITY-z.n,free=!d.gacha;
- const feat=GZF.map(f=>`<div class="gf"><img class="gf-sp" src="${f.sh?SH(f.id):SP(f.id)}" referrerpolicy="no-referrer" alt=""><b>${f.n}</b></div>`).join('');
+ const feat=GZF.map(f=>`<div class="gf"><img class="gf-sp" src="${f.sh?SH(f.id):SP(f.id)}" referrerpolicy="no-referrer" alt="${f.n}"></div>`).join('');
  const gi='<i class="ti ti-diamond gemi"></i>';
  return `<div class="bz gz"><div class="gzbg"></div><canvas id="gzc" width="200" height="125" style="display:none"></canvas><a class="gzi" data-act="gzrates" title="Taux">i</a><div class="gz-feat">${feat}</div><div class="bz-b">Vedette garantie dans ${left} tirage${left>1?'s':''}</div></div>
  <div class="bz-bar gz-bar"><span class="chip gem">${gi}<b id="gemc">${gems()}</b></span><a class="btn y" data-act="gzpull" data-v="1">${free?'Tirage gratuit':'Tirer ×1 · '+GZ_C1+' '+gi}${free?'<span class="bd">1</span>':''}</a><a class="btn y" data-act="gzpull" data-v="10">Tirer ×10 · ${GZ_C10} ${gi}</a><a class="btn sm" data-act="gzbuy">+100 (démo)</a></div>`;
