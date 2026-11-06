@@ -812,6 +812,7 @@ input{flex:1;min-width:140px}
 .pinfo .pf-ph img{width:112%;max-width:none;height:auto;margin:0 -6% 38px;image-rendering:auto;filter:drop-shadow(0 4px 5px #0008)}
 .pinfo .pf-nm{position:absolute;left:0;right:0;bottom:0;background:#ff8a1a;color:#fff;padding:7px 12px;display:flex;flex-direction:column;align-items:flex-end;clip-path:polygon(10% 0,100% 0,100% 100%,0 100%)}.pinfo .pf-nm b{font-size:16px}.pinfo .pf-nm small{font-size:11px;font-weight:800;opacity:.95}
 .pinfo .pf-rp{background:#1a2344c4;backdrop-filter:blur(2px);color:#fff;padding:12px 14px;display:flex;flex-direction:column;gap:6px}.pinfo .pf-rp h5{font-size:14px;font-weight:900;border-bottom:2px solid #ffffff55;padding-bottom:5px}
+.pinfo .pf-av{display:flex;align-items:center;gap:8px}.pinfo .pf-av span{font-weight:800;color:#e3e8ff;margin-right:auto}.pinfo .pf-av a{width:44px;height:44px;border-radius:50%;overflow:hidden;border:3px solid #ffffff55;cursor:pointer;background:#ffffff22;flex:none}.pinfo .pf-av a.on{border-color:#ffb24a;box-shadow:0 0 0 2px #ff8a1a66}.pinfo .pf-av img{width:100%;height:100%;object-fit:cover;display:block}
 .pinfo .pf-lv{display:flex;flex-direction:column;gap:3px}.pinfo .pf-lv span{font-weight:900;color:#ffb24a}.pinfo .pf-lv small,.pinfo .pir small{color:#c5cdf0;font-weight:700}
 .pinfo .bar{display:block;width:100%;height:7px!important;background:#ffffff30;border:0}.pinfo .bar i{background:#ff8a1a!important}
 .pinfo .pir{display:flex;justify-content:space-between;gap:8px;border-top:1px solid #ffffff2a;padding-top:5px}.pinfo .pir span{color:#e3e8ff}.pinfo .pir b{text-align:right}.pinfo .pir a{color:#ffd24a;cursor:pointer}
@@ -912,6 +913,9 @@ const KEY='proto-pokemon-v1';const SHINY=1/10; /* test : à remettre à 1/64 */
 const fresh=()=>({coins:1200,xp:0,lvl:1,balls:{poke:20,super:4,hyper:1},next:1,box:[],dex:{}});
 function mk(id,lvl,sh=false){const s=BY[id];return{uid:Math.random().toString(36).slice(2,9),id,lvl,sh,fav:false,team:false}}
 let S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!S||!S.box)S=fresh();if(!S.evz){S.evz=1;(S.box||[]).forEach(m=>{if(m.ev)m.ev=[0,0,0,0,0,0]})}
+const AVS=[{src:'img/portrait.webp',pos:'66% 14%',org:'66% 22%',sc:2.1,nm:'Classique'},{src:'img/avatar-roi.webp',pos:'60% 18%',org:'60% 22%',sc:2.4,nm:'Roi'}];
+const avO=()=>AVS[S.av]||AVS[0];
+const avSt=a=>`object-position:${a.pos};transform-origin:${a.org};transform:scale(${a.sc})`;
 const save=()=>{try{S.seen=Date.now();localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
 let route=(location.hash||'#hub').slice(1),E=null,busy=false,P={tab:'box',q:'',type:'',sort:'lvl',sel:null,confirm:null},mode='herbe',biome={herbe:'meadow',peche:'river'},mapView=true,mapSel=null;
 const $=s=>document.querySelector(s);
@@ -953,7 +957,7 @@ function shell(c){
  const TBP={compass:'M8 16l2-6l6-2l-2 6l-6 2M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0',backpack:'M9 6V5a3 3 0 0 1 6 0v1M5 9a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3zM10 13h4M8 21v-4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v4',home:'M5 12H3l9-9l9 9h-2M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7M9 21v-6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6',swords:'M21 3v5l-11 9l-4 4l-3-3l4-4l9-11zM3 3v5l11 9l4 4l3-3l-4-4l-9-11z','menu-2':'M4 6h16M4 12h16M4 18h16'};
  const TBF={compass:'explore_map',backpack:'bag',home:'home',swords:'combat','menu-2':'plus'},tbi=k=>`<img class="tbimg" src="img/tb_${TBF[k]}.png" alt="">`;
  const TB=[['explorer','compass','Explorer'],['sac','backpack','Sac'],['hub','home','Accueil'],['combat','swords','Combat'],['plus','menu-2','Plus']],tabs=TB.map(([k,i,l])=>`<a data-go="${k}" class="${k===route||(k==='plus'&&!TB.some(t=>t[0]===route))?'on':''}">${tbi(i)}<span>${l}</span></a>`).join('');
- return `<div class="hud"><div class="av" data-act="pinfo"><img class="avp" src="img/portrait.webp" alt=""></div><b class="name" data-act="pinfo">${esc(S.name||"")}</b><span class="lv px" data-act="pinfo">Niv.${S.lvl}</span><div class="bar" data-act="pinfo"><i style="width:${Math.min(100,S.xp/need()*100)}%;background:var(--c)"></i></div>${PINFO?pinfoHTML():''}</div><div class="main"><nav class="rail">${rail}</nav><div class="content">${c}</div></div><nav class="tabs">${tabs}</nav>`;
+ return `<div class="hud"><div class="av" data-act="pinfo"><img class="avp" src="${avO().src}" style="${avSt(avO())}" alt=""></div><b class="name" data-act="pinfo">${esc(S.name||"")}</b><span class="lv px" data-act="pinfo">Niv.${S.lvl}</span><div class="bar" data-act="pinfo"><i style="width:${Math.min(100,S.xp/need()*100)}%;background:var(--c)"></i></div>${PINFO?pinfoHTML():''}</div><div class="main"><nav class="rail">${rail}</nav><div class="content">${c}</div></div><nav class="tabs">${tabs}</nav>`;
 }
 function card(m,o={}){const s=BY[m.id],c=TC[s[2][0]]||'#8a8a7a';
  const img=o.anim?`<img class="pmi" src="${m.sh?SH(m.id):SP(m.id)}" referrerpolicy="no-referrer" alt="">`:`<img src="${m.sh?R+'shiny/'+m.id+'.png':SPS(m.id)}" referrerpolicy="no-referrer" alt="">`;
@@ -1817,7 +1821,7 @@ document.addEventListener('click',e=>{
  else if(a==='bsel'){BAGSEL[t.dataset.t]=t.dataset.k;render(true)}
  else if(a==='shoptab'){SHOPTAB=t.dataset.k;render(true)}
  else if(a==='sactab'){SACTAB=t.dataset.k;render(true)}
- else if(a==='smenu')saveMenu();else if(a==='sexp')saveIO('exp');else if(a==='simp')saveIO('imp');else if(a==='pinfo'){PINFO=!PINFO;render(true)}
+ else if(a==='smenu')saveMenu();else if(a==='sexp')saveIO('exp');else if(a==='simp')saveIO('imp');else if(a==='pinfo'){PINFO=!PINFO;render(true)}else if(a==='setav'){S.av=+t.dataset.i||0;save();render(true)}
  else if(a==='evoff')modalOv('<h4 class="px">Événement indisponible</h4><div class="svnote" style="margin:0">Cet événement est désactivé pour le moment. Reviens bientôt !</div><div class="pbt"><a class="btn y" data-m="x">OK</a></div>');
  else if(a==='afnew'){AF={idx:null,id:0,q:'',lvl:60,sh:false,bg:'meadow',moves:[],stars:3,sp:['',''],immT:''};render(true)}
  else if(a==='afedit'){const bi=+t.dataset.i,b=BOSSES[bi];AF={idx:bi-BASEN,id:b.id,q:'',lvl:b.lvl,sh:!!b.sh,bg:b.bg,moves:[...b.moves],stars:b.stars||3,sp:[(b.spec||[])[0]||'',(b.spec||[])[1]||''],immT:b.immT||''};render(true)}
@@ -2742,8 +2746,9 @@ function pinfoHTML(){
  let h=0;for(const ch of (S.name||'Dresseur'))h=(h*31+ch.charCodeAt(0))%900000;const id=String(100000+h);
  const row=(l,v)=>`<div class="pir"><span>${l}</span><b>${v}</b></div>`;
  return `<div class="pinfo"><div class="pf-h"><i class="ti ti-id-badge-2"></i><b>Profil</b><a class="pf-x" data-act="pinfo">×</a></div>
- <div class="pf-b"><div class="pf-ph"><img src="img/portrait.webp" alt=""><div class="pf-nm"><b>${esc(S.name||'Dresseur')}</b><small>N° ID ${id}</small></div></div>
+ <div class="pf-b"><div class="pf-ph"><img src="${avO().src}" alt=""><div class="pf-nm"><b>${esc(S.name||'Dresseur')}</b><small>N° ID ${id}</small></div></div>
  <div class="pf-rp"><h5>Rapport d'aventure</h5>
+ <div class="pf-av"><span>Avatar</span>${AVS.map((a,i)=>`<a class="${(S.av||0)===i?'on':''}" data-act="setav" data-i="${i}" title="${a.nm}"><img src="${a.src}" style="${avSt({...a,sc:1.5})}" alt=""></a>`).join('')}</div>
  <div class="pf-lv"><span>Niv. ${S.lvl}</span><div class="bar"><i style="width:${Math.min(100,S.xp/n*100)}%"></i></div><small>${fmtN(S.xp)} / ${fmtN(n)} XP · encore ${fmtN(left)}</small></div>
  ${row('Badges obtenus',nb+' / 9')}${row('Pokédex',cap+' <small>capturés</small> · '+seen+' <small>vus</small>')}${row('Pokémon chromatiques',shy)}
  ${row('Niveau max des Pokémon',capLv())}${row('Captures du jour',(d.wn||0)+' / 300')}${row('Bonus de repos',rm?'×1,5 · '+rm+' min':'inactif')}
