@@ -710,7 +710,8 @@ input{flex:1;min-width:140px}
 .cinfo.idle{font-size:clamp(8px,2.2cqw,11px);background:#0b1030cc;border:2px dashed #fff6;padding:3px 6px;font-weight:800}
 
 .gzbg{position:absolute;inset:0;background:linear-gradient(#0006,#0000 30%,#0000 70%,#0007),#3a5aa8 url(img/gv/f000.webp) center/cover no-repeat;animation:gzz 14s ease-in-out infinite alternate}@keyframes gzz{from{transform:scale(1)}to{transform:scale(1.07)}}
-.gz-feat{position:absolute;left:3%;right:3%;top:4%;display:flex;gap:8px;justify-content:center;z-index:3}
+.gzi{position:absolute;right:8px;top:8px;z-index:5;width:28px;height:28px;border-radius:50%;border:2.5px solid #fff;color:#fff;background:#0b103055;display:grid;place-items:center;font:italic 900 16px Georgia,serif;cursor:pointer;text-shadow:0 1px 2px #000a}
+.gz-feat{position:absolute;left:3%;right:3%;top:46px;display:flex;gap:8px;justify-content:center;z-index:3}
 .gf{flex:1;max-width:30%;background:#0b103033;border:2px solid #ffd24a99;box-shadow:0 0 12px #ffd24a33;backdrop-filter:blur(2px);border-radius:14px;text-shadow:0 1px 3px #000c;padding:4px;display:flex;flex-direction:column;align-items:center;text-align:center;min-width:0}
 .gf-sp{height:clamp(44px,12cqw,84px);width:auto;max-width:100%;object-fit:contain}
 .gf b{font-size:clamp(9px,2.5cqw,12px);line-height:1.15}.gf small{font-size:clamp(8px,2.2cqw,11px);color:#ffd24a;font-weight:800}
@@ -1429,10 +1430,10 @@ function gzRates(){
 function gachaView(){
  gzPre();
  const d=dayS(),z=S.gz||(S.gz={n:0,tot:0}),left=GZ_PITY-z.n,free=!d.gacha;
- const feat=GZF.map(f=>`<div class="gf"><img class="gf-sp" src="${f.sh?SH(f.id):SP(f.id)}" referrerpolicy="no-referrer" alt=""><b>${f.n}</b><small><i class="ti ti-star-filled"></i> 0,3 %</small></div>`).join('');
+ const feat=GZF.map(f=>`<div class="gf"><img class="gf-sp" src="${f.sh?SH(f.id):SP(f.id)}" referrerpolicy="no-referrer" alt=""><b>${f.n}</b></div>`).join('');
  const gi='<i class="ti ti-diamond gemi"></i>';
- return `<div class="bz gz"><div class="gzbg"></div><canvas id="gzc" width="200" height="125" style="display:none"></canvas><div class="gz-feat">${feat}</div><div class="bz-b">Vedette garantie dans ${left} tirage${left>1?'s':''}</div></div>
- <div class="bz-bar gz-bar"><span class="chip gem">${gi}<b id="gemc">${gems()}</b></span><a class="btn y" data-act="gzpull" data-v="1">${free?'Tirage gratuit':'Tirer ×1 · '+GZ_C1+' '+gi}${free?'<span class="bd">1</span>':''}</a><a class="btn y" data-act="gzpull" data-v="10">Tirer ×10 · ${GZ_C10} ${gi}</a><a class="btn sm" data-act="gzrates"><i class="ti ti-info-circle"></i>Taux</a><a class="btn sm" data-act="gzbuy">+100 (démo)</a></div>`;
+ return `<div class="bz gz"><div class="gzbg"></div><canvas id="gzc" width="200" height="125" style="display:none"></canvas><a class="gzi" data-act="gzrates" title="Taux">i</a><div class="gz-feat">${feat}</div><div class="bz-b">Vedette garantie dans ${left} tirage${left>1?'s':''}</div></div>
+ <div class="bz-bar gz-bar"><span class="chip gem">${gi}<b id="gemc">${gems()}</b></span><a class="btn y" data-act="gzpull" data-v="1">${free?'Tirage gratuit':'Tirer ×1 · '+GZ_C1+' '+gi}${free?'<span class="bd">1</span>':''}</a><a class="btn y" data-act="gzpull" data-v="10">Tirer ×10 · ${GZ_C10} ${gi}</a><a class="btn sm" data-act="gzbuy">+100 (démo)</a></div>`;
 }
 let GZB=null;
 function gzBG(){
