@@ -238,7 +238,7 @@ function loop(now){if(!paused){const pv=tcur;tcur=(now-t0)/1000;fireSfx(pv,tcur)
 addEventListener('resize',()=>{fit();frame(tcur)});
 fit();if(!EMB)newPull();ui(true);requestAnimationFrame(loop);
 if(EMB){
- addEventListener('message',e=>{const d=e.data;if(!d||d.t!=='gz')return;
+ addEventListener('message',e=>{const d=e.data;if(!d||d.t!=='gz')return;snd=!d.mute;
   pulls=d.pulls.map(p=>({id:p.id||0,sk:p.sk||'',tier:p.tier,n:''}));pulls.sort((a,b)=>b.tier-a.tier);pulls.forEach(p=>loadSil(p.id));
   kinds=pulls.map(p=>p.tier);for(let i=kinds.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[kinds[i],kinds[j]]=[kinds[j],kinds[i]]}
   N=kinds.length===1?1:10;const go=()=>{if(vloaded<NF){setTimeout(go,100);return}start(N);parent.postMessage({t:'gzgo'},'*')};go()});

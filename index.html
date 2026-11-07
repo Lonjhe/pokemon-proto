@@ -1420,7 +1420,7 @@ function gzPlay(res,n){
  /* musique : lecture débloquée par le geste du joueur, lancée quand l'animation démarre */
  const A=new Audio('gacha-musique.m4a');let go=false,done=false;A.preload='auto';A.muted=true;
  try{A.play().then(()=>{if(!go){A.pause();A.currentTime=0}}).catch(()=>{})}catch(e){}
- const send=()=>{try{fr.contentWindow.postMessage({t:'gz',pulls:res.map(c=>({tier:TI[c.r],id:c.sid||0,sk:c.sk||''}))},'*')}catch(e){}};
+ const send=()=>{try{fr.contentWindow.postMessage({t:'gz',mute:!!S.mute,pulls:res.map(c=>({tier:TI[c.r],id:c.sid||0,sk:c.sk||''}))},'*')}catch(e){}};
  const reveal=()=>{if(done)return;done=true;clearTimeout(fb);removeEventListener('message',onm);try{A.pause()}catch(e){}
   fl.classList.add('on');sk.hidden=true;setTimeout(()=>{fr.remove();rs.hidden=false},350)};
  const onm=e=>{if(e.source!==fr.contentWindow)return;const t=e.data&&e.data.t;
