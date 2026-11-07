@@ -826,6 +826,18 @@ input{flex:1;min-width:140px}
 .pm>*{position:relative;z-index:1}
 .pm-h{display:flex;justify-content:center;align-items:center;font-size:11px;text-shadow:0 2px 0 #0006;padding:2px 0}.pm-h .chip{position:absolute;right:0}
 .pm-gear{position:absolute;left:0;top:-4px;width:34px;height:34px;border-radius:50%;background:#fff;color:#c8203c;display:grid;place-items:center;font-size:20px;box-shadow:0 3px 0 #0004;cursor:pointer}.av-pk{display:flex;gap:12px;justify-content:center;margin:10px 0}.av-pk a{width:84px;height:84px;border-radius:50%;overflow:hidden;border:4px solid #ffffff55;cursor:pointer;background:#ffffff22;position:relative}.av-pk a.on{border-color:#ffb24a;box-shadow:0 0 0 3px #ff8a1a66}.av-pk img{width:100%;height:100%;object-fit:cover;display:block}.av-pk small{position:absolute;left:0;right:0;bottom:0;background:#000a;color:#fff;font-size:10px;font-weight:900;text-align:center}
+.dy{flex:none;background:linear-gradient(#1d2358,#151a42);border:3px solid #0b1030;box-shadow:inset 0 0 0 2px var(--b);border-radius:14px;padding:10px 10px 8px;color:var(--t)}
+.dy-t{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;padding:0 4px 8px;border-bottom:2px solid #ffffff22}.dy-t i{color:var(--y);font-size:20px}.dy-t span{flex:1;min-width:0}.dy-t b{color:var(--y);font-size:12px;white-space:nowrap}
+.dy-tr{position:relative;display:grid;grid-template-columns:repeat(7,1fr);align-items:end;padding-top:12px}
+.dy-ln{position:absolute;left:calc(100%/14);right:calc(100%/14);top:calc(12px + 25px);height:7px;border-radius:4px;background:#0b1030;box-shadow:inset 0 0 0 1px var(--b)}.dy-ln i{display:block;height:100%;border-radius:4px;background:var(--y)}
+.dy-c{position:relative;display:flex;flex-direction:column;align-items:center;gap:1px;z-index:1}
+.dy-o{position:relative;width:42px;height:42px;border-radius:50%;background:#0b1030;border:3px solid var(--b);display:grid;place-items:center;box-shadow:0 3px 0 #0006}
+.dy-o img,.dy-o .gi{max-width:68%;max-height:68%;width:auto;height:auto;object-fit:contain;image-rendering:auto}.dy-o i{font-size:20px}
+.dy-c.dn .dy-o{background:var(--y);border-color:#ffe27a}
+.dy-c.rd{cursor:pointer}.dy-c.rd .dy-o{border-color:var(--y);animation:zbob 1.1s ease-in-out infinite;box-shadow:0 0 0 3px #ffcb0055,0 3px 0 #0006}
+.dy-c.big .dy-o{width:52px;height:52px;border-color:#ffb300;box-shadow:0 0 12px #ffb30088,0 3px 0 #0006}
+.dy-c .ck{position:absolute;right:-6px;bottom:-4px;width:18px;height:18px;border-radius:50%;background:var(--g);border:2px solid #0b1030}.dy-c .ck::after{content:"";position:absolute;left:5px;top:2px;width:4px;height:8px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
+.dy-c b{font-size:10px;color:var(--m);margin-top:3px}.dy-c.dn b,.dy-c.rd b{color:var(--y)}.dy-c small{font-size:10px;font-weight:800;color:var(--t);min-height:12px}
 .pm-g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 6px;align-content:start}
 .pm-t{position:relative;display:flex;flex-direction:column;align-items:center;gap:7px;color:#fff;cursor:pointer;font-size:11px;font-weight:900;letter-spacing:.03em;text-transform:uppercase;text-shadow:0 1px 0 #0007}
 .pm-t .rd{width:clamp(76px,23vw,92px);aspect-ratio:1;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 4px 0 #0004;transition:transform .1s}
@@ -1029,7 +1041,7 @@ function hub(){
   <a class="hm-chg" data-act="pickp"><i class="ti ti-refresh"></i>Changer</a>
   <div class="hm-nm"><b class="px">${ps[1]}</b><small>Niv. ${p.lvl} · ${hearts(p)}</small></div>
   <div class="hm-hp">PV ${hpm}/${hpm}<i><b style="width:100%"></b></i></div></div>
- <div class="hm-tiles"><a class="cb-big cbl" data-go="ligue"><img src="${SPEC.PUNCH}" alt="" referrerpolicy="no-referrer"><div><b class="px">Ligue</b><small>${done?'Terminée':st.name}</small></div></a><a class="cb-big cbb" data-go="boss"><img src="${SPEC.MASK}" alt="" referrerpolicy="no-referrer"><div><b class="px">Boss</b><small>${(S.bossRecs||[]).length?'Récap disponible':fmtT(bs.left).replace(/ \d+s$/,'')}</small></div></a></div></div>`;
+ ${dailyHTML()}</div>`;
 }
 document.addEventListener('click',e=>{if(e.target.id==='hmpk'){const el=e.target;el.classList.remove('hop');void el.offsetWidth;el.classList.add('hop');const b=$('#hmb');if(b)b.textContent='C\'est parti !';setTimeout(()=>go('explorer'),420)}});
 function hmOverlay(html){const o=document.createElement('div');o.className='hm-ov';o.innerHTML=`<div class="hm-ovc">${html}<div style="margin-top:12px"><a class="btn y" id="hmok">OK</a></div></div>`;document.body.appendChild(o);o.querySelector('#hmok').onclick=()=>{o.remove();render()}}
@@ -1044,10 +1056,10 @@ function openChest(){
  const d=dayS();if(d.chest)return;d.chest=true;
  const k=todayKey(),y=new Date(Date.now()+((S.dayShift||0)-1)*864e5),yk=y.getFullYear()+'-'+(y.getMonth()+1)+'-'+y.getDate();
  const stk=S.streak||(S.streak={last:'',n:0});stk.n=stk.last===yk?stk.n+1:1;stk.last=k;
- const coins=100+stk.n*20,sup=stk.n%5===0?5:0;S.coins+=coins;S.gems=gems()+10;S.balls.poke+=2;let egn='';if(stk.n%7===0){breed();S.eggs.push({k:'l',id:pickEgg('l')});egn='<div style="color:var(--y);margin-top:4px">Événement série de 7 jours : <b>Œuf légendaire</b> !</div>'}if(sup)S.balls.super=(S.balls.super||0)+sup;
+ const coins=100,pos=((stk.n-1)%7)+1,dr=DAILY()[pos-1],got=bossGive(dr);S.coins+=coins;S.gems=gems()+10;S.balls.poke+=2;let egn=`<div style="color:var(--y);margin-top:6px">Jour ${pos}/7 : <b>${rewTxt(dr)}</b>${pos===7?' · grande récompense !':''}</div>`;
  const qs=DAY_QUESTS.filter(q=>d[q[0]]>=q[2]);const qc=qs.reduce((a,q)=>a+q[3],0);S.coins+=qc;egn+=`<div style="color:var(--y);margin-top:4px">+${addXp(100)} XP${xpNote()}</div>`;
  save();
- hmOverlay(`<h4 class="px" style="font-size:11px;color:var(--y)">Coffre ouvert</h4><img src="img/chest.png" alt="" style="width:96px;height:96px;object-fit:contain;filter:drop-shadow(0 4px 3px #0008)"><div style="font-weight:900;font-size:16px;margin-top:6px">+${coins} pièces · +2 Poké Balls${sup?' · +5 Super Balls':''}</div>${egn}${qc?`<div style="color:var(--y);margin-top:4px">Quêtes : +${qc} pièces</div>`:''}<div style="color:var(--m);margin-top:4px">Série : ${stk.n} jour${stk.n>1?'s':''}</div>`);
+ hmOverlay(`<h4 class="px" style="font-size:11px;color:var(--y)">Coffre ouvert</h4><img src="img/chest.png" alt="" style="width:96px;height:96px;object-fit:contain;filter:drop-shadow(0 4px 3px #0008)"><div style="font-weight:900;font-size:16px;margin-top:6px">+${coins} pièces · +10 gemmes · +2 Poké Balls</div>${egn}${qc?`<div style="color:var(--y);margin-top:4px">Quêtes : +${qc} pièces</div>`:''}<div style="color:var(--m);margin-top:4px">Série : ${stk.n} jour${stk.n>1?'s':''}</div>`);
 }
 
 function newEnc(){
@@ -1922,6 +1934,16 @@ const BTIER=[
  [11,20,'11e à 20e',[{k:'coin',q:1000},{k:'gem',q:20},{k:'ball',v:'super',q:3},{k:'item',v:'bonbonm',q:2}]],
  [21,999,'Autres participants',[{k:'coin',q:500},{k:'gem',q:10},{k:'ball',v:'poke',q:5},{k:'item',v:'bonbon',q:3}]]];
 const BDEAD=[{k:'egg',v:'c'}];
+const DAILY_DEF=[{k:'coin',q:200},{k:'ball',v:'poke',q:5},{k:'gem',q:20},{k:'ball',v:'super',q:5},{k:'item',v:'bonbon',q:3},{k:'coin',q:600},{k:'egg',v:'l'}];
+const DAILY=()=>{const c=CFG();if(!Array.isArray(c.daily)||c.daily.length!==7)c.daily=DAILY_DEF.map(x=>({...x}));return c.daily};
+function dailyState(){const stk=S.streak||{last:'',n:0},k=todayKey(),y=new Date(Date.now()+((S.dayShift||0)-1)*864e5),yk=y.getFullYear()+'-'+(y.getMonth()+1)+'-'+y.getDate();
+ if(stk.last===k)return{done:((stk.n-1)%7)+1,today:true};if(stk.last===yk)return{done:stk.n%7,today:false};return{done:0,today:false}}
+const rewQ=e=>e.k==='egg'?'':'×'+(e.q||1);
+function dailyHTML(){
+ const D=DAILY(),st=dailyState(),n=st.done,nx=st.today?null:D[n];
+ const msg=st.today?(n>=7?'Cycle terminé · reprise demain':(7-n)+' jour'+(7-n>1?'s':'')+' avant le jour 7'):'Ouvre le coffre : jour '+(n+1);
+ const cs=D.map((e,i)=>{const dn=i<n,rd=i===n&&!st.today,big=i===6;return `<div class="dy-c ${dn?'dn':''} ${rd?'rd':''} ${big?'big':''}" ${rd?'data-act="chest"':''}><span class="dy-o">${rewIco(e)}${dn?'<em class="ck"></em>':''}</span><b>J${i+1}</b><small>${rewQ(e)}</small></div>`}).join('');
+ return `<div class="dy"><div class="dy-t"><i class="ti ti-gift"></i><span>${msg}</span>${nx?`<b>${rewTxt(nx)}</b>`:''}</div><div class="dy-tr"><div class="dy-ln"><i style="width:${n>1?Math.min(100,(n-1)/6*100):0}%"></i></div>${cs}</div></div>`}
 const tierOf=r=>BTIER.find(t=>r>=t[0]&&r<=t[1]);
 function rewTxt(e){return e.k==='coin'?e.q+' Pokédollars':e.k==='gem'?e.q+' gemmes':e.k==='ball'?BALLS[e.v].n+' ×'+e.q:e.k==='egg'?EGGT[e.v].n:ITN(e.v)+' ×'+e.q}
 function bossGive(e){if(e.k==='gem'){S.gems=gems()+e.q;return{n:e.q+' gemmes'}}return gzDo(e)}
@@ -2773,7 +2795,7 @@ function saveIO(mode){
 document.addEventListener('click',e=>{if(PINFO&&!(e.target.closest&&e.target.closest('.pinfo,[data-act=pinfo]'))){PINFO=false;const p=document.querySelector('.pinfo');if(p)p.remove()}},true);
 function avMenu(){
  let o=document.querySelector('.io-ov');if(o)o.remove();o=document.createElement('div');o.className='pick-ov io-ov';document.body.appendChild(o);
- const draw=()=>{o.innerHTML='<div class="pick-c"><h4 class="px">Réglages</h4><div class="svnote" style="margin:0">Avatar</div><div class="av-pk">'+AVS.map((a,i)=>`<a class="${(S.av||0)===i?'on':''}" data-av="${i}"><img src="${a.src}" style="${avSt({...a,sc:1.5})}" alt=""><small>${a.nm}</small></a>`).join('')+'</div><div class="pbt"><a class="btn" data-av="snd"><i class="ti ti-${S.mute?'volume-off':'volume'}"></i>Son : ${S.mute?'coupé':'activé'}</a><a class="btn" data-av="x">Fermer</a></div></div>'};
+ const draw=()=>{o.innerHTML='<div class="pick-c"><h4 class="px">Réglages</h4><div class="svnote" style="margin:0">Avatar</div><div class="av-pk">'+AVS.map((a,i)=>`<a class="${(S.av||0)===i?'on':''}" data-av="${i}"><img src="${a.src}" style="${avSt({...a,sc:1.5})}" alt=""><small>${a.nm}</small></a>`).join('')+'</div><div class="pbt"><a class="btn" data-av="snd"><i class="ti ti-'+(S.mute?'volume-off':'volume')+'"></i>Son : '+(S.mute?'coupé':'activé')+'</a><a class="btn" data-av="x">Fermer</a></div></div>'};
  draw();
  o.addEventListener('click',e=>{const t=e.target.closest('[data-av]');if(!t){if(e.target===o)o.remove();return}const a=t.dataset.av;if(a==='x'){o.remove();return}if(a==='snd'){S.mute=!S.mute;save();draw();return}S.av=+a||0;save();draw();render(true)});
 }
@@ -2789,7 +2811,7 @@ function plusView(){
  const er=eggsReady(),TO=(k,go,ic,lab,bd)=>evOn(k)?T(go,ic,lab,bd):T('act:evoff',ic,lab,bd).replace('class="pm-t"','class="pm-t off"');
  return `<div class="pm"><div class="pm-h"><span class="px">MENU</span><span class="chip" id="capt"></span><a class="pm-gear" data-act="avmenu" title="Réglages"><i class="ti ti-settings"></i></a></div>
  <div class="pm-g">${T('pokemon',IM(UB+'d/da/Bag_Premier_Ball_SV_Sprite.png',PA('premier-ball')),'Pokémon')}${T('elevage',IM(UB+'3/3f/Bag_Lucky_Egg_SV_Sprite.png',PA('lucky-egg')),'Élevage',er)}${T('act:gocamp',IM('img/mn_camp.png'),'Camp EV')}${T('boutique',IM(SPEC.DOLLAR),'Boutique')}${T('gacha',IM(SPEC.DICE,PA('lucky-egg')),'Gacha',d.gacha?'':1)}${T('ligue',IM(SPEC.PUNCH,PA('muscle-band')),'Ligue')}${TO('boss','boss',IM(SPEC.MASK,PA('x-attack')),'Boss')}${TO('manoir','manoir',IM(R+'other/official-artwork/710.png'),'Halloween')}${T('social',IM(BBU('Poké Doll'),PA('poke-doll')),'Social')}${T('quetes',IM('img/quest.png'),'Quêtes')}${T('act:chest',IM(d.chest?'img/chestO.png':'img/chest.png'),'Coffre',d.chest?'':1)}${T('act:smenu',IM('img/mn_save.png'),'Sauvegarde')}</div>
- <div class="pm-i">${d.chest?`Série de ${streak} jour${streak>1?'s':''} · quêtes ${qd}/${DAY_QUESTS.length}`:'Le coffre quotidien est prêt à être ouvert !'}</div></div>`;
+ </div>`;
 }
 function teamEdit(){
  let o=document.querySelector('.te-ov');if(o)o.remove();o=document.createElement('div');o.className='pick-ov te-ov';document.body.appendChild(o);
@@ -2872,6 +2894,17 @@ document.addEventListener('change',e=>{const k=e.target.dataset&&e.target.datase
  if(k==='lvl')AF.lvl=Math.max(1,Math.min(100,+v||1));else if(k==='stars')AF.stars=+v;else if(k==='sp0')AF.sp[0]=v;else if(k==='sp1')AF.sp[1]=v;else if(k==='immT')AF.immT=v;else if(k==='bg')AF.bg=v;else if(/^m\d$/.test(k)){const i=+k[1];AF.moves[i]=v?{n:v,t:MD[v][0],p:MD[v][2]}:null}
  render(true)});
 function rewIco(e){return e.k==='coin'?'<i class="ti ti-coin" style="color:var(--y)"></i>':e.k==='gem'?'<i class="ti ti-diamond" style="color:#ff7ad9"></i>':e.k==='ball'?`<img src="${BI(e.v)}" alt="">`:e.k==='egg'?eggImg(e.v,46):`<i class="ti ti-${ITI(e.v)}"></i>`}
+const ADI=['bonbon','bonbonm','bonbonxl','capargent','capor','captal','capoeuf','restes','orbe','sitrus','ceinture','pfeu','peau','pfoudre','plune','pfeuille'];
+function adminDaily(){
+ const sel=(f,i,v,o)=>`<select class="ain" data-ad="${f}:${i}" style="width:auto!important;min-width:0;flex:1">${o.map(([k,n])=>`<option value="${k}" ${k===v?'selected':''}>${n}</option>`).join('')}</select>`;
+ return DAILY().map((e,i)=>{
+  const v=e.k==='ball'?sel('v',i,e.v,Object.entries(BALLS).map(([k,b])=>[k,b.n])):e.k==='egg'?sel('v',i,e.v,Object.entries(EGGT).map(([k,b])=>[k,b.n])):e.k==='item'?sel('v',i,e.v,ADI.map(k=>[k,ITN(k)])):'';
+  const q=e.k==='egg'?'':`<input class="ain" type="number" min="1" max="99999" value="${e.q||1}" data-ad="q:${i}" style="width:84px!important;flex:none">`;
+  return `<div class="arow" style="flex-wrap:wrap"><span class="dy-o" style="flex:none;${i===6?'width:48px;height:48px;border-color:#ffb300':''}">${rewIco(e)}</span><div class="grow" style="min-width:60px"><b>Jour ${i+1}</b>${i===6?' <span class="chip">grande</span>':''}</div><div style="display:flex;gap:6px;width:100%;margin-top:6px">${sel('k',i,e.k,[['coin','Pokédollars'],['gem','Gemmes'],['ball','Balls'],['item','Objet'],['egg','Œuf']])}${v}${q}</div></div>`}).join('')}
+document.addEventListener('change',e=>{const d=e.target.dataset&&e.target.dataset.ad;if(!d)return;const [f,i]=d.split(':'),r=DAILY()[+i],v=e.target.value;
+ if(f==='k'){const D={coin:{k:'coin',q:200},gem:{k:'gem',q:20},ball:{k:'ball',v:'poke',q:5},item:{k:'item',v:'bonbon',q:3},egg:{k:'egg',v:'c'}};DAILY()[+i]={...D[v]}}
+ else if(f==='v')r.v=v;else if(f==='q')r.q=Math.max(1,Math.min(99999,+v||1));
+ save();render(true)});
 function adminView(){
  if(!window.ADM)return `<div class="title"><h3 class="px">Administration</h3></div><div class="panel"><h4 class="px">Accès réservé</h4><div style="color:var(--m);margin:6px 0 8px">Code administrateur requis.</div><input id="apin" class="ain" type="password" inputmode="numeric" placeholder="Code" autocomplete="off"><div id="aerr" style="color:var(--r);min-height:18px;margin-top:4px"></div><div style="display:flex;gap:8px"><a class="btn y" data-act="alogin">Entrer</a><a class="btn" data-go="hub">Retour</a></div></div>`;
  if(AF)return adminForm();
@@ -2881,6 +2914,7 @@ function adminView(){
  const ev=EVTS.map(([k,n])=>`<div class="arow"><div class="grow"><b>${n}</b><br><small>${evOn(k)?'Actif':'Désactivé'}</small></div><div class="sw ${evOn(k)?'on':''}" data-act="aev" data-k="${k}"></div></div>`).join('');
  return `<div class="title"><h3 class="px">Administration</h3><a class="btn" data-act="alogout">Quitter</a></div>
  <div class="panel"><h4 class="px">Rotation des boss</h4><div style="color:var(--m);margin:6px 0 8px;font-size:12px">Un boss toutes les 2 h, dans l'ordre ci-dessous, en boucle.</div>${rot}${out}<a class="btn y" data-act="afnew" style="margin-top:6px"><i class="ti ti-plus"></i>Créer un boss</a></div>
+ <div class="panel"><h4 class="px">Coffre quotidien · 7 jours</h4><div style="color:var(--m);margin:6px 0 8px;font-size:12px">Récompense remise à l'ouverture du coffre, en plus du lot de base. Le jour 7 est la grande récompense ; le cycle repart ensuite à J1.</div>${adminDaily()}</div>
  <div class="panel"><h4 class="px">Événements</h4><div style="margin-top:8px">${ev}</div></div>
  <div class="panel"><h4 class="px">Sécurité</h4><div style="color:var(--m);margin:6px 0 8px;font-size:12px">Prototype : réglages et code stockés sur cet appareil. La vraie protection viendra avec le serveur.</div><a class="btn" data-act="apin2">Changer le code</a></div>`;
 }
