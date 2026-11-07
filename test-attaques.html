@@ -876,6 +876,27 @@ input{flex:1;min-width:140px}
 .bcrm .panel{background:#f3ecc4;color:#2a2412;border-color:#2a2412;border-radius:18px}.bcrm .panel .px,.bcrm .panel b{color:#2a2412}.bcrm .panel small{color:#6b5a2a!important}.bcrm .rwg .li{background:#fffaf0;color:#2a2412;border:1px solid #d8c9a0;border-radius:12px}.bcrm .rwi{color:#2a2412}
 .bcrm .lb{background:#fffaf0;color:#2a2412}
 
+/* fiche detaillee : style coherent avec la carte dresseur */
+.svw{z-index:80;background:#050a24d9}
+.sv{border:3px solid #fff;border-radius:20px;box-shadow:0 0 0 3px #0008,0 14px 40px #000a;overflow:hidden;max-height:calc(100dvh - 24px);width:min(560px,100%);background:linear-gradient(160deg,color-mix(in srgb,var(--tc) 42%,#1a2150) 0,#151a42 42%)}
+.sv .svh{flex:none;padding:12px 14px}.sv .svh img{width:104px;height:104px}.sv .svn h3{font-size:15px;margin:5px 0}
+.sv .svh .btn{border-radius:50%;width:32px;height:32px;padding:0;display:grid;place-items:center;background:#ff8a1a;border:2px solid #fff;color:#fff}
+.sv .svn .chip{border-radius:12px}
+.sv .svtabs{flex:none;gap:6px;padding:0 14px;margin-bottom:10px;flex-wrap:nowrap}
+.sv .svtabs a{flex:1;text-align:center;padding:8px 4px;font-size:12px;font-weight:900;background:#ffffff1a;border:2px solid #ffffff33;border-radius:16px;color:#e3e8ff;white-space:nowrap}
+.sv .svtabs a.on{background:#ff8a1a;border-color:#fff;color:#fff}
+.sv .svb{flex:1;min-height:0;overflow:auto;padding:0 14px 10px}
+.sv .svflash{flex:none;border-radius:14px;margin:0 14px 10px}
+.sv .svl{display:flex;flex-direction:column;gap:6px}
+.sv .svl .svr{background:#0b103099;border:2px solid #ffffff1f;border-radius:14px;padding:8px 12px;grid-template-columns:110px 1fr}
+.sv .svnote{border-radius:14px;border:2px solid #ffffff1f;border-left:4px solid var(--tc)}
+.sv .mvc{border-radius:14px}
+.sv .svit{background:#0b103099;border:2px solid #ffffff1f;border-radius:14px;padding:10px 12px}
+.sv .svbt .btn{border-radius:14px}
+.sv .sva{flex:none;background:#0b1030cc;border-top:2px solid #ffffff2a;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sv .sva .btn{border-radius:20px;justify-content:center;min-height:40px;text-align:center}
+.sv .sva .btn:nth-child(3){grid-column:1/-1}
+
 body{margin:0;background:var(--bg);color:var(--t);font-family:Nunito,sans-serif}
 .wrap{max-width:1180px;margin:0 auto;padding:12px}
 .top{position:sticky;top:0;z-index:20;background:var(--bg);padding:8px 0 10px;border-bottom:2px solid var(--b)}

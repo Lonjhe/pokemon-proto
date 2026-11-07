@@ -879,6 +879,27 @@ input{flex:1;min-width:140px}
 .app[data-pal=orange] .hud .lv{color:#000;text-shadow:none}
 .bcrm .panel{background:#f3ecc4;color:#2a2412;border-color:#2a2412;border-radius:18px}.bcrm .panel .px,.bcrm .panel b{color:#2a2412}.bcrm .panel small{color:#6b5a2a!important}.bcrm .rwg .li{background:#fffaf0;color:#2a2412;border:1px solid #d8c9a0;border-radius:12px}.bcrm .rwi{color:#2a2412}
 .bcrm .lb{background:#fffaf0;color:#2a2412}
+
+/* fiche detaillee : style coherent avec la carte dresseur */
+.svw{z-index:80;background:#050a24d9}
+.sv{border:3px solid #fff;border-radius:20px;box-shadow:0 0 0 3px #0008,0 14px 40px #000a;overflow:hidden;max-height:calc(100dvh - 24px);width:min(560px,100%);background:linear-gradient(160deg,color-mix(in srgb,var(--tc) 42%,#1a2150) 0,#151a42 42%)}
+.sv .svh{flex:none;padding:12px 14px}.sv .svh img{width:104px;height:104px}.sv .svn h3{font-size:15px;margin:5px 0}
+.sv .svh .btn{border-radius:50%;width:32px;height:32px;padding:0;display:grid;place-items:center;background:#ff8a1a;border:2px solid #fff;color:#fff}
+.sv .svn .chip{border-radius:12px}
+.sv .svtabs{flex:none;gap:6px;padding:0 14px;margin-bottom:10px;flex-wrap:nowrap}
+.sv .svtabs a{flex:1;text-align:center;padding:8px 4px;font-size:12px;font-weight:900;background:#ffffff1a;border:2px solid #ffffff33;border-radius:16px;color:#e3e8ff;white-space:nowrap}
+.sv .svtabs a.on{background:#ff8a1a;border-color:#fff;color:#fff}
+.sv .svb{flex:1;min-height:0;overflow:auto;padding:0 14px 10px}
+.sv .svflash{flex:none;border-radius:14px;margin:0 14px 10px}
+.sv .svl{display:flex;flex-direction:column;gap:6px}
+.sv .svl .svr{background:#0b103099;border:2px solid #ffffff1f;border-radius:14px;padding:8px 12px;grid-template-columns:110px 1fr}
+.sv .svnote{border-radius:14px;border:2px solid #ffffff1f;border-left:4px solid var(--tc)}
+.sv .mvc{border-radius:14px}
+.sv .svit{background:#0b103099;border:2px solid #ffffff1f;border-radius:14px;padding:10px 12px}
+.sv .svbt .btn{border-radius:14px}
+.sv .sva{flex:none;background:#0b1030cc;border-top:2px solid #ffffff2a;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sv .sva .btn{border-radius:20px;justify-content:center;min-height:40px;text-align:center}
+.sv .sva .btn:nth-child(3){grid-column:1/-1}
 </style>
 </head>
 <body>
@@ -3128,13 +3149,11 @@ function detail(m){
  let body='';
  if(tab==='info'){
   const row=(a,b)=>`<div class="svr"><span>${a}</span><b>${b}</b></div>`;
-  body=`<div class="svl">${row('N° Pokédex','#'+String(m.id).padStart(4,'0'))}${row('Nom',s[1]+(m.sh?' ✦':''))}${row('Type',s[2].map(ty).join(' '))}${row('Amitié',friendHTML(m))}${row('Objet tenu',m.held?HELD[m.held].n:'Aucun')}${row('Évolution',evoShort(m.id))}${row('Dresseur','Jérôme')}${row('N° ID',m.ot)}${row('Nature',`${nat[0]}${nat[1]?` <small style="color:var(--m)">(+${SN[nat[1]]} −${SN[nat[2]]})</small>`:' <small style="color:var(--m)">(neutre)</small>'}`)}${row('Talent',`${ab[0]}<small style="display:block;color:var(--m);font-weight:600">${ab[1]}</small>`)}${row('Caractéristique',CHAR[top][0])}${row('Habitats',habitats(m.id).join(' · ')||'—')}</div>
+  body=`<div class="svl">${row('N° Pokédex','#'+String(m.id).padStart(4,'0'))}${row('Nom',s[1]+(m.sh?' ✦':''))}${row('Type',s[2].map(ty).join(' '))}${row('Amitié',friendHTML(m))}${row('Objet tenu',m.held?HELD[m.held].n:'Aucun')}${row('N° ID',m.ot)}${row('Nature',`${nat[0]}${nat[1]?` <small style="color:var(--m)">(+${SN[nat[1]]} −${SN[nat[2]]})</small>`:' <small style="color:var(--m)">(neutre)</small>'}`)}${row('Talent',`${ab[0]}<small style="display:block;color:var(--m);font-weight:600">${ab[1]}</small>`)}</div>
   <div class="svnote"><i class="ti ti-map-pin"></i> Rencontré au Niv. ${Math.max(1,m.lvl-3)}, Prairie des Brumes. ${m.sh?'Un spécimen shiny exceptionnel !':'Un Pokémon plein de vie.'}</div>`;
  }else if(tab==='stats'){
   body=`<div class="svs"><div>${radarSVG(m)}<div class="lg"><span><i style="background:#4dd0e1"></i>IV (0–31)</span><span><i style="background:#ff9800"></i>EV (0–252)</span></div></div>
-  <div><div class="svt"><span></span><span>Stat</span><span>IV</span><span>EV</span></div>${[0,1,2,3,4,5].map(i=>`<div class="svt"><b>${SN[i]}${nat[1]===i?' <em style="color:var(--r)">▲</em>':nat[2]===i?' <em style="color:var(--c)">▼</em>':''}</b><b style="color:var(--y)">${st[i]}</b><span style="color:#4dd0e1">${m.iv[i]}${m.iv[i]===31?' ★':''}</span><span style="color:#ff9800">${m.ev[i]}</span></div>`).join('')}
-  <div class="svt tot"><b>Total</b><b></b><span style="color:#4dd0e1">${ivs}/186</span><span style="color:#ff9800">${evs}/510</span></div>
-  <div class="svnote"><b style="color:var(--y)">Potentiel : ${ivl}</b><br>Les EV se gagnent en combattant, les IV sont fixés à la capture.</div></div></div>`;
+  <div class="svnote" style="margin-top:0"><b style="color:var(--y)">Potentiel : ${ivl}</b> · IV ${ivs}/186 · EV ${evs}/510<br>Les EV se gagnent en combattant, les IV sont fixés à la capture.</div></div>`;
  }else if(tab==='items'){body=itemsTab(m)}else{
   const slot=P.slot,eq=m.moves.map((n,k)=>mvCard(n,undefined,{sel:slot===k,attr:`data-act="slot" data-k="${k}" data-uid="${m.uid}"`,right:`<span class="chg">${slot===k?'Choisis une attaque →':'Changer'}</span>`})).join('');
   let right='<div class="svnote">Touche une attaque pour la remplacer : par <b>niveau</b>, par <b>CT / CS</b> ou chez le <b>Tuteur</b>.</div>';
@@ -3193,7 +3212,7 @@ function itemsTab(m){
  const cp=Object.entries(CAPS).map(([k,c])=>`<a class="btn sm ${(it[k]||0)>0?'y':'off'}" title="${c.d}" ${(it[k]||0)>0?`data-act="cap" data-k="${k}" data-uid="${m.uid}"`:''}><i class="ti ti-${c.ic}"></i>${c.n} <small>×${it[k]||0}</small></a>`).join('');
  const hl=Object.entries(HELD).map(([k,h])=>`<div class="li pick ${m.held===k?'sel':''} ${(it[k]||0)>0||m.held===k?'':'dim'}" ${(it[k]||0)>0&&m.held!==k?`data-act="hold" data-k="${k}" data-uid="${m.uid}"`:''}><div class="ico"><i class="ti ti-${h.ic}"></i></div><div class="grow"><b>${h.n}</b><div style="color:var(--m);font-size:12px">${h.d}</div></div>${m.held===k?'<i class="ti ti-check" style="color:var(--g)"></i>':`<span class="chip">×${it[k]||0}</span>`}</div>`).join('');
  const vt=VIT.map(([k,n,ic],i)=>`<a class="btn sm ${(it[k]||0)>0?'y':'off'}" title="+10 EV ${SN[i]}" ${(it[k]||0)>0?`data-act="vit" data-k="${k}" data-uid="${m.uid}"`:''}><i class="ti ti-${ic}"></i>${n} <small>×${it[k]||0}</small></a>`).join('');
- return `<div class="svi">${sec('Évolution',`<div class="svbt">${evh}</div>`)}${sec('Bonbons',`<div class="svbt">${cd}</div>`)}${sec('Capsules',`<div class="svbt">${cp}</div><div class="svnote" style="margin:6px 0 0">Les capsules modifient IV, nature ou capacités. Achète-les à la boutique.</div>`)}${sec('Vitamines',`<div class="svbt">${vt}</div><div class="svnote" style="margin:6px 0 0">+10 EV dans la statistique. Trouvées au camp d'entraînement ou achetées à la boutique.</div>`)}${sec('Objet tenu',`<div class="list">${hl}</div>${m.held?`<a class="btn sm" data-act="hold" data-k="" data-uid="${m.uid}"><i class="ti ti-x"></i>Retirer l'objet</a>`:''}`)}</div>`;
+ return `<div class="svi">${sec('Évolution',`<div class="svbt">${evh}</div>`)}${sec('Bonbons',`<div class="svbt">${cd}</div>`)}${sec('Capsules',`<div class="svbt">${cp}</div><div class="svnote" style="margin:6px 0 0">Les capsules modifient IV, nature ou capacités. Achète-les à la boutique.</div>`)}${sec('Vitamines',`<div class="svbt">${vt}</div><div class="svnote" style="margin:6px 0 0">+10 EV dans la statistique. Trouvées au camp d'entraînement ou achetées à la boutique.</div>`)}</div>`;
 }
 function friendHTML(m){const l=friendLv(m),f=m.fr||0,nx=FR[l+1];return `${hearts(m)} <small style="color:var(--m)">${f}${nx?`/${nx}`:' (max)'}</small>`}
 const TYF={Plante:'plante',Feu:'feu',Eau:'eau',Insecte:'insecte',Normal:'normal',Électrik:'electrik',Poison:'poison',Vol:'vol',Sol:'sol',Roche:'roche',Spectre:'spectre',Acier:'acier',Psy:'psy',Glace:'glace',Dragon:'dragon',Ténèbres:'tenebres',Fée:'fee',Combat:'combat'};
