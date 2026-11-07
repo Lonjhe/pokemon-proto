@@ -903,6 +903,35 @@ input{flex:1;min-width:140px}
 
 .hud .avp{transform:none!important;object-position:center!important;object-fit:cover;image-rendering:auto}
 .hud.big{padding-top:10px;padding-bottom:10px}.hud.big .av{width:52px;height:52px;border-radius:50%}.hud.big .bar{height:9px}.hud.big .lv{font-size:12px}
+/* tailles, boites, missions, pension */
+.szb{display:inline-block;font-size:11px;font-weight:900;border-radius:10px;padding:1px 8px;border:2px solid #fff;background:#2a3170;color:#fff;line-height:1.3;vertical-align:middle}
+.szb.s0,.szb.s4{background:#f5c542;color:#4a3300}
+.pkg{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:4px}
+.pkc.em{background:#ffffff14;border:2px solid #ffffff1a;cursor:default}
+.pkc.em.tg{border-color:#f5c542;cursor:pointer}
+.pkc.dim{opacity:.28}
+.pkc.mv,.pkr.mvs{outline:2px solid #f5c542}
+.pkc .pkl2{position:absolute;bottom:0;left:3px;font-size:9px;font-weight:900;color:#e4e8ff;font-style:normal}
+.pkc .pks2{position:absolute;top:0;left:3px;font-size:10px;color:#f5c542;font-style:normal}
+.pkc .pkz{position:absolute;bottom:0;right:3px;font-size:9px;font-weight:900;color:#f5c542;font-style:normal}
+.pkbh{padding:3px 6px;gap:4px;justify-content:space-between}.pkbh a{cursor:pointer;display:grid;place-items:center;min-width:24px;font-size:18px}
+.pkbh .pkbt{flex:1;min-width:0;flex-direction:column;font-size:13px;line-height:1.1;text-align:center}.pkbh .pkbt span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}.pkbh .pkbt small{font-size:11px;font-weight:600;opacity:.85}
+.bxg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;max-height:55vh;overflow:auto}
+.bxi{position:relative;background:#0b103099;border:2px solid #ffffff1f;border-radius:12px;padding:8px 34px 8px 10px;cursor:pointer;display:flex;flex-direction:column;gap:2px}
+.bxi.cur{border-color:#f5c542}.bxi b{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bxi small{color:var(--m)}
+.bxi .bxe{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:26px;height:26px;border-radius:50%;background:#ffffff22;display:grid;place-items:center;font-size:14px}
+.qt{flex:none;width:12px;height:12px;border-radius:50%;background:#4cc08a;border:2px solid #fff}.qt.q2{background:#f5c542}.qt.q3{background:#ff5a6e}
+.li.qdone{opacity:.55}
+.pen{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.pen-s{background:#0b103099;border:2px solid #ffffff22;border-radius:14px;padding:10px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;min-height:170px;justify-content:center;color:#fff;min-width:0}
+.pen-s.em{border-style:dashed;cursor:pointer;color:#aab2e6}.pen-s img{width:64px;height:64px;object-fit:contain;image-rendering:pixelated}
+.pen-s small{color:var(--m)}.pen-g{display:flex;gap:4px;flex-wrap:wrap;justify-content:center}
+.pen-m{margin:8px 0;font-size:13px;color:var(--m);display:flex;gap:6px;align-items:center}.pen-m.ok{color:var(--g)}
+.pen-e{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px;flex-wrap:wrap}.pen-eg{display:flex;gap:6px;align-items:center;min-height:44px}
+
+.pkg .pkc{min-width:0;min-height:0;overflow:hidden}.pkg .pkc img{position:absolute;inset:0;margin:auto;max-width:82%;max-height:82%}
+.pkf input{flex:1 1 100%}.pkf select{flex:1 1 40%}
+.bztabs{flex-wrap:nowrap}.bztabs a{white-space:nowrap;padding-left:6px;padding-right:6px;font-size:13px}
 </style>
 </head>
 <body>
@@ -947,8 +976,325 @@ const WATER=SPECIES.filter(x=>x[2].includes('Eau')).map(x=>x[0]);
 const BALLS={poke:{n:'Poké Ball',m:1,c:'var(--r)',p:100},super:{n:'Super Ball',m:1.5,c:'var(--c)',p:300},hyper:{n:'Hyper Ball',m:2,c:'var(--y)',p:800}};
 const CAP_MAX=10,CAP_REGEN_MIN=15; /* capture : stock max et minutes par recharge (à ajuster) */
 const KEY='proto-pokemon-v1';const SHINY=1/10; /* test : à remettre à 1/64 */
+/*CORE-NEW*/
+/*MI-BEGIN*/
+const HGT={"1":7,"2":10,"3":20,"4":6,"5":11,"6":17,"7":5,"8":10,"9":16,"10":3,"11":7,"12":11,"13":3,"14":6,"15":10,"16":3,"17":11,"18":15,"19":3,"20":7,"21":3,"22":12,"23":20,"24":35,"25":4,"26":8,"27":6,"28":10,"29":4,"30":8,"31":13,"32":5,"33":9,"34":14,"35":6,"36":13,"37":6,"38":11,"39":5,"40":10,"41":8,"42":16,"43":5,"44":8,"45":12,"46":3,"47":10,"48":10,"49":15,"50":2,"51":7,"52":4,"53":10,"54":8,"55":17,"56":5,"57":10,"58":7,"59":19,"60":6,"61":10,"62":13,"63":9,"64":13,"65":15,"66":8,"67":15,"68":16,"69":7,"70":10,"71":17,"72":9,"73":16,"74":4,"75":10,"76":14,"77":10,"78":17,"79":12,"80":16,"81":3,"82":10,"83":8,"84":14,"85":18,"86":11,"87":17,"88":9,"89":12,"90":3,"91":15,"92":13,"93":16,"94":15,"95":88,"96":10,"97":16,"98":4,"99":13,"100":5,"101":12,"102":4,"103":20,"104":4,"105":10,"106":15,"107":14,"108":12,"109":6,"110":12,"111":10,"112":19,"113":11,"114":10,"115":22,"116":4,"117":12,"118":6,"119":13,"120":8,"121":11,"122":13,"123":15,"124":14,"125":11,"126":13,"127":15,"128":14,"129":9,"130":65,"131":25,"132":3,"133":3,"134":10,"135":8,"136":9,"137":8,"138":4,"139":10,"140":5,"141":13,"142":18,"143":21,"144":17,"145":16,"146":20,"147":18,"148":40,"149":22,"150":20,"151":4,"200":7,"353":6,"355":8,"708":4,"710":4,"607":3,"425":4,"562":5,"778":2,"854":1,"442":10,"479":3,"781":39,"864":10,"491":15,"802":7,"487":45,"897":20,"429":9,"354":11,"356":16,"477":22,"709":15,"711":9,"608":6,"609":10,"426":12,"563":17,"855":2};
+const EGGG={"1":["monster","plant"],"2":["monster","plant"],"3":["monster","plant"],"4":["monster","dragon"],"5":["monster","dragon"],"6":["monster","dragon"],"7":["monster","water1"],"8":["monster","water1"],"9":["monster","water1"],"10":["bug"],"11":["bug"],"12":["bug"],"13":["bug"],"14":["bug"],"15":["bug"],"16":["flying"],"17":["flying"],"18":["flying"],"19":["ground"],"20":["ground"],"21":["flying"],"22":["flying"],"23":["ground","dragon"],"24":["ground","dragon"],"25":["ground","fairy"],"26":["ground","fairy"],"27":["ground"],"28":["ground"],"29":["monster","ground"],"30":["no-eggs"],"31":["no-eggs"],"32":["monster","ground"],"33":["monster","ground"],"34":["monster","ground"],"35":["fairy"],"36":["fairy"],"37":["ground"],"38":["ground"],"39":["fairy"],"40":["fairy"],"41":["flying"],"42":["flying"],"43":["plant"],"44":["plant"],"45":["plant"],"46":["bug","plant"],"47":["bug","plant"],"48":["bug"],"49":["bug"],"50":["ground"],"51":["ground"],"52":["ground"],"53":["ground"],"54":["water1","ground"],"55":["water1","ground"],"56":["ground"],"57":["ground"],"58":["ground"],"59":["ground"],"60":["water1"],"61":["water1"],"62":["water1"],"63":["humanshape"],"64":["humanshape"],"65":["humanshape"],"66":["humanshape"],"67":["humanshape"],"68":["humanshape"],"69":["plant"],"70":["plant"],"71":["plant"],"72":["water3"],"73":["water3"],"74":["mineral"],"75":["mineral"],"76":["mineral"],"77":["ground"],"78":["ground"],"79":["monster","water1"],"80":["monster","water1"],"81":["mineral"],"82":["mineral"],"83":["flying","ground"],"84":["flying"],"85":["flying"],"86":["water1","ground"],"87":["water1","ground"],"88":["indeterminate"],"89":["indeterminate"],"90":["water3"],"91":["water3"],"92":["indeterminate"],"93":["indeterminate"],"94":["indeterminate"],"95":["mineral"],"96":["humanshape"],"97":["humanshape"],"98":["water3"],"99":["water3"],"100":["mineral"],"101":["mineral"],"102":["plant"],"103":["plant"],"104":["monster"],"105":["monster"],"106":["humanshape"],"107":["humanshape"],"108":["monster"],"109":["indeterminate"],"110":["indeterminate"],"111":["monster","ground"],"112":["monster","ground"],"113":["fairy"],"114":["plant"],"115":["monster"],"116":["water1","dragon"],"117":["water1","dragon"],"118":["water2"],"119":["water2"],"120":["water3"],"121":["water3"],"122":["humanshape"],"123":["bug"],"124":["humanshape"],"125":["humanshape"],"126":["humanshape"],"127":["bug"],"128":["ground"],"129":["water2","dragon"],"130":["water2","dragon"],"131":["monster","water1"],"132":["ditto"],"133":["ground"],"134":["ground"],"135":["ground"],"136":["ground"],"137":["mineral"],"138":["water1","water3"],"139":["water1","water3"],"140":["water1","water3"],"141":["water1","water3"],"142":["flying"],"143":["monster"],"144":["no-eggs"],"145":["no-eggs"],"146":["no-eggs"],"147":["water1","dragon"],"148":["water1","dragon"],"149":["water1","dragon"],"150":["no-eggs"],"151":["no-eggs"],"200":["indeterminate"],"353":["indeterminate"],"355":["indeterminate"],"708":["plant","indeterminate"],"710":["indeterminate"],"607":["indeterminate"],"425":["indeterminate"],"562":["mineral","indeterminate"],"778":["indeterminate"],"854":["mineral","indeterminate"],"442":["indeterminate"],"479":["indeterminate"],"781":["mineral"],"864":["water1","water3"],"491":["no-eggs"],"802":["no-eggs"],"487":["no-eggs"],"897":["no-eggs"],"429":["indeterminate"],"354":["indeterminate"],"356":["indeterminate"],"477":["indeterminate"],"709":["plant","indeterminate"],"711":["indeterminate"],"608":["indeterminate"],"609":["indeterminate"],"426":["indeterminate"],"563":["mineral","indeterminate"],"855":["mineral","indeterminate"]};
+/*MI-END*/
+/* ===== TAILLES (XS à XL), BOÎTES, MISSIONS, PENSION ===== */
+const SZR=[[.70,.85],[.85,.94],[.94,1.06],[1.06,1.15],[1.15,1.30]],SZN=['XS','S','M','L','XL'];
+const shinyP=()=>SHINY*(S.charm?2:1);
+function rollSz(b=0){const r=Math.random()*100,k=r<1?0:r<25?1:r<75-b?2:r<99?3:4,[a,c]=SZR[k];return +(a+Math.random()*(c-a)).toFixed(3)}
+const szCat=c=>c<.85?0:c<.94?1:c<1.06?2:c<1.15?3:4;
+const szCm=m=>Math.round((HGT[m.id]||10)*10*(m.sz||1));
+const fmtLen=cm=>cm>=100?(cm/100).toFixed(2).replace('.',',')+' m':cm+' cm';
+const szBadge=m=>`<span class="szb s${szCat(m.sz||1)}">${SZN[szCat(m.sz||1)]}</span>`;
+const szTxt=(c,id)=>`taille ${SZN[szCat(c)]} · ${fmtLen(Math.round((HGT[id]||10)*10*c))}`;
+const ensureSz=m=>{if(!m.sz)m.sz=rollSz();return m};
+
+/* --- boîtes : 12 × 30 cases --- */
+const BOX_N=12,BOX_S=30;
+const boxName=i=>(S.bn&&S.bn[i])||('Boîte '+(i+1));
+const inBox=m=>!m.team&&!m.pen;
+const boxFull=()=>S.box.filter(inBox).length>=BOX_N*BOX_S;
+function boxSync(){
+ const occ=new Set();
+ S.box.forEach(m=>{ensureSz(m);
+  if(!inBox(m)){m.bx=null;m.sl=null;return}
+  if(m.bx!=null&&m.sl!=null&&m.bx>=0&&m.bx<BOX_N&&m.sl>=0&&m.sl<BOX_S){const k=m.bx*BOX_S+m.sl;if(occ.has(k)){m.bx=null;m.sl=null}else occ.add(k)}
+  else{m.bx=null;m.sl=null}});
+ let k=0;
+ S.box.forEach(m=>{if(inBox(m)&&m.bx==null){while(occ.has(k)&&k<BOX_N*BOX_S)k++;if(k<BOX_N*BOX_S){m.bx=Math.floor(k/BOX_S);m.sl=k%BOX_S;occ.add(k)}}});
+}
+function sortBox(key){
+ boxSync();const bi=P.bx||0,l=S.box.filter(m=>inBox(m)&&m.bx===bi);
+ l.sort((a,b)=>key==='lvl'?b.lvl-a.lvl:key==='name'?BY[a.id][1].localeCompare(BY[b.id][1]):key==='fav'?((b.fav?1:0)-(a.fav?1:0))||(a.id-b.id):key==='sz'?(b.sz||1)-(a.sz||1):a.id-b.id);
+ l.forEach((m,i)=>{m.sl=i});save();render(true);
+}
+function pkMoveTo(tg){
+ boxSync();const m=S.box.find(x=>x.uid===P.mv);if(!m){P.mv=null;render(true);return}
+ const bi=P.bx||0,teamN=S.box.filter(x=>x.team).length;
+ if(tg.sl!=null){
+  if(m.team){if(teamN<=1){P.mv=null;render(true);return}m.team=false}
+  m.bx=bi;m.sl=tg.sl;
+ }else if(tg.team){
+  if(m.team||teamN>=6){P.mv=null;render(true);return}
+  m.team=true;m.bx=null;m.sl=null;
+ }else{
+  const o=S.box.find(x=>x.uid===tg.uid);if(!o||o===m||(m.team&&o.team)){P.mv=null;render(true);return}
+  if(m.team&&!o.team){m.team=false;m.bx=o.bx;m.sl=o.sl;o.team=true;o.bx=null;o.sl=null}
+  else if(!m.team&&o.team){o.team=false;o.bx=m.bx;o.sl=m.sl;m.team=true;m.bx=null;m.sl=null}
+  else{const a=[m.bx,m.sl];m.bx=o.bx;m.sl=o.sl;o.bx=a[0];o.sl=a[1]}
+ }
+ P.mv=null;save();render(true);
+}
+function boxList(){
+ boxSync();const cnt=Array(BOX_N).fill(0);S.box.forEach(m=>{if(inBox(m)&&m.bx!=null)cnt[m.bx]++});
+ const o=modalOv(`<h4 class="px">Choisir une boîte</h4><div class="bxg">${cnt.map((c,i)=>`<div class="bxi ${i===(P.bx||0)?'cur':''}" data-m="go" data-v="${i}"><b>${esc(boxName(i))}</b><small>${c}/${BOX_S}</small><a class="bxe" data-m="ren" data-v="${i}"><i class="ti ti-pencil"></i></a></div>`).join('')}</div><div class="svnote" style="margin:0">Touche le crayon pour renommer une boîte.</div><div class="pbt"><a class="btn" data-m="x">Fermer</a></div>`);
+ o._h=b=>{const k=b.dataset.m,i=+b.dataset.v;if(k==='go'){P.bx=i;return}if(k==='ren'){o.remove();boxRename(i);return false}};
+}
+function boxRename(i){
+ const o=modalOv(`<h4 class="px">Renommer la boîte ${i+1}</h4><input id="bxn" maxlength="14" value="${esc(boxName(i))}" autocomplete="off" style="width:100%;background:#0b1030;border:2px solid #ffffff44;border-radius:12px;color:#fff;padding:10px 12px;font:700 15px Nunito,sans-serif"><div class="pbt"><a class="btn" data-m="x">Annuler</a><a class="btn y" data-m="ok">Valider</a></div>`);
+ o._h=b=>{if(b.dataset.m==='ok'){const v=(o.querySelector('#bxn').value||'').trim().slice(0,14);S.bn=S.bn||[];S.bn[i]=v;save()}};
+}
+function newAct(a,t){
+ if(a==='bnav'){P.bx=((P.bx||0)+(+t.dataset.v)+BOX_N)%BOX_N;render(true);return true}
+ if(a==='blist'){boxList();return true}
+ if(a==='bslot'){if(P.mv)pkMoveTo({sl:+t.dataset.v});return true}
+ if(a==='tslot'){if(P.mv)pkMoveTo({team:1});return true}
+ if(a==='pkmvx'){P.mv=null;render(true);return true}
+ if(a==='pks'&&P.mv){pkMoveTo({uid:t.dataset.uid});return true}
+ if(a==='qclaim'){qClaim(t.dataset.v);return true}
+ if(a==='qreset'){const q=qS();q.d.k='';q.w.k='';qS();save();render(true);return true}
+ return false;
+}
+function pkGrid(list){
+ const bi=P.bx||0,ok=new Set(list.map(m=>m.uid)),flt=!!(P.q||P.type),by={};
+ S.box.forEach(m=>{if(inBox(m)&&m.bx===bi)by[m.sl]=m});
+ let h='';
+ for(let s=0;s<BOX_S;s++){const m=by[s];
+  if(!m){h+=`<div class="pkc em ${P.mv?'tg':''}" ${P.mv?`data-act="bslot" data-v="${s}"`:''}></div>`;continue}
+  const k=szCat(m.sz||1);
+  h+=`<div class="pkc ${m.uid===P.s2?'sel':''} ${m.uid===P.mv?'mv':''} ${flt&&!ok.has(m.uid)?'dim':''}" data-act="pks" data-uid="${m.uid}" title="${BY[m.id][1]}"><img src="${m.sh?SH(m.id):SP(m.id)}" referrerpolicy="no-referrer" alt="">${m.sh?'<i class="pks2">✦</i>':''}${m.fav?'<i class="pkfv">♥</i>':''}<i class="pkl2">${m.lvl}</i>${k===0||k===4?`<i class="pkz">${SZN[k]}</i>`:''}</div>`}
+ return h;
+}
+function pkBody(team,list,types){
+ boxSync();
+ const sp=m=>`<img src="${m.sh?SH(m.id):SP(m.id)}" referrerpolicy="no-referrer" alt="">`;
+ const rows=Array.from({length:6},(_,i)=>{const m=team[i];return m?`<div class="pkr ${PKREP||P.mv?'tgt':''} ${P.mv===m.uid?'mvs':''}" data-act="pks" data-uid="${m.uid}"><div class="pkl"><span class="pkv">Niv. ${m.lvl}</span><b>${BY[m.id][1]}${m.sh?' ✦':''}</b></div>${sp(m)}</div>`:`<div class="pkr em ${P.mv?'tgt':''}" ${P.mv?'data-act="tslot"':''}><span>—</span></div>`}).join('');
+ const bi=P.bx||0,n=S.box.filter(m=>inBox(m)&&m.bx===bi).length,mvm=P.mv&&S.box.find(x=>x.uid===P.mv);
+ return `${PKREP?`<div class="pkrep">Équipe complète : touche le Pokémon à remplacer <a data-act="pkrepx">Annuler</a></div>`:''}${mvm?`<div class="pkrep">Déplacer ${BY[mvm.id][1]} : touche une case libre ou un Pokémon <a data-act="pkmvx">Annuler</a></div>`:''}
+ <div class="pkm"><div class="pkp"><a class="pkh" data-act="teamedit">Équipe ${team.length}/6<i class="ti ti-arrows-sort"></i></a>${rows}</div>
+ <div class="pkb"><div class="pkh pkbh"><a data-act="bnav" data-v="-1"><i class="ti ti-chevron-left"></i></a><a class="pkbt" data-act="blist"><span>${esc(boxName(bi))} <i class="ti ti-chevron-down"></i></span><small>${n}/${BOX_S}</small></a><a data-act="bnav" data-v="1"><i class="ti ti-chevron-right"></i></a></div>
+ <div class="pkf"><input id="pkq" placeholder="Rechercher" value="${esc(P.q)}" autocomplete="off"><select data-pk="type"><option value="">Types</option>${types.map(t=>`<option ${P.type===t?'selected':''}>${t}</option>`).join('')}</select><select data-pk="sort"><option value="">Trier</option>${[['id','N°'],['lvl','Niveau'],['name','Nom'],['fav','Favoris'],['sz','Taille']].map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select></div>
+ <div class="pkg">${pkGrid(list)}</div></div></div>`;
+}
+/* ===== MISSIONS : quotidiennes, hebdomadaires, défis globaux ===== */
+const TYPES_ALL=['Normal','Feu','Eau','Plante','Électrik','Glace','Combat','Poison','Sol','Vol','Psy','Insecte','Roche','Spectre','Dragon','Ténèbres','Acier','Fée'];
+const QT0={1:{c:100,g:0},2:{c:200,g:3},3:{c:400,g:8}};
+const qrc=()=>{const c=CFG();return c.qr||(c.qr=JSON.parse(JSON.stringify(QT0)))};
+const qMult=()=>CFG().qw||4;
+const qRew=(tr,mult=1)=>{const r=qrc()[tr]||QT0[tr],a=[];if(r.c)a.push({k:'coin',q:r.c*mult});if(r.g)a.push({k:'gem',q:r.g*mult});return a};
+const tyOwn=()=>{const c={};S.box.filter(m=>!m.pen).forEach(m=>BY[m.id][2].forEach(t=>c[t]=(c[t]||0)+1));return c};
+const pType=()=>pick([...new Set(SPECIES.flatMap(s=>s[2]))]);
+const pTeamType=()=>{const c=tyOwn(),l=Object.keys(c).filter(t=>c[t]>=3);return l.length?pick(l):null};
+const dQ=(g,tr,need,t,o={})=>({g,tr,need,t:typeof t==='function'?t:()=>t,...o});
+const QD={
+ cap3:dQ('cap',1,3,'Capturer 3 Pokémon',{ev:'cap'}),
+ capT:dQ('capT',1,1,x=>`Capturer 1 Pokémon de type ${x.p}`,{ev:'cap',par:pType,f:(d,x)=>d.types.includes(x.p)}),
+ fish3:dQ('fish',1,3,'Pêcher 3 Pokémon',{ev:'cap',r:1,f:d=>d.fish}),
+ tw1:dQ('tw',1,1,'Gagner 1 combat de dresseur',{ev:'tw'}),
+ pens:dQ('pens',1,2,'Déposer 2 Pokémon à la pension',{ev:'pens'}),
+ gacha1:dQ('gacha',1,1,'Faire 1 tirage au Gacha',{ev:'gacha'}),
+ buy1:dQ('buy',1,1,'Acheter un objet à la boutique',{ev:'buy'}),
+ chest:dQ('chest',1,1,'Ouvrir le coffre quotidien',{ev:'chest'}),
+ cap5:dQ('cap',2,5,'Capturer 5 Pokémon',{ev:'cap'}),
+ capL:dQ('capL',2,1,'Capturer un Pokémon de taille L ou XL',{ev:'cap',f:d=>d.cat>=3}),
+ capNew:dQ('capNew',2,1,'Capturer une nouvelle espèce pour le Pokédex',{ev:'cap',f:d=>d.newSp}),
+ fish5:dQ('fish',2,5,'Pêcher 5 Pokémon',{ev:'cap',r:1,f:d=>d.fish}),
+ fishL:dQ('fishL',2,1,'Pêcher un Pokémon de taille L ou XL',{ev:'cap',r:1,f:d=>d.fish&&d.cat>=3}),
+ tw3:dQ('tw',2,3,'Gagner 3 combats de dresseur',{ev:'tw'}),
+ twT:dQ('twT',2,1,x=>`Battre 1 dresseur avec une équipe 100 % type ${x.p}`,{ev:'tw',par:pTeamType,f:(d,x)=>d.mono.includes(x.p)}),
+ crit3:dQ('crit',2,3,'Infliger 3 coups critiques',{ev:'crit'}),
+ eff5:dQ('eff',2,5,'Infliger 5 coups super efficaces',{ev:'eff'}),
+ hatch1:dQ('hatch',2,1,'Faire éclore 1 œuf',{ev:'hatch'}),
+ evo1:dQ('evo',2,1,'Faire évoluer 1 Pokémon',{ev:'evo'}),
+ spend1k:dQ('spend',2,1000,'Dépenser 1 000 pièces à la boutique',{ev:'spend'}),
+ capIV:dQ('capIV',3,1,'Capturer un Pokémon avec une stat parfaite (IV 31)',{ev:'cap',f:d=>d.iv31}),
+ fish150:dQ('fish150',3,1,'Pêcher un Pokémon de plus de 1,5 m',{ev:'cap',r:1,f:d=>d.fish&&d.cm>=150}),
+ fishL3:dQ('fishL',3,3,'Pêcher 3 Pokémon de taille L ou XL',{ev:'cap',r:1,f:d=>d.fish&&d.cat>=3}),
+ twT3:dQ('twT',3,3,x=>`Battre 3 dresseurs avec une équipe 100 % type ${x.p}`,{ev:'tw',par:pTeamType,f:(d,x)=>d.mono.includes(x.p)}),
+ noDmg:dQ('noDmg',3,1,'Gagner un combat de dresseur sans perdre de PV',{ev:'tw',f:d=>d.noDmg}),
+ gym:dQ('gym',3,1,'Battre un champion d\'arène',{ev:'tw',f:d=>d.gym})
+};
+const QW={
+ w_cap20:dQ('cap',2,20,'Capturer 20 Pokémon',{ev:'cap'}),
+ w_fish15:dQ('fish',2,15,'Pêcher 15 Pokémon',{ev:'cap',r:1,f:d=>d.fish}),
+ w_fishL3:dQ('fishL',3,3,'Pêcher 3 Pokémon de taille L ou XL',{ev:'cap',r:1,f:d=>d.fish&&d.cat>=3}),
+ w_fishXL:dQ('fishXL',3,1,'Pêcher un Pokémon XL',{ev:'cap',r:1,f:d=>d.fish&&d.cat===4}),
+ w_tw10:dQ('tw',2,10,'Gagner 10 combats de dresseur',{ev:'tw'}),
+ w_twT5:dQ('twT',3,5,x=>`Battre 5 dresseurs avec une équipe 100 % type ${x.p}`,{ev:'tw',par:pTeamType,f:(d,x)=>d.mono.includes(x.p)}),
+ w_gym3:dQ('gym',3,3,'Battre 3 champions d\'arène',{ev:'tw',f:d=>d.gym}),
+ w_new5:dQ('capNew',2,5,'Compléter 5 nouvelles entrées du Pokédex',{ev:'cap',f:d=>d.newSp}),
+ w_hatch3:dQ('hatch',2,3,'Faire éclore 3 œufs',{ev:'hatch'}),
+ w_evo3:dQ('evo',2,3,'Faire évoluer 3 Pokémon',{ev:'evo'}),
+ w_shiny:dQ('shiny',3,1,'Capturer un Pokémon chromatique',{ev:['cap','hatch'],f:d=>d.sh}),
+ w_types5:dQ('types',3,5,'Capturer 5 Pokémon de types différents',{ev:'cap',u:1}),
+ w_chest5:dQ('chest',2,5,'Ouvrir le coffre 5 jours dans la semaine',{ev:'chest'}),
+ w_spend5k:dQ('spend',2,5000,'Dépenser 5 000 pièces à la boutique',{ev:'spend'}),
+ w_gacha5:dQ('gacha',2,5,'Faire 5 tirages au Gacha',{ev:'gacha'}),
+ w_dq15:dQ('dq',2,15,'Terminer 15 missions quotidiennes',{ev:'dq'}),
+ w_pegg3:dQ('pegg',2,3,'Récupérer 3 œufs à la pension',{ev:'pegg',n:1})
+};
+const QDEF={...QD,...QW};
+const GM=q=>[{k:'gem',q}];
+const dexN=()=>Object.entries(S.dex).filter(([id,v])=>v==='c'&&+id<=151).length;
+const QG=[
+ {id:'ligue',t:'Battre la Ligue',ic:'trophy',st:[1],rw:[GM(50)],v:()=>advS().step>=ADV.length?1:0},
+ {id:'arene',t:'Battre les 8 champions d\'arène',ic:'medal',st:[8],rw:[GM(40)],v:()=>advS().badges.length},
+ {id:'shiny',t:'Capturer des Pokémon chromatiques',ic:'sparkles',st:[1,3,10,25],rw:[GM(30),GM(60),GM(150),GM(300)],v:()=>Math.max(S.q.g.shiny||0,S.box.filter(m=>m.sh).length)},
+ {id:'dex',t:'Remplir le Pokédex (Charme Chroma à 151)',ic:'book',st:[25,50,100,151],rw:[[{k:'coin',q:500}],GM(20),[{k:'gem',q:50},{k:'ball',v:'hyper',q:5}],GM(100)],v:dexN},
+ {id:'cap',t:'Capturer des Pokémon',ic:'circle-dot',st:[100,500,1000],rw:[[{k:'coin',q:500}],GM(30),GM(100)],v:()=>S.q.g.cap||0},
+ {id:'fish',t:'Pêcher des Pokémon',ic:'fish',st:[50,250,1000],rw:[[{k:'coin',q:300}],GM(20),GM(80)],v:()=>S.q.g.fish||0},
+ {id:'fishXL',t:'Pêcher un Pokémon XL',ic:'ruler',st:[1,5],rw:[GM(20),GM(60)],v:()=>S.q.g.fishXL||0},
+ {id:'xsxl',t:'Obtenir un Pokémon XS ou XL',ic:'arrows-vertical',st:[1,5],rw:[GM(20),GM(60)],v:()=>Math.max(S.q.g.xsxl||0,S.box.filter(m=>{const k=szCat(m.sz||1);return k===0||k===4}).length)},
+ {id:'hatch',t:'Faire éclore des œufs',ic:'egg',st:[10,50],rw:[GM(20),GM(60)],v:()=>S.q.g.hatch||0},
+ {id:'lvl',t:'Atteindre le niveau 100 avec un Pokémon',ic:'arrow-up',st:[1],rw:[GM(30)],v:()=>S.box.some(m=>m.lvl>=100)?1:0},
+ {id:'evo',t:'Faire évoluer des Pokémon',ic:'sparkles',st:[10,50],rw:[GM(20),GM(60)],v:()=>S.q.g.evo||0},
+ {id:'tw',t:'Gagner des combats de dresseur',ic:'swords',st:[50,250,1000],rw:[GM(20),GM(60),GM(150)],v:()=>S.q.g.tw||0},
+ {id:'dq',t:'Terminer des missions quotidiennes',ic:'list-check',st:[30,100,365],rw:[GM(20),GM(60),GM(200)],v:()=>S.q.g.dq||0},
+ {id:'chest',t:'Ouvrir le coffre quotidien',ic:'gift',st:[7,30,100],rw:[GM(10),GM(30),GM(80)],v:()=>S.q.g.chest||0}
+];
+const weekKey=()=>{const d=new Date(Date.now()+(S.dayShift||0)*864e5),k=(d.getDay()+6)%7,m=new Date(d.getFullYear(),d.getMonth(),d.getDate()-k);return m.getFullYear()+'-'+(m.getMonth()+1)+'-'+m.getDate()};
+const weekLeft=()=>{const d=new Date(Date.now()+(S.dayShift||0)*864e5);return 7-((d.getDay()+6)%7)};
+function qGen(defs,plan){
+ const out=[],used=new Set();
+ plan.forEach(tr=>{
+  const ids=Object.keys(defs).filter(i=>defs[i].tr===tr&&!used.has(defs[i].g)&&!(defs[i].r&&(S.rod||0)<1)).sort(()=>Math.random()-.5);
+  for(const id of ids){const d=defs[id];let p=null;if(d.par){p=d.par();if(!p)continue}
+   used.add(d.g);out.push({id,tr,n:0,p,done:false,claimed:false});break}
+ });
+ return out;
+}
+function qS(){
+ const q=S.q||(S.q={d:{k:'',list:[]},w:{k:'',list:[]},g:{},gc:{}});
+ if(!q.g)q.g={};if(!q.gc)q.gc={};
+ const tk=todayKey();if(q.d.k!==tk){q.d={k:tk,list:qGen(QD,[1,1,2,3]),bonus:false}}
+ const wk=weekKey();if(q.w.k!==wk){q.w={k:wk,list:qGen(QW,[2,2,2,3,3]),bonus:false}}
+ if(!q.g.i){q.g.i=1;q.g.cap=S.box.length}
+ return q;
+}
+function qCheck(){if(!S.charm&&dexN()>=151){S.charm=true;S.qnote='Charme Chroma obtenu : tes chances de croiser un chromatique sont doublées !'}}
+const qInfo=(m,x)=>({types:BY[m.id][2],t0:BY[m.id][2][0],cat:szCat(m.sz||1),cm:szCm(m),sh:!!m.sh,iv31:(m.iv||[]).some(v=>v>=31),...x});
+function qCap(m,fish,newSp){ensure(m);qEv('cap',qInfo(m,{fish:!!fish,newSp:!!newSp}))}
+function qTrainer(){
+ const t=B.team,mono=t.length>=3?TYPES_ALL.filter(x=>t.every(f=>(f.types||[]).includes(x))):[],gym=B.adv!=null&&ADV[B.adv]&&ADV[B.adv].kind==='gym';
+ qEv('tw',{mono,noDmg:t.every(f=>f.hp>=f.max),gym});
+}
+function qEv(ev,d={}){
+ const q=qS(),g=q.g;
+ if(ev==='cap'){g.cap=(g.cap||0)+1;if(d.fish){g.fish=(g.fish||0)+1;if(d.cat===4)g.fishXL=(g.fishXL||0)+1}if(d.cat===0||d.cat===4)g.xsxl=(g.xsxl||0)+1;if(d.sh)g.shiny=(g.shiny||0)+1}
+ else if(ev==='hatch'){g.hatch=(g.hatch||0)+1;if(d.cat===0||d.cat===4)g.xsxl=(g.xsxl||0)+1;if(d.sh)g.shiny=(g.shiny||0)+1}
+ else if(ev==='tw')g.tw=(g.tw||0)+1;
+ else if(ev==='evo')g.evo=(g.evo||0)+1;
+ else if(ev==='chest')g.chest=(g.chest||0)+1;
+ [...q.d.list,...q.w.list].forEach(x=>{
+  if(x.done)return;const def=QDEF[x.id];if(!def)return;
+  if(![].concat(def.ev).includes(ev))return;
+  if(def.f&&!def.f(d,x))return;
+  if(def.u){x.seen=x.seen||[];if(!x.seen.includes(d.t0))x.seen.push(d.t0);x.n=x.seen.length}
+  else x.n=(x.n||0)+(d.n||1);
+  if(x.n>=def.need){x.n=def.need;x.done=true}
+ });
+ qCheck();save();
+}
+function qClaim(v){
+ const q=qS(),[t,a]=v.split(':');let rew=[],title='',bonus=false;
+ if(t==='g'){const g=QG.find(x=>x.id===a),c=q.gc[a]||0;if(!g||c>=g.st.length||g.v()<g.st[c])return;rew=g.rw[c].slice();q.gc[a]=c+1;title=g.t}
+ else{
+  const L=t==='d'?q.d:q.w,x=L.list[+a];if(!x||!x.done||x.claimed)return;
+  x.claimed=true;rew=qRew(x.tr,t==='w'?qMult():1);title=QDEF[x.id].t(x);
+  if(t==='d')q.g.dq=(q.g.dq||0)+1;
+  if(L.list.every(y=>y.claimed)&&!L.bonus){L.bonus=true;bonus=true;rew=rew.concat(t==='d'?[{k:'gem',q:5}]:[{k:'gem',q:25},{k:'egg',v:'c'},{k:'ball',v:'super',q:5}])}
+ }
+ rew.forEach(bossGive);qCheck();save();
+ if(t==='d')qEv('dq');
+ render(true);
+ modalOv(`<h4 class="px">Récompense</h4><div class="svnote" style="margin:0">${esc(title)}${bonus?'<br><b>Bonus : toutes les missions terminées !</b>':''}</div><div class="prows">${rew.map(e=>`<div class="prow"><span class="dy-o">${rewIco(e)}</span><div class="grow"><b>${rewTxt(e)}</b></div></div>`).join('')}</div><div class="pbt"><a class="btn y" data-m="x">OK</a></div>`);
+}
+function quetesView(){
+ const q=qS();qCheck();
+ const rt=r=>r.map(rewTxt).join(' · ');
+ const row=(x,k,i)=>{const def=QDEF[x.id],need=def.need,pct=Math.min(100,Math.round((x.n||0)/need*100)),rw=qRew(x.tr,k==='w'?qMult():1);
+  const act=x.claimed?'<i class="ti ti-circle-check" style="color:var(--g);font-size:26px"></i>':x.done?`<a class="btn y" data-act="qclaim" data-v="${k}:${i}">Récupérer</a>`:'';
+  return `<div class="li ${x.claimed?'qdone':''}"><span class="qt q${x.tr}" title="${['Facile','Moyen','Difficile'][x.tr-1]}"></span><div class="grow"><b>${esc(def.t(x))}</b>${bar(pct,x.done?'var(--g)':'var(--c)')}<div style="font-size:12px;color:var(--m)">${Math.min(x.n||0,need)}/${need} · ${rt(rw)}</div></div>${act}</div>`};
+ const dl=q.d.list.map((x,i)=>row(x,'d',i)).join(''),wl=q.w.list.map((x,i)=>row(x,'w',i)).join('');
+ const hh=Math.floor(msToMidnight()/36e5),mm=Math.floor(msToMidnight()/6e4)%60;
+ const dn=q.d.list.filter(x=>x.claimed).length,wn=q.w.list.filter(x=>x.claimed).length;
+ const gl=QG.map(g=>{const c=q.gc[g.id]||0,fin=c>=g.st.length,cur=fin?g.st[g.st.length-1]:g.st[c],val=Math.min(g.v(),cur),ok=!fin&&g.v()>=g.st[c];
+  const act=fin?'<i class="ti ti-circle-check" style="color:var(--g);font-size:26px"></i>':ok?`<a class="btn y" data-act="qclaim" data-v="g:${g.id}">Récupérer</a>`:'';
+  return `<div class="li ${fin?'qdone':''}"><div class="ico"><i class="ti ti-${g.ic}"></i></div><div class="grow"><b>${g.t}</b>${g.st.length>1?` <span class="chip">Palier ${Math.min(c+1,g.st.length)}/${g.st.length}</span>`:''}${bar(Math.round(val/cur*100),fin||ok?'var(--g)':'var(--c)')}<div style="font-size:12px;color:var(--m)">${val}/${cur} · ${fin?'Terminé':rt(g.rw[c])}</div></div>${act}</div>`}).join('');
+ return `<div class="title"><h3 class="px">Quêtes</h3></div>
+ ${S.charm?`<div class="panel" style="border-color:var(--y)"><b><i class="ti ti-sparkles" style="color:var(--y)"></i> Charme Chroma actif</b><div style="font-size:12px;color:var(--m)">Pokédex complet : chances de croiser un chromatique doublées.</div></div>`:''}
+ <div class="panel"><h4 class="px">Quotidiennes <small style="font-family:Nunito;color:var(--m)">· ${hh} h ${mm} min</small></h4><div class="list">${dl}</div><div style="font-size:12px;color:var(--m);margin-top:6px"><i class="ti ti-gift"></i> Toutes récupérées (${dn}/${q.d.list.length}) : +5 gemmes</div></div>
+ <div class="panel"><h4 class="px">Hebdomadaires <small style="font-family:Nunito;color:var(--m)">· ${weekLeft()} jour${weekLeft()>1?'s':''}</small></h4><div class="list">${wl}</div><div style="font-size:12px;color:var(--m);margin-top:6px"><i class="ti ti-gift"></i> Toutes récupérées (${wn}/${q.w.list.length}) : Œuf rare, 25 gemmes, 5 Super Balls</div></div>
+ <div class="panel"><h4 class="px">Défis</h4><div class="list">${gl}</div></div>`;
+}
+function adminQuests(){
+ const r=qrc();
+ return [1,2,3].map(t=>`<div class="arow" style="flex-wrap:wrap"><span class="qt q${t}"></span><div class="grow"><b>${['Facile','Moyen','Difficile'][t-1]}</b></div><div style="display:flex;gap:6px;width:100%;margin-top:6px"><input class="ain" type="number" min="0" max="99999" value="${r[t].c}" data-aq="${t}:c" style="flex:1" title="Pièces"><input class="ain" type="number" min="0" max="99999" value="${r[t].g}" data-aq="${t}:g" style="flex:1" title="Gemmes"></div><div style="font-size:11px;color:var(--m);width:100%">Pièces · Gemmes</div></div>`).join('')+`<div class="arow"><div class="grow"><b>Multiplicateur hebdomadaire</b></div><input class="ain" type="number" min="1" max="20" value="${qMult()}" data-aq="w:x" style="width:84px!important;flex:none"></div><a class="btn" data-act="qreset" style="margin-top:6px"><i class="ti ti-refresh"></i>Tirer de nouvelles missions</a>`;
+}
+document.addEventListener('change',e=>{const d=e.target.dataset&&e.target.dataset.aq;if(!d)return;const[a,b]=d.split(':');
+ if(a==='w')CFG().qw=Math.max(1,Math.min(20,+e.target.value||4));else qrc()[a][b]=Math.max(0,Math.min(99999,+e.target.value||0));
+ save();render(true)});
+
+/* ===== PENSION (accouplement) → œufs à faire éclore à la nurserie ===== */
+const EGN={ground:'Terrestre',indeterminate:'Amorphe',monster:'Monstrueux',water1:'Eau 1',plant:'Végétal',humanshape:'Humanoïde',mineral:'Minéral',water3:'Eau 3',dragon:'Draconique',bug:'Insecte',flying:'Aérien','no-eggs':'Inconnu',fairy:'Féerique',water2:'Eau 2',ditto:'Métamorph'};
+const eg=id=>EGGG[id]||['no-eggs'];
+const PEN_T=[0,15*60000,8*60000];
+function penFix(){
+ const p=S.pen||(S.pen={a:null,b:null,last:Date.now(),eggs:[]});
+ if(p.a&&!S.box.find(m=>m.uid===p.a))p.a=null;if(p.b&&!S.box.find(m=>m.uid===p.b))p.b=null;
+ return p;
+}
+const penMon=u=>u?S.box.find(m=>m.uid===u):null;
+function penCompat(a,b){
+ if(!a||!b)return -1;const ga=eg(a.id),gb=eg(b.id);
+ if(ga.includes('no-eggs')||gb.includes('no-eggs'))return 0;
+ const da=ga.includes('ditto'),db=gb.includes('ditto');if(da&&db)return 0;if(da||db)return 1;
+ if(!ga.some(x=>gb.includes(x)))return 0;
+ return a.id===b.id?2:1;
+}
+function penEgg(A,B){
+ const cand=[A,B].filter(m=>!eg(m.id).includes('ditto')),par=pick(cand.length?cand:[A]);
+ let id=par.id;while(EVP[id])id=EVP[id];
+ ensure(A);ensure(B);
+ const pv=[0,1,2,3,4,5].sort(()=>Math.random()-.5).slice(0,2).map(q=>[q,(Math.random()<.5?A:B).iv[q]]);
+ return{k:eggTier(id),id,pv};
+}
+function penRoll(){
+ const p=penFix(),A=penMon(p.a),B=penMon(p.b),c=penCompat(A,B);if(c<=0)return 0;
+ const T=PEN_T[c],now=Date.now();let n=0;
+ while(now-p.last>=T&&p.eggs.length<3&&n<3){p.last+=T;p.eggs.push(penEgg(A,B));n++}
+ if(p.eggs.length>=3)p.last=now;
+ if(n)save();return n;
+}
+function penSet(slot,m){const p=penFix();m.pen=true;m.bx=null;m.sl=null;p[slot]=m.uid;if(p.a&&p.b)p.last=Date.now();qEv('pens');save();render(true)}
+function penRm(slot){
+ const p=penFix(),m=penMon(p[slot]);if(!m)return;
+ if(boxFull()){modalOv(`<h4 class="px">Boîtes pleines</h4><div class="svnote" style="margin:0">Libère une case avant de reprendre ${BY[m.id][1]}.</div><div class="pbt"><a class="btn y" data-m="x">OK</a></div>`);return}
+ m.pen=false;p[slot]=null;p.last=Date.now();save();render(true);
+}
+function penCollect(){
+ const p=penFix(),n=p.eggs.length;if(!n)return;breed();
+ p.eggs.forEach(e=>S.eggs.push(e));p.eggs=[];p.last=Date.now();qEv('pegg',{n});save();render(true);
+}
+function penPick(slot){
+ const p=penFix(),other=penMon(slot==='a'?p.b:p.a);
+ let l=S.box.filter(m=>inBox(m)&&!(other&&m.uid===other.uid));
+ l=other?l.filter(m=>penCompat(other,m)>0):l.filter(m=>!eg(m.id).includes('no-eggs'));
+ l.sort((a,b)=>a.id-b.id||b.lvl-a.lvl);
+ const rows=l.slice(0,120).map(m=>`<div class="prow" data-m="set" data-v="${m.uid}" style="cursor:pointer"><img class="pmi" src="${SPS(m.id)}" referrerpolicy="no-referrer" alt=""><div class="grow"><b>${BY[m.id][1]}${m.sh?' ✦':''} ${szBadge(m)}</b><small>Niv. ${m.lvl} · ${eg(m.id).map(g=>EGN[g]||g).join(' / ')}</small></div></div>`).join('')||'<div class="svnote">Aucun Pokémon compatible dans tes boîtes (les Pokémon de l\'équipe doivent d\'abord être rangés).</div>';
+ const o=modalOv(`<h4 class="px">Déposer à la pension</h4><div class="svnote" style="margin:0">${other?'Seuls les Pokémon compatibles avec '+BY[other.id][1]+' sont proposés (même groupe d\'œuf, ou Métamorph).':'Les Pokémon du groupe « Inconnu » (légendaires…) ne peuvent pas se reproduire.'}</div><div class="prows">${rows}</div><div class="pbt"><a class="btn" data-m="x">Annuler</a></div>`);
+ o._h=b=>{if(b.dataset.m==='set'){const m=S.box.find(x=>x.uid===b.dataset.v);if(m)penSet(slot,m)}};
+}
+function penTab(){
+ const p=penFix();penRoll();
+ const A=penMon(p.a),B=penMon(p.b),c=penCompat(A,B),T=PEN_T[Math.max(0,c)]||1;
+ const slot=(m,k)=>m?`<div class="pen-s on"><img src="${m.sh?SH(m.id):SP(m.id)}" referrerpolicy="no-referrer" alt=""><b>${BY[m.id][1]}${m.sh?' ✦':''}</b><small>Niv. ${m.lvl} ${szBadge(m)}</small><div class="pen-g">${eg(m.id).map(g=>`<span class="chip">${EGN[g]||g}</span>`).join('')}</div><a class="btn sm" data-act="prm" data-v="${k}">Reprendre</a></div>`:`<a class="pen-s em" data-act="pdep" data-v="${k}"><i class="ti ti-plus" style="font-size:26px"></i><b>Déposer un Pokémon</b></a>`;
+ const msg=c===-1?'Dépose deux Pokémon pour former un couple.':c===0?'Ces deux Pokémon ne s\'entendent pas (aucun groupe d\'œuf en commun).':c===1?'Ils s\'entendent bien : un œuf toutes les 15 min.':'Ils s\'adorent ! Un œuf toutes les 8 min.';
+ const pct=c>0?Math.min(100,Math.round((Date.now()-p.last)/T*100)):0;
+ const eggs=p.eggs.map(e=>eggImg(e.k,44)).join('');
+ return `<div class="panel"><h4 class="px">Pension</h4><div class="pen">${slot(A,'a')}${slot(B,'b')}</div>
+ <div class="pen-m ${c>0?'ok':''}"><i class="ti ti-${c>0?'heart':'heart-off'}"></i> ${msg}</div>
+ ${c>0?`<div class="bar"><i id="penbar" style="width:${p.eggs.length>=3?100:pct}%;background:var(--o)"></i></div><div style="font-size:12px;color:var(--m);margin-top:4px">${p.eggs.length>=3?'Pension pleine : récupère les œufs.':'Prochain œuf en cours…'}</div>`:''}
+ <div class="pen-e"><div class="pen-eg">${eggs||'<span style="color:var(--m);font-size:13px">Aucun œuf pour le moment.</span>'}</div><a class="btn y ${p.eggs.length?'':'off'}" ${p.eggs.length?'data-act="pcol"':''}><i class="ti ti-egg"></i>Récupérer (${p.eggs.length})</a></div>
+ <div class="svnote" style="margin:8px 0 0">Les œufs récupérés vont à la réserve : place-les dans un incubateur de la <b>Nurserie</b>. Le bébé hérite de 2 IV de ses parents.</div></div>`;
+}
+setInterval(()=>{if(!S||!S.pen)return;const n=S.pen.eggs.length;penRoll();if(route==='elevage'&&BR.tab==='pension'&&!document.querySelector('.pick-ov')){if(S.pen.eggs.length!==n)render(true);else{const b=document.getElementById('penbar');if(b){const c=penCompat(penMon(S.pen.a),penMon(S.pen.b));if(c>0)b.style.width=(S.pen.eggs.length>=3?100:Math.min(100,Math.round((Date.now()-S.pen.last)/PEN_T[c]*100)))+'%'}}}},2000);
+
 const fresh=()=>({coins:1200,xp:0,lvl:1,balls:{poke:20,super:4,hyper:1},next:1,box:[],dex:{}});
-function mk(id,lvl,sh=false){const s=BY[id];return{uid:Math.random().toString(36).slice(2,9),id,lvl,sh,fav:false,team:false}}
+function mk(id,lvl,sh=false,sz){const s=BY[id];return{uid:Math.random().toString(36).slice(2,9),id,lvl,sh,fav:false,team:false,sz:sz||rollSz()}}
 let S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!S||!S.box)S=fresh();if(!S.evz){S.evz=1;(S.box||[]).forEach(m=>{if(m.ev)m.ev=[0,0,0,0,0,0]})}
 const AVS=[{hud:'img/hud-classique.webp',src:'img/portrait.webp',pos:'66% 14%',org:'66% 22%',sc:2.1,nm:'Classique'},{hud:'img/hud-roi.webp',src:'img/avatar-roi.webp',pos:'60% 18%',org:'60% 22%',sc:2.4,nm:'Roi'}];
 const avO=()=>AVS[S.av]||AVS[0];
@@ -1070,14 +1416,14 @@ function hub(){
 document.addEventListener('click',e=>{if(e.target.id==='hmpk'){const el=e.target;el.classList.remove('hop');void el.offsetWidth;el.classList.add('hop');const b=$('#hmb');if(b)b.textContent='C\'est parti !';setTimeout(()=>go('explorer'),420)}});
 function hmOverlay(html){const o=document.createElement('div');o.className='hm-ov';o.innerHTML=`<div class="hm-ovc">${html}<div style="margin-top:12px"><a class="btn y" id="hmok">OK</a></div></div>`;document.body.appendChild(o);o.querySelector('#hmok').onclick=()=>{o.remove();render()}}
 function gachaPull(){
- const d=dayS();if(d.gacha)return;d.gacha=true;
- {const r=Math.random();if(r<.12){const k=r<.04?'f':'l';breed();S.eggs.push({k,id:pickEgg(k)});save();hmOverlay(`<h4 class="px" style="font-size:11px;color:var(--y)">Gacha du jour</h4>${eggImg(k,110)}<div style="font-weight:900;font-size:18px">${EGGT[k].n} !</div><div style="color:var(--m)">À placer dans un incubateur (Élevage).</div>`);return}}
- const ids=SPECIES.map(x=>x[0]),id=wpick(ids),sh=Math.random()<SHINY,m=mk(id,3+Math.floor(Math.random()*8),sh);
+ const d=dayS();if(d.gacha)return;d.gacha=true;qEv('gacha');
+ {const r=Math.random();if(r<.01){const k=r<.003?'f':'l';breed();S.eggs.push({k,id:pickEgg(k)});save();hmOverlay(`<h4 class="px" style="font-size:11px;color:var(--y)">Gacha du jour</h4>${eggImg(k,110)}<div style="font-weight:900;font-size:18px">${EGGT[k].n} !</div><div style="color:var(--m)">À placer dans un incubateur (Élevage).</div>`);return}}
+ const ids=SPECIES.map(x=>x[0]),id=wpick(ids),sh=Math.random()<shinyP(),m=mk(id,3+Math.floor(Math.random()*8),sh);
  S.box.push(m);if(!S.dex[id]||S.dex[id]==='s')S.dex[id]='c';save();
  hmOverlay(`<h4 class="px" style="font-size:11px;color:var(--y)">Gacha du jour</h4><img src="${sh?SH(id):SP(id)}" referrerpolicy="no-referrer" alt=""><div style="font-weight:900;font-size:18px">${BY[id][1]}${sh?' ✦':''}</div><div style="color:var(--m)">Niv. ${m.lvl}${sh?' · Shiny !':''}</div>`);
 }
 function openChest(){
- const d=dayS();if(d.chest)return;d.chest=true;
+ const d=dayS();if(d.chest)return;d.chest=true;qEv('chest');
  const k=todayKey(),y=new Date(Date.now()+((S.dayShift||0)-1)*864e5),yk=y.getFullYear()+'-'+(y.getMonth()+1)+'-'+y.getDate();
  const stk=S.streak||(S.streak={last:'',n:0});stk.n=stk.last===yk?stk.n+1:1;stk.last=k;
  const coins=100,pos=((stk.n-1)%7)+1,dr=DAILY()[pos-1],got=bossGive(dr);S.coins+=coins;S.gems=gems()+10;S.balls.poke+=2;let egn=`<div style="color:var(--y);margin-top:6px">Jour ${pos}/7 : <b>${rewTxt(dr)}</b>${pos===7?' · grande récompense !':''}</div>`;
@@ -1087,8 +1433,8 @@ function openChest(){
 }
 
 function newEnc(){
- const z=ZP[biome[mode]],id=wpick(zPool(biome[mode],mode)),sh=Math.random()<SHINY;
- E={id,lvl:z.lv[0]+Math.floor(Math.random()*(z.lv[1]-z.lv[0]+1)),sh,ball:E&&E.ball||'poke',state:'ready',hp:100,bonus:1,msg:`Un ${BY[id][1]} sauvage apparaît !`};
+ const z=ZP[biome[mode]],id=wpick(zPool(biome[mode],mode)),sh=Math.random()<shinyP();
+ const sz=rollSz();E={id,sz,lvl:z.lv[0]+Math.floor(Math.random()*(z.lv[1]-z.lv[0]+1)),sh,ball:E&&E.ball||'poke',state:'ready',hp:100,bonus:1,msg:`Un ${BY[id][1]} sauvage apparaît ! · ${szTxt(sz,id)}`};
  if(!S.dex[id]){S.dex[id]='s';save()}
  friendAdd(1);
 }
@@ -1310,14 +1656,16 @@ function campModal(){
  return '';
 }
 function camp(){
- return `<div class="seg bztabs"><a data-act="btab" data-v="elevage" class="${BR.tab==='elevage'?'on':''}"><i class="ti ti-egg"></i>Élevage${eggsReady()?` <em>${eggsReady()}</em>`:''}</a><a data-act="btab" data-v="camp" class="${BR.tab==='camp'?'on':''}"><i class="ti ti-tent"></i>Camp d'entraînement</a></div>${BR.tab==='camp'?campTab():elevageTab()}`;
+ const t=(k,ic,l,x='')=>`<a data-act="btab" data-v="${k}" class="${BR.tab===k?'on':''}"><i class="ti ti-${ic}"></i>${l}${x}</a>`;
+ return `<div class="seg bztabs">${t('pension','heart-handshake','Pension',penFix().eggs.length?` <em>${penFix().eggs.length}</em>`:'')}${t('elevage','egg','Nurserie',eggsReady()?` <em>${eggsReady()}</em>`:'')}${t('camp','tent','Camp')}</div>${BR.tab==='camp'?campTab():BR.tab==='pension'?penTab():elevageTab()}`;
 }
 const elevageView=()=>`<div class="title"><h3 class="px">Élevage &amp; Camp</h3></div>${camp()}`;
 function hatch(i){
- const e=S.inc[i];if(!e||incPct(e)<1)return;const m=mk(e.id,1,Math.random()<SHINY);ensure(m);
+ const e=S.inc[i];if(!e||incPct(e)<1)return;if(boxFull()){modalOv('<h4 class="px">Boîtes pleines</h4><div class="svnote" style="margin:0">Libère une case dans tes boîtes avant de faire éclore cet œuf.</div><div class="pbt"><a class="btn y" data-m="x">OK</a></div>');return}const m=mk(e.id,1,Math.random()<shinyP());ensure(m);
  const idx=[0,1,2,3,4,5].sort(()=>Math.random()-.5).slice(0,3);idx.forEach(k=>m.iv[k]=31);m.ev=[0,0,0,0,0,0];
  const kp=keeperM();let inh='';if(kp){const fx=keeperFx(kp),ord=[0,1,2,3,4,5].sort((a,b)=>kp.iv[b]-kp.iv[a]).slice(0,fx.inh);ord.forEach(q=>{m.iv[q]=Math.max(m.iv[q],kp.iv[q])});inh=`${BY[kp.id][1]} (${fx.n}) transmet : ${ord.map(q=>SN[q]+' '+kp.iv[q]).join(', ')}`}
- S.box.push(m);S.dex[e.id]='c';S.inc[i]=null;save();
+ if(e.pv&&e.pv.length){e.pv.forEach(([q,v])=>{if(v>m.iv[q])m.iv[q]=v});inh+=(inh?' · ':'')+'Parents : '+e.pv.map(([q,v])=>SN[q]+' '+v).join(', ')}
+ S.box.push(m);S.dex[e.id]='c';S.inc[i]=null;save();qEv('hatch',qInfo(m,{}));
  hatchAnim(m,e.k,idx,inh);
 }
 
@@ -1361,8 +1709,11 @@ function hatchAnim(m,k,idx,inh){
 function collectLane(i){const c=laneOf(i);if(!laneRun(i))return;const m=S.box.find(x=>x.uid===c.uid);if(!m)return;ensure(m);m.ev[c.dum]+=evPending(i);c.t0=Date.now();c.lr=c.t0}
 function breedAct(a,t){
  const v=t.dataset.v;
+ if(a==='pdep'){penPick(v);return true}
+ if(a==='prm'){penRm(v);return true}
+ if(a==='pcol'){penCollect();return true}
  if(a==='btab'){BR.tab=v;BR.pick=null;BR.cd=null;BR.cm=null;render(true);return true}
- if(a==='walk'){breed();S.inc.forEach(e=>{if(e)e.t0-=60000});save();render(true);return true}
+ if(a==='walk'){breed();S.inc.forEach(e=>{if(e)e.t0-=60000});if(S.pen)S.pen.last-=60000;save();render(true);return true}
  if(a==='einfo'){BR.info=BR.info===v?null:v;render(true);return true}
  if(a==='vit'){const m=S.box.find(x=>x.uid===t.dataset.uid);if(m)useVit(m,t.dataset.k);return true}
  if(a==='noop')return true;
@@ -1373,14 +1724,14 @@ function breedAct(a,t){
  if(a==='kset'){S.keeper=v||null;BR.kp=false;save();render(true);return true}
  if(a==='pclose'){BR.pick=null;BR.info=null;BR.kp=false;BR.cd=null;BR.cm=null;render(true);return true}
  if(a==='evdemo'){breed();S.eggs.push({k:v,id:pickEgg(v)});save();render(true);return true}
- if(a==='incrm'){breed();const i=+v,e=S.inc[i];if(e){S.eggs.push({k:e.k,id:e.id});S.inc[i]=null}BR.pick=null;save();render(true);return true}
+ if(a==='incrm'){breed();const i=+v,e=S.inc[i];if(e){S.eggs.push({k:e.k,id:e.id,pv:e.pv});S.inc[i]=null}BR.pick=null;save();render(true);return true}
  if(a==='incgo'){breed();const i=+v,e=S.inc[i];
   if(!e){BR.pick=i;BR.info=null;render(true)}
   else if(incPct(e)>=1)hatch(i);
   else{BR.pick=i;render(true)}
   return true}
- if(a==='incput'){breed();const j=+v,i=BR.pick,eg=S.eggs[j];if(i===null||!eg||S.inc[i])return true;S.inc[i]={k:eg.k,id:eg.id,t0:Date.now()};S.eggs.splice(j,1);BR.pick=null;save();render(true);return true}
- if(a==='eggsel_unused'){breed();const j=+v,free=S.inc.findIndex(x=>!x);if(free<0)return true;const eg=S.eggs[j];S.inc[free]={k:eg.k,id:eg.id,t0:Date.now()};S.eggs.splice(j,1);save();render(true);return true}
+ if(a==='incput'){breed();const j=+v,i=BR.pick,eg=S.eggs[j];if(i===null||!eg||S.inc[i])return true;S.inc[i]={k:eg.k,id:eg.id,pv:eg.pv,t0:Date.now()};S.eggs.splice(j,1);BR.pick=null;save();render(true);return true}
+ if(a==='eggsel_unused'){breed();const j=+v,free=S.inc.findIndex(x=>!x);if(free<0)return true;const eg=S.eggs[j];S.inc[free]={k:eg.k,id:eg.id,pv:eg.pv,t0:Date.now()};S.eggs.splice(j,1);save();render(true);return true}
  if(a==='cdum'){BR.cd=+v;render(true);return true}
  if(a==='cmon'){BR.cm=+v;render(true);return true}
  if(a==='cdset'){breed();const i=BR.cd,c=S.campx[i]||(S.campx[i]={});collectLane(i);c.dum=+v;if(c.uid){c.t0=Date.now();c.lr=c.t0}BR.cd=null;save();render(true);return true}
@@ -1398,7 +1749,7 @@ const RC={n:'#8fa0d8',r:'#4dd0e1',sr:'#c084fc',ur:'#ffd24a'},RN={n:'Commun',r:'R
 let GZE=null,GZW=0;
 function gzInit(){if(GZE)return;
 GZE=[];const gw=(w,r,o)=>GZE.push({w,r,...o});
-gw(8,'n',{k:'egg',v:'a'});gw(5,'r',{k:'egg',v:'b'});gw(3,'sr',{k:'egg',v:'c'});gw(.6,'ur',{k:'egg',v:'l'});gw(.3,'ur',{k:'egg',v:'f'});
+gw(.12,'ur',{k:'egg',v:'l'});gw(.06,'ur',{k:'egg',v:'f'});
 gw(16,'n',{k:'item',v:'bonbon',q:2});gw(8,'r',{k:'item',v:'bonbonm',q:1});gw(2.5,'sr',{k:'item',v:'bonbonxl',q:1});
 VIT.forEach(([k])=>gw(1.4,'r',{k:'item',v:k,q:1}));
 gw(1.2,'r',{k:'item',v:'restes'});gw(.8,'sr',{k:'item',v:'orbe'});gw(2.5,'n',{k:'item',v:'sitrus',q:2});gw(.8,'sr',{k:'item',v:'ceinture'});
@@ -1419,7 +1770,7 @@ function gzDo(e){
  else if(e.k==='item'){it[e.v]=(it[e.v]||0)+(e.q||1);c.n=ITN(e.v)+((e.q||1)>1?' ×'+e.q:'');c.sub='Dans le Sac';c.vis=`<i class="ti ti-${ITI(e.v)}"></i>`}
  else if(e.k==='ball'){S.balls[e.v]=(S.balls[e.v]||0)+e.q;c.n=BALLS[e.v].n+' ×'+e.q;c.sub='Dans le Sac';c.vis=`<img src="${BI(e.v)}" style="width:56px;image-rendering:pixelated" alt="">`}
  else if(e.k==='coin'){S.coins+=e.q;c.n=e.q+' P$';c.sub='Pokédollars';c.vis='<i class="ti ti-coin"></i>'}
- else if(e.k==='mon'){const pool=SPECIES.map(s=>s[0]).filter(i=>!LEGS.includes(i)),id=pool[Math.floor(Math.random()*pool.length)],sh=Math.random()<SHINY,m=mk(id,5+Math.floor(Math.random()*11),sh);S.box.push(m);if(!S.dex[id]||S.dex[id]==='s')S.dex[id]='c';c.sid=id;c.n=BY[id][1]+(sh?' ✦':'');c.sub='Niv. '+m.lvl+' · dans la boîte';c.vis=`<img class="gcs" src="${sh?SH(id):SP(id)}" referrerpolicy="no-referrer" alt="">`}
+ else if(e.k==='mon'){const pool=SPECIES.map(s=>s[0]).filter(i=>!LEGS.includes(i)),id=pool[Math.floor(Math.random()*pool.length)],sh=Math.random()<shinyP(),m=mk(id,5+Math.floor(Math.random()*11),sh);S.box.push(m);if(!S.dex[id]||S.dex[id]==='s')S.dex[id]='c';c.sid=id;c.n=BY[id][1]+(sh?' ✦':'');c.sub='Niv. '+m.lvl+' · dans la boîte';c.vis=`<img class="gcs" src="${sh?SH(id):SP(id)}" referrerpolicy="no-referrer" alt="">`}
  else if(e.k==='feat'){const f=GZF[e.i],m=mk(f.id,f.lv,!!f.sh);S.box.push(m);S.dex[f.id]='c';c.sid=f.id;c.n=f.n;c.sub='Pokémon vedette · Niv. '+f.lv;c.vis=`<img class="gcs" src="${f.sh?SH(f.id):SP(f.id)}" referrerpolicy="no-referrer" alt="">`}
  return c;
 }
@@ -1431,7 +1782,7 @@ function gzPull(n){
  const z=S.gz||(S.gz={n:0,tot:0}),es=[];
  for(let i=0;i<n;i++){let e;if(z.n+1>=GZ_PITY){e=GZE.filter(x=>x.k==='feat')[Math.floor(Math.random()*GZF.length)]}else e=gzPick();z.tot++;if(e.k==='feat')z.n=0;else z.n++;es.push(e)}
  if(n===10&&!es.some(e=>e.r!=='n')){const rr=GZE.filter(e=>e.r==='r');es[9]=rr[Math.floor(Math.random()*rr.length)]}
- const res=es.map(gzDo);save();gzPlay(res,n);
+ const res=es.map(gzDo);qEv('gacha',{n});save();gzPlay(res,n);
 }
 function capHalf(cv,top,col){
  const x=cv.getContext('2d');x.clearRect(0,0,32,20);
@@ -1687,6 +2038,7 @@ function msg(t){const e=$('#msg');if(e)e.textContent=t}
 async function throwBall(){
  if(busy||!E||E.state!=='ready')return;
  if(S.balls[E.ball]<=0){msg(`Plus de ${BALLS[E.ball].n} ! Choisis une autre ball.`);return}
+if(boxFull()){msg('Toutes tes boîtes sont pleines ! Relâche un Pokémon pour en capturer un autre.');return}
  {const cs=capState();if(cs.n<=0){msg(`Plus de tentatives de capture ! Prochaine dans ${fmtMS(cs.next)}.`);return}S.cap.n--;if(cs.n>=CAP_MAX)S.cap.t=nowMs()}
  busy=true;E.state='throwing';S.balls[E.ball]--;save();setBallUI();capTick();
  const ar=$('#arena'),b=$('#ball'),w=$('#wild');
@@ -1702,10 +2054,10 @@ async function throwBall(){
  await sleep(350);
  if(ok){
   b.classList.add('ok');try{if(fxInit()){const q=ctr(b,$('#arena'));sp({x:q.x,y:q.y,s0:20,s1:140,life:.5,col:'rgba(255,220,80,.95)'});rad(30,(x,y)=>sp({type:'star',x:q.x,y:q.y,vx:x*rnd(60,260),vy:y*rnd(60,260)-40,vr:rnd(-8,8),drag:1.3,s0:rnd(6,14),s1:0,life:rnd(.7,1.2),col:pick(['#ffe08a','#fff','#ffb3d9','#9be7ff'])}));ringAt(q,'rgba(255,220,80,.9)',0,120)}}catch(e){}
-  const m=mk(E.id,E.lvl,E.sh);S.box.push(m);S.dex[E.id]='c';zcAdd(mode,biome[mode],E.id);dayS().cap++;friendAdd(3);
+  const newSp=S.dex[E.id]!=='c',m=mk(E.id,E.lvl,E.sh,E.sz);S.box.push(m);S.dex[E.id]='c';zcAdd(mode,biome[mode],E.id);qCap(m,mode==='peche',newSp);dayS().cap++;friendAdd(3);
   const gain=addXp((8+2*E.lvl)*(E.sh?3:1),true);S.coins+=5+Math.round(E.lvl/2);
   save();
-  msg(`${E.sh?'Un shiny ! ':''}${s[1]} est attrapé ! +${gain} XP`);
+  msg(`${E.sh?'Un shiny ! ':''}${s[1]} est attrapé ! (${SZN[szCat(m.sz)]}) +${gain} XP`);
   E.state='done';
   $('#acts').innerHTML=`<a class="btn y" data-act="next" style="grid-column:1/-1"><i class="ti ti-player-track-next"></i>Continuer</a>`;
   rerenderHud();
@@ -1719,20 +2071,6 @@ async function throwBall(){
 function rerenderHud(){const h=$('.hud');if(h){const t=document.createElement('div');t.innerHTML=shell('');h.replaceWith(t.querySelector('.hud'))}}
 
 let PKREP=null,PKRET=null;
-function pkBody(team,list,types){
- const sp=m=>`<img src="${m.sh?SH(m.id):SP(m.id)}" referrerpolicy="no-referrer" alt="">`;
- const rows=Array.from({length:6},(_,i)=>{const m=team[i];return m?`<div class="pkr ${PKREP?'tgt':''}" data-act="pks" data-uid="${m.uid}"><div class="pkl"><span class="pkv">Niv. ${m.lvl}</span><b>${BY[m.id][1]}${m.sh?' ✦':''}</b></div>${sp(m)}</div>`:`<div class="pkr em"><span>—</span></div>`}).join('');
- const grid=pkGrid(list);
- return `${PKREP?`<div class="pkrep">Équipe complète : touche le Pokémon à remplacer <a data-act="pkrepx">Annuler</a></div>`:''}
- <div class="pkm"><div class="pkp"><a class="pkh" data-act="teamedit">Équipe ${team.length}/6<i class="ti ti-arrows-sort"></i></a>${rows}</div>
- <div class="pkb"><div class="pkh">Boîte ${S.box.filter(m=>!m.team).length}</div>
- <div class="pkf"><input id="pkq" placeholder="Rechercher" value="${esc(P.q)}" autocomplete="off"><select data-pk="type"><option value="">Types</option>${types.map(t=>`<option ${P.type===t?'selected':''}>${t}</option>`).join('')}</select><select data-pk="sort">${[['id','N°'],['lvl','Niveau'],['name','Nom'],['fav','Favoris']].map(([k,l])=>`<option value="${k}" ${P.sort===k?'selected':''}>${l}</option>`).join('')}</select></div>
- <div class="pkg">${grid}</div></div></div>`;
-}
-function pkGrid(list){
- const l=list.filter(m=>!m.team);
- return l.length?l.map(m=>`<div class="pkc ${m.uid===P.s2?'sel':''}" data-act="pks" data-uid="${m.uid}" title="${BY[m.id][1]}"><img src="${m.sh?SH(m.id):SP(m.id)}" referrerpolicy="no-referrer" alt="">${m.fav?'<i class="pkfv">♥</i>':''}</div>`).join(''):'<div class="pke">Aucun Pokémon.</div>';
-}
 function pkList(){
  let list=S.box.slice();
  if(P.q)list=list.filter(m=>NRM(BY[m.id][1]).includes(NRM(P.q)));
@@ -1746,16 +2084,17 @@ function pkSum(uid){
  const mx=Math.max(...st.map(x=>x[1])),mv=movesFrom(m),team=S.box.filter(x=>x.team);
  const ov=document.createElement('div');ov.className='sl-ov pks';
  ov.innerHTML=`<div class="sl sr"><div class="pks-h"><img src="${m.sh?SH(m.id):SP(m.id)}" referrerpolicy="no-referrer" alt=""><b>${s[1]}${m.sh?' ✦':''}</b><span>Niv. ${m.lvl}</span></div>
- <div class="pks-n">N° ${String(m.id).padStart(3,'0')} · ${s[1]}</div>
+ <div class="pks-n">N° ${String(m.id).padStart(3,'0')} · ${s[1]} · ${szBadge(m)} ${fmtLen(szCm(m))}</div>
  <div class="pks-t">${s[2].map(t=>`<span style="background:${TC[t]||'#555'}">${t}</span>`).join('')}</div>
  <div class="pks-rd">${radarSVG(m)}<div class="pks-lg"><span style="color:#4dd0e1">● IV</span><span style="color:#ff9800">● EV</span></div></div>
  <div class="pks-r"><span>Objet tenu</span><b>${m.held?HELD[m.held].n:'—'}</b></div>
  <div class="pks-m">${mv.map(x=>`<div><i style="background:${TC[x.t]||'#555'}"></i>${x.n}<small>${x.t}</small></div>`).join('')}</div>
- <div class="pks-b"><a class="pkbtn" data-x="full">Fiche complète</a>${m.team?`<a class="pkbtn y ${team.length<=1?'off':''}" data-x="out">Retirer de l'équipe</a>`:`<a class="pkbtn y" data-x="in">Ajouter à l'équipe</a>`}</div></div>`;
+ <div class="pks-b"><a class="pkbtn" data-x="full">Fiche complète</a><a class="pkbtn" data-x="mv">Déplacer</a>${m.team?`<a class="pkbtn y ${team.length<=1?'off':''}" data-x="out">Retirer de l'équipe</a>`:`<a class="pkbtn y" data-x="in">Ajouter à l'équipe</a>`}</div></div>`;
  document.body.appendChild(ov);requestAnimationFrame(()=>ov.classList.add('in'));
  const close=()=>{ov.classList.remove('in');setTimeout(()=>ov.remove(),220)};
  ov.addEventListener('click',e=>{if(e.target===ov){close();return}const b=e.target.closest('[data-x]');if(!b)return;const x=b.dataset.x;
   if(x==='full'){close();P.sel=uid;P.dt='info';render(true);return}
+  if(x==='mv'){close();P.mv=uid;render(true);return}
   if(x==='out'&&team.length>1){m.team=false;save();close();render(true)}
   else if(x==='in'){if(team.length<6){m.team=true;save();close();render(true)}else{PKREP=uid;close();render(true)}}});
 }
@@ -1802,19 +2141,19 @@ function intro(){
  draw();
 }
 const PAL={amber:['#edb31e','#e3a202','#efc524'],red:['#c8203c','#b01a33','#e0405a'],blue:['#3a7be0','#2a5fc0','#5a97ee'],orange:['#e8731c','#c95a10','#f59a50'],green:['#2f9e5e','#237a49','#4fbf7e'],pink:['#d44a8c','#b03273','#ec72ad'],violet:['#7a4ad8','#5a32b0','#9a6cf0'],teal:['#1f9aa8','#167a86','#40bccb'],night:['#3a1f6e','#2a1352','#5a3796']};
-const ROUTEPAL={pokemon:'pk',hub:'green',explorer:'teal',elevage:'pink',gacha:'violet',manoir:'night',ligue:'orange',boss:'orange',combat:'blue',sac:'amber',boutique:'amber',plus:'red'};
+const ROUTEPAL={pokemon:'pk',hub:'green',explorer:'teal',elevage:'pink',gacha:'violet',manoir:'night',ligue:'orange',boss:'orange',combat:'blue',sac:'amber',boutique:'amber',plus:'red',quetes:'violet'};
 const PALU={};
 const bgUri=n=>PALU[n]||(PALU[n]='data:image/svg+xml,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="none"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0fbfa"/><stop offset=".5" stop-color="#fcd6ee"/><stop offset="1" stop-color="#fde4ff"/></linearGradient><clipPath id="c"><path d="M0 0H857L375 1080H0Z"/></clipPath><filter id="b"><feGaussianBlur stdDeviation="14"/></filter></defs><rect width="1920" height="1080" fill="${PAL[n][0]}"/><g fill="none" stroke="${PAL[n][2]}" stroke-width="70" opacity=".7"><circle cx="1500" cy="720" r="240"/><circle cx="1500" cy="720" r="400"/><circle cx="1500" cy="720" r="560"/></g><path d="M857 0H1077L595 1080H375Z" fill="${PAL[n][1]}"/><path d="M0 0H857L375 1080H0Z" fill="url(#g)"/><g clip-path="url(#c)"><path d="M857 0L375 1080" stroke="#d3d8e4" stroke-width="44" opacity=".75" filter="url(#b)"/></g></svg>`).replace(/'/g,'%27'));
 function setPal(){const A=document.getElementById('app'),n=ROUTEPAL[route];if(n==='pk'){A.dataset.pal='pk';A.style.backgroundColor='#7371ee';A.style.backgroundImage='linear-gradient(165deg,#9a9cfb 0%,#7371ee 55%,#6258dc 100%)'}else if(n){A.dataset.pal=n;A.style.backgroundColor=PAL[n][0];A.style.backgroundImage=`url("${bgUri(n)}")`}else{delete A.dataset.pal;A.style.backgroundColor='';A.style.backgroundImage=''}}
 function render(keep){
  if(!S.name||!S.box.length){intro();return}
- const c=route==='hub'?hub():route==='explorer'?explorer():route==='pokemon'?pokemon():route==='combat'?combat():route==='boss'?boss():route==='ligue'?ligue():route==='boutique'?boutique():route==='sac'?sac():route==='elevage'?elevageView():route==='gacha'?gachaView():route==='manoir'?manoirView():route==='plus'?plusView():route==='admin'?adminView():stub();
+ const c=route==='hub'?hub():route==='explorer'?explorer():route==='pokemon'?pokemon():route==='combat'?combat():route==='boss'?boss():route==='ligue'?ligue():route==='boutique'?boutique():route==='sac'?sac():route==='elevage'?elevageView():route==='gacha'?gachaView():route==='manoir'?manoirView():route==='plus'?plusView():route==='quetes'?quetesView():route==='admin'?adminView():stub();
  const y=window.scrollY;
  $('#app').innerHTML=shell(c);setPal();capTick();drawZone();zScroll();if(document.getElementById('bzc')||document.getElementById('czc')||document.getElementById('gzc')||document.getElementById('hwc'))bzStart();if(document.getElementById('fa')){fsInit();}
  if(keep)window.scrollTo(0,y);
  document.querySelectorAll('img').forEach(i=>i.addEventListener('error',()=>{i.style.visibility='hidden'},{once:true}));
 }
-function go(r){if(r==='explorer'&&route!=='explorer'){mapView=true;mapSel=null;E=null}fsStop();if(r!=='pokemon')PKRET=null;route=r;history.replaceState(null,'','#'+r);if(r==='explorer'&&E&&E.state==='done')newEnc();P.sel=P.sel;window.scrollTo(0,0);render()}
+function go(r){if(r==='explorer'&&route!=='explorer'){mapView=true;mapSel=null;E=null}fsStop();if(r!=='pokemon'){PKRET=null;P.mv=null}route=r;history.replaceState(null,'','#'+r);if(r==='explorer'&&E&&E.state==='done')newEnc();P.sel=P.sel;window.scrollTo(0,0);render()}
 document.addEventListener('click',e=>{
  const t=e.target.closest('[data-go],[data-act],[data-mode],[data-biome],[data-ball],[data-tab],[data-sel],[data-dex],[data-dx]');if(!t)return;
  if(t.dataset.go){go(t.dataset.go);return}
@@ -1827,6 +2166,7 @@ document.addEventListener('click',e=>{
  if(t.dataset.dx){P.dx=+t.dataset.dx;render(true);return}
  const a=t.dataset.act,m=S.box.find(x=>x.uid===t.dataset.uid);
  if(breedAct(a,t)){}
+ else if(newAct(a,t)){}
  else if(a==='throw')throwBall();
  else if(a==='flee'){if(busy)return;fsStop();mapView=true;mapSel=null;E=null;render()}
  else if(a==='next'){E=null;render()}
@@ -1891,7 +2231,7 @@ document.addEventListener('click',e=>{
  else if(a==='reset'){S=fresh();E=null;P.sel=null;save();render()}
 });
 document.addEventListener('input',e=>{if(e.target.id==='pkq'){P.q=e.target.value;const g=document.querySelector('.pkg');if(g)g.innerHTML=pkGrid(pkList())}});
-document.addEventListener('change',e=>{const k=e.target.dataset&&e.target.dataset.pk;if(k==='type'){P.type=e.target.value;render(true)}else if(k==='sort'){P.sort=e.target.value;render(true)}});
+document.addEventListener('change',e=>{const k=e.target.dataset&&e.target.dataset.pk;if(k==='type'){P.type=e.target.value;render(true)}else if(k==='sort'){if(e.target.value)sortBox(e.target.value)}});
 document.addEventListener('input',e=>{if(e.target.id==='q'){P.q=e.target.value;const p=e.target.selectionStart;render(true);const q=$('#q');q.focus();q.setSelectionRange(p,p)}});
 document.addEventListener('change',e=>{if(e.target.id==='ft'){P.type=e.target.value;render(true)}if(e.target.id==='so'){P.sort=e.target.value;render(true)}});
 window.addEventListener('hashchange',()=>{const r=(location.hash||'#hub').slice(1);if(r!==route)go(r)});
@@ -2716,6 +3056,7 @@ async function act(who,mv){
  const boss=B.mode==='boss'&&D===B.foe,shield=boss?Math.max(.25,Math.min(1,Math.pow(A.lvl/D.lvl,2))):1,raid=r.d*RAID*shield*(B.shc>0?.3:1);if(boss&&B.shc>0){const was=B.shc;B.shc=Math.max(0,B.shc-(r.e>1?2:1));if(was>0&&B.shc===0)say('Le bouclier cristal du boss se brise !')}
  if(boss){bossS().mine+=raid;B.dealt+=raid;save();const d=$('#dealt');if(d)d.textContent=fmtN(B.dealt)}else{let nh=D.hp-r.d;if(D.held==='ceinture'&&!D.cons&&D.hp===D.max&&nh<=0){nh=1;D.cons=1;say(`${D.name} tient bon grâce à sa Ceinture Force !`)}D.hp=Math.max(0,nh)}
  const tgt=$(D===B.foe?'#foe':'#me'),ar=$('#arena');
+ if(who==='me'){if(r.crit)qEv('crit');if(r.e>1)qEv('eff')}
  if(r.crit||r.e>1)shk(1.5);
  if(ar&&tgt)floatTxt(ctr(tgt,ar),'-'+fmtN(boss?raid:r.d),boss?'#ffcb05':r.e>1?'#ffeb3b':'#ff5252',r.e>1||r.crit?19:15);
  setHp(D===B.foe?'foe':'me');await sleep(450);
@@ -2757,7 +3098,7 @@ async function swTo(k){
  render(true);await sleep(60);const e2=$('#me');if(e2)await sendOut(e2);await sleep(300);await round(null);
 }
 function finish(win){
- B.over=true;B.busy=false;const lines=[];
+ B.over=true;B.busy=false;const lines=[];if(win&&B.mode==='duel'&&B.hw==null)qTrainer();
  if(B.hw!=null)hwFinish(win,lines);
  else if(B.adv!=null)advFinish(win,lines);
  else if(B.mode==='duel'){const c=win?60+B.foe.lvl*5:10,x=addXp(win?40+B.foe.lvl*3:5);S.coins+=c;lines.push(`+${fmtN(c)} pièces · +${x} XP${xpNote()}`);if(win){const up=S.box.filter(m=>m.team&&m.lvl<capLv()&&m.lvl<B.foe.lvl+5);up.forEach(m=>{m.lvl=Math.min(capLv(),m.lvl+(m.lvl<B.foe.lvl?2:1))});if(up.length)lines.push(`Niveau supérieur : ${up.map(m=>BY[m.id][1]+' → '+m.lvl).join(', ')}`)}}
@@ -2939,6 +3280,7 @@ function adminView(){
  return `<div class="title"><h3 class="px">Administration</h3><a class="btn" data-act="alogout">Quitter</a></div>
  <div class="panel"><h4 class="px">Rotation des boss</h4><div style="color:var(--m);margin:6px 0 8px;font-size:12px">Un boss toutes les 2 h, dans l'ordre ci-dessous, en boucle.</div>${rot}${out}<a class="btn y" data-act="afnew" style="margin-top:6px"><i class="ti ti-plus"></i>Créer un boss</a></div>
  <div class="panel"><h4 class="px">Coffre quotidien · 7 jours</h4><div style="color:var(--m);margin:6px 0 8px;font-size:12px">Récompense remise à l'ouverture du coffre, en plus du lot de base. Le jour 7 est la grande récompense ; le cycle repart ensuite à J1.</div>${adminDaily()}</div>
+ <div class="panel"><h4 class="px">Missions · récompenses par palier</h4><div style="color:var(--m);margin:6px 0 8px;font-size:12px">Récompense des missions quotidiennes selon leur difficulté ; les hebdomadaires la multiplient.</div>${adminQuests()}</div>
  <div class="panel"><h4 class="px">Événements</h4><div style="margin-top:8px">${ev}</div></div>
  <div class="panel"><h4 class="px">Sécurité</h4><div style="color:var(--m);margin:6px 0 8px;font-size:12px">Prototype : réglages et code stockés sur cet appareil. La vraie protection viendra avec le serveur.</div><a class="btn" data-act="apin2">Changer le code</a></div>`;
 }
@@ -2976,7 +3318,7 @@ async function bossThrow(i){
  if(m)m.textContent='…';
  for(let k=0;k<sh;k++){await sleep(250);await anim(bl,[{transform:'rotate(0)'},{transform:'rotate(-25deg)'},{transform:'rotate(25deg)'},{transform:'rotate(0)'}],{duration:600});await sleep(200)}
  await sleep(350);
- if(ok){const tl=Math.min(capLv(),Math.max(5,...S.box.filter(m=>m.team).map(m=>m.lvl))),mon=mk(bo.id,tl,!!bo.sh);r.capLv=tl;S.box.push(mon);S.dex[bo.id]='c';r.phase='won'}
+ if(ok){const tl=Math.min(capLv(),Math.max(5,...S.box.filter(m=>m.team).map(m=>m.lvl))),mon=mk(bo.id,tl,!!bo.sh);r.capLv=tl;S.box.push(mon);qCap(mon,false,S.dex[bo.id]!=='c');S.dex[bo.id]='c';r.phase='won'}
  else if(r.throws>=thr(bo))r.phase='fled';
  else r.msg=`Il s'est libéré ! Lancers restants : <b>${thr(bo)-r.throws}/${thr(bo)}</b>.`;
  r.busy=false;save();render(true);
@@ -3154,14 +3496,14 @@ const mvCard=(n,pp,o={})=>{const d=MD[n];return `<div class="mvc ${o.sel?'sel':'
 function habitats(id){return Object.entries(ZP).filter(([k,z])=>z.ids.includes(id)).map(([k,z])=>`${z.name} ${Math.round(zRate(k,id)*100)} %`)}
 function detail(m){
  if(!m)return '';
- ensure(m);const s=BY[m.id],tc=TC[s[2][0]]||'#4dd0e1',st=stat6(m),nat=NAT[m.nat],tab=P.dt||'info',[ivs,ivl]=ivRate(m);
+ ensure(m);ensureSz(m);const s=BY[m.id],tc=TC[s[2][0]]||'#4dd0e1',st=stat6(m),nat=NAT[m.nat],tab=P.dt||'info',[ivs,ivl]=ivRate(m);
  const evs=m.ev.reduce((a,b)=>a+b,0),top=m.iv.indexOf(Math.max(...m.iv)),ab=ABIL[s[2][0]]||ABIL.Normal;
  const teamN=S.box.filter(x=>x.team).length,val=20+m.lvl*3+(m.sh?300:0);
  const tabs=[['info','Infos'],['stats','Stats IV / EV'],['moves','Attaques'],['items','Objets & évo.']].map(([k,l])=>`<a data-act="dtab" data-v="${k}" class="${tab===k?'on':''}">${l}</a>`).join('');
  let body='';
  if(tab==='info'){
   const row=(a,b)=>`<div class="svr"><span>${a}</span><b>${b}</b></div>`;
-  body=`<div class="svl">${row('N° Pokédex','#'+String(m.id).padStart(4,'0'))}${row('Nom',s[1]+(m.sh?' ✦':''))}${row('Type',s[2].map(ty).join(' '))}${row('Amitié',friendHTML(m))}${row('Objet tenu',m.held?HELD[m.held].n:'Aucun')}${row('N° ID',m.ot)}${row('Nature',`${nat[0]}${nat[1]?` <small style="color:var(--m)">(+${SN[nat[1]]} −${SN[nat[2]]})</small>`:' <small style="color:var(--m)">(neutre)</small>'}`)}${row('Talent',`${ab[0]}<small style="display:block;color:var(--m);font-weight:600">${ab[1]}</small>`)}</div>
+  body=`<div class="svl">${row('N° Pokédex','#'+String(m.id).padStart(4,'0'))}${row('Nom',s[1]+(m.sh?' ✦':''))}${row('Type',s[2].map(ty).join(' '))}${row('Taille',`${fmtLen(szCm(m))} ${szBadge(m)} <small style="color:var(--m)">(moy. ${fmtLen((HGT[m.id]||10)*10)})</small>`)}${row("Groupes d'œuf",eg(m.id).map(g=>EGN[g]||g).join(' · '))}${row('Amitié',friendHTML(m))}${row('Objet tenu',m.held?HELD[m.held].n:'Aucun')}${row('N° ID',m.ot)}${row('Nature',`${nat[0]}${nat[1]?` <small style="color:var(--m)">(+${SN[nat[1]]} −${SN[nat[2]]})</small>`:' <small style="color:var(--m)">(neutre)</small>'}`)}${row('Talent',`${ab[0]}<small style="display:block;color:var(--m);font-weight:600">${ab[1]}</small>`)}</div>
   <div class="svnote"><i class="ti ti-map-pin"></i> Rencontré au Niv. ${Math.max(1,m.lvl-3)}, Prairie des Brumes. ${m.sh?'Un spécimen shiny exceptionnel !':'Un Pokémon plein de vie.'}</div>`;
  }else if(tab==='stats'){
   body=`<div class="svs"><div>${radarSVG(m)}<div class="lg"><span><i style="background:#4dd0e1"></i>IV (0–31)</span><span><i style="background:#ff9800"></i>EV (0–252)</span></div></div>
@@ -3180,7 +3522,7 @@ function detail(m){
   }
   body=`<div class="svm"><div class="mvl">${eq}</div><div>${right}</div></div>`;
  }
- return `<div class="svw open" data-act="close"><div class="sv" style="--tc:${tc}" data-dex="1"><div class="svh"><img src="${m.sh?ARS(m.id):AR(m.id)}" alt="" referrerpolicy="no-referrer"><div class="svn"><span class="chip">N°${String(m.id).padStart(4,'0')}</span><h3 class="px">${s[1]}${m.sh?' ✦':''}</h3><div>${s[2].map(ty).join(' ')} <span class="chip">Niv. ${m.lvl}</span> <span class="chip">${nat[0]}</span></div></div><a class="btn sm" data-act="close" style="margin-left:auto;align-self:flex-start"><i class="ti ti-x"></i></a></div>
+ return `<div class="svw open" data-act="close"><div class="sv" style="--tc:${tc}" data-dex="1"><div class="svh"><img src="${m.sh?ARS(m.id):AR(m.id)}" alt="" referrerpolicy="no-referrer"><div class="svn"><span class="chip">N°${String(m.id).padStart(4,'0')}</span><h3 class="px">${s[1]}${m.sh?' ✦':''}</h3><div>${s[2].map(ty).join(' ')} <span class="chip">Niv. ${m.lvl}</span> ${szBadge(m)} <span class="chip">${nat[0]}</span></div></div><a class="btn sm" data-act="close" style="margin-left:auto;align-self:flex-start"><i class="ti ti-x"></i></a></div>
  <div class="seg svtabs">${tabs}</div>${P.flash?`<div class="svflash">${P.flash}</div>`:''}<div class="svb">${body}</div>
  <div class="sva"><a class="btn sm ${m.team?'':'y'}" data-act="team" data-uid="${m.uid}"><i class="ti ti-${m.team?'minus':'plus'}"></i>${m.team?'Retirer de l\'équipe':'Ajouter à l\'équipe'}</a><a class="btn sm" data-act="fav" data-uid="${m.uid}"><i class="ti ti-heart"></i>${m.fav?'Retirer favori':'Favori'}</a><a class="btn sm ${S.partner===m.uid?'':'y'}" data-act="partner" data-uid="${m.uid}"><i class="ti ti-star${S.partner===m.uid?'-filled':''}"></i>${S.partner===m.uid?'Partenaire actuel':'Choisir comme partenaire'}</a>${P.confirm===m.uid?`<a class="btn sm r" data-act="release" data-uid="${m.uid}">Confirmer (+${val})</a>`:`<a class="btn sm" data-act="release" data-uid="${m.uid}">Relâcher</a>`}${teamN>=6&&!m.team?'<span style="color:var(--m);font-size:12px">Équipe pleine (6).</span>':''}</div></div></div>`;
 }
@@ -3208,7 +3550,7 @@ const HELD={restes:{n:'Restes',d:'Soigne 1/16 des PV à chaque tour',ic:'heart-p
 const EGGP=['Ultralaser','Séisme','Close Combat','Pouvoir Lunaire','Poing Ombre','Lame d\'Air','Tir de Boue','Choc Mental','Étincelle','Pisto-Poing'];
 const eggMoves=m=>LS_(m.id).e.map(i=>LSN[i]).filter(n=>MD[n]&&!m.moves.includes(n));
 function evoOpts(m){return(EVO[m.id]||[]).map(([to,c])=>{const own=typeof c==='number'?m.lvl>=c:c==='Échange'?false:(itm()[STONE[c]]||0)>0;return{to,c,ok:own,why:typeof c==='number'?(own?'':`Niv. ${c} requis`):c==='Échange'?'Échange (bientôt)':own?'':`${c} requise`}})}
-function evolve(m,to){const o=evoOpts(m).find(x=>x.to===to);if(!o||!o.ok)return;if(typeof o.c==='string')itm()[STONE[o.c]]--;const from=BY[m.id][1];m.id=to;S.dex[to]='c';P.flash=`Félicitations ! ${from} évolue en ${BY[to][1]} !`;save();render(true)}
+function evolve(m,to){const o=evoOpts(m).find(x=>x.to===to);if(!o||!o.ok)return;if(typeof o.c==='string')itm()[STONE[o.c]]--;const from=BY[m.id][1];m.id=to;S.dex[to]='c';qEv('evo');P.flash=`Félicitations ! ${from} évolue en ${BY[to][1]} !`;save();render(true)}
 function candy(m,k){const it=itm();if((it[k]||0)<1)return;if(m.lvl>=capLv()){P.flash=`Niveau max atteint (${capLv()}) : monte de niveau ou gagne un badge.`;render(true);return}it[k]--;m.lvl=Math.min(capLv(),m.lvl+CANDY[k].lv);P.flash=`${BY[m.id][1]} monte au niveau ${m.lvl} !`;save();render(true)}
 function useCap(m,k){const it=itm();if((it[k]||0)<1)return;ensure(m);
  if(k==='capargent'){const i=m.iv.indexOf(Math.min(...m.iv));if(m.iv[i]>=31){P.flash='Tous les IV sont déjà au maximum.';render(true);return}m.iv[i]=31;P.flash=`IV ${SN[i]} porté à 31 !`}
@@ -3239,7 +3581,7 @@ function dexBody(){
   if(!st)return `<div class="dxk u"><span class="dxn">${n}</span><b>? ? ?</b></div>`;
   const cc=st==='c'?c:'#8f9190';
   return `<div class="dxk" data-dx="${id}" style="background:linear-gradient(100deg,color-mix(in srgb,${cc} 78%,#fff),color-mix(in srgb,${cc} 78%,#000))"><img class="dxl" src="${tyi(t)}" alt=""><span class="dxn">${n}</span><b>${x[1]}</b><span class="dxc"><img src="${AR_}" alt="" referrerpolicy="no-referrer" style=""></span></div>`};
- return `<div class="dxh"><span><i class="dxb"></i>${got}<i class="dxb s"></i>${seen}</span><b>Pokédex</b><input id="q" placeholder="Rechercher" value="${esc(P.q||'')}" autocomplete="off"></div>
+ return `<div class="dxh"><span><i class="dxb"></i>${got}<i class="dxb s"></i>${seen}</span><b>Pokédex${S.charm?' ✦':''}</b><input id="q" placeholder="Rechercher" value="${esc(P.q||'')}" autocomplete="off"></div>
  <div class="dxw">${dl.map(row).join('')||'<div class="pke">Aucun résultat.</div>'}</div>`;
 }
 function dexDetail(id){
@@ -3574,7 +3916,7 @@ function fsHooked(){
 function fsBoot(){FS.lk=Date.now()+900;
  const it=itm();it.botte=(it.botte||0)+1;save();FS.boot=false;document.querySelectorAll('#fa .fjump,#fa .ftrn').forEach(e=>e.remove());const b=$('#fb');if(b){b.style.display='none';b.className='fb'}const p=$('#flp');if(p)p.setAttribute('d','');FS.ph='idle';fsUI();fsMsg('Une Vieille Botte ! Pas de Pokémon cette fois… (×'+it.botte+' dans le Sac)');
 }
-function fsFinish(id){FS.ph='idle';FS.lk=Date.now()+900;newEnc();E.id=id;E.msg=`Un ${BY[id][1]} sauvage est remonté ! (${TIERN[fishTier(id)]})`;if(!S.dex[id])S.dex[id]='s';save();render()}
+function fsFinish(id){FS.ph='idle';FS.lk=Date.now()+900;newEnc();E.id=id;E.sz=rollSz([0,0,5,10][rodLv()]||0);E.msg=`Un ${BY[id][1]} sauvage est remonté ! (${TIERN[fishTier(id)]}) · ${szTxt(E.sz,id)}`;if(!S.dex[id])S.dex[id]='s';save();render()}
 const fsPtr=new Map();
 function fsSync(){const v=[...fsPtr.values()];FS.reel=v.includes('X');FS.dir=v.filter(x=>x!=='X'&&x!=='C').pop()||null;document.querySelectorAll('#fhold').forEach(e=>e.classList.toggle('on',FS.reel));document.querySelectorAll('.far').forEach(e=>e.classList.toggle('on',FS.dir===e.dataset.d))}
 document.addEventListener('pointerdown',e=>{if((FS.ph==='cast'||FS.ph==='wait')&&e.target.closest&&e.target.closest('#fdial')){e.preventDefault();fsEarly();return}if(FS.ph==='bite'&&e.target.closest&&e.target.closest('#fdial,#fexc')){e.preventDefault();fsStrike();return}const c=e.target.closest&&e.target.closest('#fcharge');if(c){e.preventDefault();if(FS.ph==='idle'){fsPtr.set(e.pointerId,'C');fsCharge()}return}
@@ -3710,7 +4052,7 @@ function buy1(k){
  else if(x.ty==='egg'){breed();S.eggs.push({k:x.e,id:pickEgg(x.e)})}
  else if(x.ty==='ball')S.balls[x.b]=(S.balls[x.b]||0)+x.n;
  else{const it=itm();it[x.i]=(it[x.i]||0)+x.n}
- S.coins-=x.p;return true;
+ S.coins-=x.p;qEv('buy');qEv('spend',{n:x.p});return true;
 }
 function buy(k,n=1){for(let i=0;i<n;i++)if(!buy1(k))break;save();render(true)}
 function buyAsk(k){
