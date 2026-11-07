@@ -900,6 +900,9 @@ input{flex:1;min-width:140px}
 .sv .sva{flex:none;background:#0b1030cc;border-top:2px solid #ffffff2a;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .sv .sva .btn{border-radius:20px;justify-content:center;min-height:40px;text-align:center}
 .sv .sva .btn:nth-child(3){grid-column:1/-1}
+
+.hud .avp{transform:none!important;object-position:center!important;object-fit:cover;image-rendering:auto}
+.hud.big{padding-top:10px;padding-bottom:10px}.hud.big .av{width:52px;height:52px;border-radius:50%}.hud.big .bar{height:9px}.hud.big .lv{font-size:12px}
 </style>
 </head>
 <body>
@@ -947,7 +950,7 @@ const KEY='proto-pokemon-v1';const SHINY=1/10; /* test : à remettre à 1/64 */
 const fresh=()=>({coins:1200,xp:0,lvl:1,balls:{poke:20,super:4,hyper:1},next:1,box:[],dex:{}});
 function mk(id,lvl,sh=false){const s=BY[id];return{uid:Math.random().toString(36).slice(2,9),id,lvl,sh,fav:false,team:false}}
 let S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!S||!S.box)S=fresh();if(!S.evz){S.evz=1;(S.box||[]).forEach(m=>{if(m.ev)m.ev=[0,0,0,0,0,0]})}
-const AVS=[{src:'img/portrait.webp',pos:'66% 14%',org:'66% 22%',sc:2.1,nm:'Classique'},{src:'img/avatar-roi.webp',pos:'60% 18%',org:'60% 22%',sc:2.4,nm:'Roi'}];
+const AVS=[{hud:'img/hud-classique.webp',src:'img/portrait.webp',pos:'66% 14%',org:'66% 22%',sc:2.1,nm:'Classique'},{hud:'img/hud-roi.webp',src:'img/avatar-roi.webp',pos:'60% 18%',org:'60% 22%',sc:2.4,nm:'Roi'}];
 const avO=()=>AVS[S.av]||AVS[0];
 const avSt=a=>`object-position:${a.pos};transform-origin:${a.org};transform:scale(${a.sc})`;
 const save=()=>{try{S.seen=Date.now();localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
@@ -991,7 +994,7 @@ function shell(c){
  const TBP={compass:'M8 16l2-6l6-2l-2 6l-6 2M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0',backpack:'M9 6V5a3 3 0 0 1 6 0v1M5 9a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3zM10 13h4M8 21v-4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v4',home:'M5 12H3l9-9l9 9h-2M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7M9 21v-6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6',swords:'M21 3v5l-11 9l-4 4l-3-3l4-4l9-11zM3 3v5l11 9l4 4l3-3l-4-4l-9-11z','menu-2':'M4 6h16M4 12h16M4 18h16'};
  const TBF={compass:'explore_map',backpack:'bag',home:'home',swords:'combat','menu-2':'plus'},tbi=k=>`<img class="tbimg" src="img/tb_${TBF[k]}.png" alt="">`;
  const TB=[['explorer','compass','Explorer'],['sac','backpack','Sac'],['hub','home','Accueil'],['combat','swords','Combat'],['plus','menu-2','Plus']],tabs=TB.map(([k,i,l])=>`<a data-go="${k}" class="${k===route||(k==='plus'&&!TB.some(t=>t[0]===route))?'on':''}">${tbi(i)}<span>${l}</span></a>`).join('');
- return `<div class="hud"><div class="av" data-act="pinfo"><img class="avp" src="${avO().src}" style="${avSt(avO())}" alt=""></div><b class="name" data-act="pinfo">${esc(S.name||"")}</b><span class="lv px" data-act="pinfo">Niv.${S.lvl}</span><div class="bar" data-act="pinfo"><i style="width:${Math.min(100,S.xp/need()*100)}%;background:var(--c)"></i></div>${PINFO?pinfoHTML():''}</div><div class="main"><nav class="rail">${rail}</nav><div class="content">${c}</div></div><nav class="tabs">${tabs}</nav>`;
+ return `<div class="hud ${S.hudsm?'':'big'}"><div class="av" data-act="pinfo"><img class="avp" src="${avO().hud}" alt=""></div><b class="name" data-act="pinfo">${esc(S.name||"")}</b><span class="lv px" data-act="pinfo">Niv.${S.lvl}</span><div class="bar" data-act="pinfo"><i style="width:${Math.min(100,S.xp/need()*100)}%;background:var(--c)"></i></div>${PINFO?pinfoHTML():''}</div><div class="main"><nav class="rail">${rail}</nav><div class="content">${c}</div></div><nav class="tabs">${tabs}</nav>`;
 }
 function card(m,o={}){const s=BY[m.id],c=TC[s[2][0]]||'#8a8a7a';
  const img=o.anim?`<img class="pmi" src="${m.sh?SH(m.id):SP(m.id)}" referrerpolicy="no-referrer" alt="">`:`<img src="${m.sh?R+'shiny/'+m.id+'.png':SPS(m.id)}" referrerpolicy="no-referrer" alt="">`;
@@ -2816,9 +2819,9 @@ function saveIO(mode){
 document.addEventListener('click',e=>{if(PINFO&&!(e.target.closest&&e.target.closest('.pinfo,[data-act=pinfo]'))){PINFO=false;const p=document.querySelector('.pinfo');if(p)p.remove()}},true);
 function avMenu(){
  let o=document.querySelector('.io-ov');if(o)o.remove();o=document.createElement('div');o.className='pick-ov io-ov';document.body.appendChild(o);
- const draw=()=>{o.innerHTML='<div class="pick-c"><h4 class="px">Réglages</h4><div class="svnote" style="margin:0">Avatar</div><div class="av-pk">'+AVS.map((a,i)=>`<a class="${(S.av||0)===i?'on':''}" data-av="${i}"><img src="${a.src}" style="${avSt({...a,sc:1.5})}" alt=""><small>${a.nm}</small></a>`).join('')+'</div><div class="pbt"><a class="btn" data-av="snd"><i class="ti ti-'+(S.mute?'volume-off':'volume')+'"></i>Son : '+(S.mute?'coupé':'activé')+'</a><a class="btn" data-av="x">Fermer</a></div></div>'};
+ const draw=()=>{o.innerHTML='<div class="pick-c"><h4 class="px">Réglages</h4><div class="svnote" style="margin:0">Avatar</div><div class="av-pk">'+AVS.map((a,i)=>`<a class="${(S.av||0)===i?'on':''}" data-av="${i}"><img src="${a.src}" style="${avSt({...a,sc:1.5})}" alt=""><small>${a.nm}</small></a>`).join('')+'</div><div class="pbt"><a class="btn" data-av="hud"><i class="ti ti-arrows-vertical"></i>En-tête : '+(S.hudsm?'compact':'grand')+'</a><a class="btn" data-av="snd"><i class="ti ti-'+(S.mute?'volume-off':'volume')+'"></i>Son : '+(S.mute?'coupé':'activé')+'</a><a class="btn" data-av="x">Fermer</a></div></div>'};
  draw();
- o.addEventListener('click',e=>{const t=e.target.closest('[data-av]');if(!t){if(e.target===o)o.remove();return}const a=t.dataset.av;if(a==='x'){o.remove();return}if(a==='snd'){S.mute=!S.mute;save();draw();return}S.av=+a||0;save();draw();render(true)});
+ o.addEventListener('click',e=>{const t=e.target.closest('[data-av]');if(!t){if(e.target===o)o.remove();return}const a=t.dataset.av;if(a==='x'){o.remove();return}if(a==='hud'){S.hudsm=!S.hudsm;save();draw();render(true);return}if(a==='snd'){S.mute=!S.mute;save();draw();return}S.av=+a||0;save();draw();render(true)});
 }
 function saveMenu(){
  let o=document.querySelector('.io-ov');if(o)o.remove();o=document.createElement('div');o.className='pick-ov io-ov';document.body.appendChild(o);
