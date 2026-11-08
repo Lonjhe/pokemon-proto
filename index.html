@@ -2194,7 +2194,7 @@ document.addEventListener('click',e=>{
  else if(a==='nextball'){const k=Object.keys(BALLS),i=(k.indexOf(E.ball)+1)%k.length;E.ball=k[i];setBallUI()}
  else if(a==='close'){P.tutPick=null;P.sel=null;P.confirm=null;P.slot=null;P.flash=null;render(true)}
  else if(a==='dtab'){P.dt=t.dataset.v;P.slot=null;P.flash=null;render(true)}
- else if(a==='slot'&&P.tutPick){const mm=S.box.find(x=>x.uid===t.dataset.uid);if(mm)tutLearn(mm,P.tutPick,+t.dataset.k)}
+ else if(a==='slot'&&P.tutPick){const mm=S.box.find(x=>x.uid===t.dataset.uid);if(mm)tutLearn(mm,P.tutPick,+t.dataset.k,P.tutSrc||'tut')}
  else if(a==='slot'){P.slot=P.slot===+t.dataset.k?null:+t.dataset.k;P.flash=null;P.src=P.src||'lvl';render(true)}
  else if(a==='src'){P.src=t.dataset.v;render(true)}
  else if(a==='learn'&&m)learnMove(m,+t.dataset.i)
@@ -2219,6 +2219,7 @@ document.addEventListener('click',e=>{
  else if(a==='candy'){if(m){const k=t.dataset.k,have=itm()[k]||0;if(have>0)qtyPop({title:CANDY[k].n,max:have,ok:'Utiliser',prev:n=>candyPrev(m,k,n),onOk:n=>useOn(k,m.uid,n)})}}
  else if(a==='bsel'){BAGSEL[t.dataset.t]=t.dataset.k;render(true)}
  else if(a==='tutor'){tutPickMon(t.dataset.v)}
+ else if(a==='ctuse'){tutPickMon(t.dataset.v,t.dataset.s||'ct')}
  else if(a==='shoptab'){SHOPTAB=t.dataset.k;render(true)}
  else if(a==='sactab'){SACTAB=t.dataset.k;render(true)}
  else if(a==='smenu')saveMenu();else if(a==='avmenu')avMenu();else if(a==='sexp')saveIO('exp');else if(a==='simp')saveIO('imp');else if(a==='pinfo'){PINFO=!PINFO;render(true)}else if(a==='setav'){S.av=+t.dataset.i||0;save();render(true)}
@@ -3490,7 +3491,8 @@ const TUT=LSTU.filter(n=>MD[n]).map(n=>[n,tutCost(n)]);
 const csOwned=()=>S.cs||(S.cs=[]);
 const ctCost=n=>Math.round((300+(MD[n][2]||50)*6)/50)*50;
 function ctRot(){for(let i=SHOP.length-1;i>=0;i--)if(SHOP[i].g==='CT')SHOP.splice(i,1);
- const sd=hash('ct'+todayKey());CTS.map((x,i)=>i).sort((a,b)=>seeded(sd,a)-seeded(sd,b)).slice(0,6).forEach(i=>{const[c,n]=CTS[i],d=MD[n];SHOP.push({k:'ct:'+n,g:'CT',t:c+' · '+n,d:`${d[0]} · Puiss. ${d[2]||'—'} · Préc. ${Math.round(d[3]*100)} · PP ${d[4]}`,p:ctCost(n),ty:'ct',n,ic:'disc'})})}
+ const sd=hash('ct'+todayKey());CTS.map((x,i)=>i).sort((a,b)=>seeded(sd,a)-seeded(sd,b)).slice(0,6).forEach(i=>{const[c,n]=CTS[i],d=MD[n];SHOP.push({k:'ct:'+n,g:'CT',t:c+' · '+n,d:`${d[0]} · Puiss. ${d[2]||'—'} · Préc. ${Math.round(d[3]*100)} · PP ${d[4]}`,p:ctCost(n),ty:'ct',n,ic:'disc'})});
+ const ct=SHOP.filter(x=>x.g==='CT').sort((a,b)=>b.p-a.p);ct.slice(0,2).forEach(x=>{x.rare=1;x.d='RARE · 1 par jour · '+x.d})}
 const TUT_P=72*36e5,TUT_D=24*36e5;
 function tutorSt(){const now=Date.now();if(S.tutF)return{on:1,end:now+TUT_D};
  const w=Math.floor(now/TUT_P),st=w*TUT_P+(hash('tut'+w)%48)*36e5;
@@ -3498,23 +3500,29 @@ function tutorSt(){const now=Date.now();if(S.tutF)return{on:1,end:now+TUT_D};
  const w2=now<st?w:w+1;return{on:0,next:now<st?st:w2*TUT_P+(hash('tut'+w2)%48)*36e5}}
 const tutorOn=()=>!!tutorSt().on;
 const fmtDur=ms=>{const m=Math.max(1,Math.ceil(ms/6e4)),h=Math.floor(m/60);return h>=24?Math.floor(h/24)+' j '+(h%24)+' h':h?h+' h '+String(m%60).padStart(2,'0'):m+' min'};
-function tutLearn(m,n,slot){
- const it=itm(),c=tutCost(n);P.tutPick=null;
- if(!tutorOn()||(it.eclat||0)<c||!lsHas(m.id,'u',n)||m.moves.includes(n)){P.flash='Impossible : Tuteur absent, Éclats insuffisants ou attaque déjà connue.';render(true);return false}
- it.eclat-=c;const old=m.moves[slot];if(slot>=m.moves.length)m.moves.push(n);else m.moves[slot]=n;
+function tutLearn(m,n,slot,src='tut'){
+ const it=itm();P.tutPick=null;let ok;
+ if(src==='tut')ok=tutorOn()&&(it.eclat||0)>=tutCost(n)&&lsHas(m.id,'u',n);
+ else if(src==='ct')ok=(ctQ()[n]||0)>0&&lsHas(m.id,'t',n);
+ else ok=csOwned().includes(n)&&lsHas(m.id,'h',n);
+ if(!ok||m.moves.includes(n)){P.flash='Impossible : stock insuffisant, Tuteur absent ou attaque déjà connue.';render(true);return false}
+ if(src==='tut')it.eclat-=tutCost(n);else if(src==='ct')ctQ()[n]--;
+ const old=m.moves[slot];if(slot>=m.moves.length)m.moves.push(n);else m.moves[slot]=n;
  P.flash=old?`${BY[m.id][1]} a oublié ${old} et appris ${n} !`:`${BY[m.id][1]} a appris ${n} !`;P.slot=null;save();render(true);return true}
-function tutPickMon(n){
- const l=S.box.filter(m=>!m.pen&&lsHas(m.id,'u',n)&&!(m.moves||[]).includes(n));
+function tutPickMon(n,src='tut'){
+ const key=src==='tut'?'u':src==='ct'?'t':'h';
+ const l=S.box.filter(m=>{if(m.pen)return false;ensure(m);return lsHas(m.id,key,n)&&!m.moves.includes(n)});
  if(!l.length){msgPop('Aucun de tes Pokémon ne peut apprendre '+n+'.');return}
- const o=modalOv(`<h4 class="px">Enseigner ${esc(n)}</h4><div class="bxg" style="grid-template-columns:1fr">${l.map(m=>{ensure(m);return `<div class="bxi" data-m="p" data-v="${m.uid}" style="flex-direction:row;align-items:center;gap:8px;padding:6px 10px"><img src="${m.sh?SH(m.id):SP(m.id)}" style="width:40px;height:40px;object-fit:contain" alt=""><b>${BY[m.id][1]}</b><small>Niv. ${m.lvl} · ${m.moves.length}/4 attaques</small></div>`}).join('')}</div><div class="pbt"><a class="btn" data-m="x">Annuler</a></div>`);
+ const o=modalOv(`<h4 class="px">${src==='tut'?'Enseigner':'Utiliser'} ${esc(n)}</h4><div class="bxg" style="grid-template-columns:1fr">${l.map(m=>{ensure(m);return `<div class="bxi" data-m="p" data-v="${m.uid}" style="flex-direction:row;align-items:center;gap:8px;padding:6px 10px"><img src="${m.sh?SH(m.id):SP(m.id)}" style="width:40px;height:40px;object-fit:contain" alt=""><b>${BY[m.id][1]}</b><small>Niv. ${m.lvl} · ${m.moves.length}/4 attaques</small></div>`}).join('')}</div><div class="pbt"><a class="btn" data-m="x">Annuler</a></div>`);
  o._h=b=>{if(b.dataset.m!=='p')return;const m=S.box.find(x=>x.uid===b.dataset.v);if(!m)return;
-  if(m.moves.length<4){o.remove();P.flash='';if(tutLearn(m,n,m.moves.length))msgPop(`${BY[m.id][1]} a appris ${n} !`);return false}
-  o.remove();P.sel=m.uid;P.tab='box';P.dt='moves';P.src='tut';P.tutPick=n;P.slot=null;P.flash=`Choisis l'attaque à oublier pour apprendre ${n}.`;go('pokemon');return false}}
+  if(m.moves.length<4){o.remove();P.flash='';if(tutLearn(m,n,m.moves.length,src))msgPop(`${BY[m.id][1]} a appris ${n} !`);return false}
+  o.remove();P.sel=m.uid;P.tab='box';P.dt='moves';P.src=src==='tut'?'tut':'ct';P.tutPick=n;P.tutSrc=src;P.slot=null;P.flash=`Choisis l'attaque à oublier pour apprendre ${n}.`;go('pokemon');return false}}
 function tutItems(){const st=tutorSt(),it=itm(),have=it.eclat||0;
  if(!st.on)return[{k:'tabs',n:'Tuteur absent',ic:GRAD,q:'',dim:true,d:`Il repasse dans ${fmtDur(st.next-Date.now())}. Gagne des Éclats de Ligue en battant champions et Conseil.`}];
  return TUT.map(([n,c])=>({k:'tu:'+n,n,ic:GRAD,q:`<i class="ti ti-diamond"></i>${c}`,dim:have<c,d:`${MD[n][0]} · Puiss. ${MD[n][2]} · Reparti dans ${fmtDur(st.end-Date.now())}`,btn:`<a class="btn sm ${have<c?'off':'y'}" data-act="tutor" data-v="${n}">Enseigner · ${c} Éclats</a>`}))}
 
-const ctOwned=()=>S.ct||(S.ct=['Tonnerre','Lance-Flammes','Surf','Plaquage','Psyko','Éco-Sphère']);
+const ctQ=()=>{if(!S.ctq){S.ctq={};(S.ct||['Tonnerre','Lance-Flammes','Surf','Plaquage','Psyko','Éco-Sphère']).forEach(n=>S.ctq[n]=1)}return S.ctq};
+const ctB=()=>{const k=todayKey();if(!S.ctb||S.ctb.k!==k)S.ctb={k,b:{}};return S.ctb.b};
 function evFix(m){if(!m.ev)return;m.ev=m.ev.map(v=>Math.max(0,Math.min(252,v|0)));let t=m.ev.reduce((a,b)=>a+b,0);while(t>510){const i=m.ev.indexOf(Math.max(...m.ev));const d=Math.min(m.ev[i],t-510);m.ev[i]-=d;t-=d}}
 function ensure(m){
  if(m.iv){evFix(m);return m}const sd=hash(m.uid);
@@ -3569,7 +3577,7 @@ function detail(m){
    const src=P.src||'lvl',stab=[['lvl','Niveau'],['ct','CT / CS'],['tut','Tuteur'],['egg','Œuf']].map(([k,l])=>`<a data-act="src" data-v="${k}" class="${src===k?'on':''}">${l}</a>`).join('');
    let rows='';const known=n=>m.moves.includes(n),ap=(n,extra,locked,btn)=>mvCard(n,undefined,{off:known(n)||locked,right:`<span class="chg">${known(n)?'Équipée':locked||btn}</span>`,attr:!known(n)&&!locked?`data-act="learn" data-i="${MK.indexOf(n)}" data-uid="${m.uid}"`:''})+(extra?`<div class="mvx">${extra}</div>`:'');
    if(src==='lvl')rows=learnset(m.id).filter((x,i,a)=>a.findIndex(y=>y[1]===x[1])===i).map(([lv,n])=>ap(n,'',lv>m.lvl?`Niv. ${lv}`:'',`${lv?'Niv. '+lv:'Évolution'} · Apprendre`)).join('');
-   if(src==='ct')rows=[...CTS.filter(([c,n])=>lsHas(m.id,'t',n)),...CSS_.filter(([c,n])=>lsHas(m.id,'h',n))].map(([c,n])=>{const cs=c.startsWith('CS'),own=cs?csOwned().includes(n):ctOwned().includes(n);return ap(n,`<small>${c}</small>`,own?'':cs?'CS non obtenue (champions d\'arène)':'Pas encore obtenue (boutique)','Utiliser')}).join('')||'<div class="svnote">Aucune CT compatible.</div>';
+   if(src==='ct')rows=[...CTS.filter(([c,n])=>lsHas(m.id,'t',n)),...CSS_.filter(([c,n])=>lsHas(m.id,'h',n))].map(([c,n])=>{const cs=c.startsWith('CS'),q=ctQ()[n]||0,own=cs?csOwned().includes(n):q>0;return ap(n,`<small>${c}</small>`,own?'':cs?'CS non obtenue (champions d\'arène)':'Aucune en stock (boutique)',cs?'Utiliser':`Utiliser (×${q})`)}).join('')||'<div class="svnote">Aucune CT compatible.</div>';
    if(src==='egg')rows=eggMoves(m).map(n=>ap(n,'<small>Capacité Œuf</small>',(itm().capoeuf||0)<1&&!known(n)?'Capsule Œuf requise':'',`Apprendre (Capsule Œuf ×${itm().capoeuf||0})`)).join('')||'<div class="svnote">Aucune capacité Œuf disponible.</div>';
    if(src==='tut')rows=(tutorOn()?'':'<div class="svnote">Le Tuteur est absent. Il repasse de temps en temps : regarde l\'onglet Tuteur de la boutique.</div>')+TUT.filter(([n])=>lsHas(m.id,'u',n)).map(([n,c])=>ap(n,'<small>Tuteur</small>',!tutorOn()?'Tuteur absent':(itm().eclat||0)<c&&!known(n)?`${c} Éclats requis`:'',`${c} Éclats · Apprendre`)).join('')||'<div class="svnote">Aucune attaque du Tuteur compatible avec ce Pokémon.</div>';
    right=`<div class="seg" style="margin-bottom:8px">${stab}</div><div class="svnote" style="margin:0 0 6px">${m.moves[slot]?`Remplace <b>${m.moves[slot]}</b>`:'<b>Emplacement vide</b> : choisis une attaque'}</div><div class="mvl">${rows}</div>`;
@@ -3582,7 +3590,7 @@ function detail(m){
 }
 function learnMove(m,i){
  const n=MK[i],slot=P.slot,src=P.src||'lvl';if(!n||slot==null||m.moves.includes(n))return;
- if(src==='ct'){const cs=CSS_.find(x=>x[1]===n);if(cs?!csOwned().includes(n):!ctOwned().includes(n))return}
+ if(src==='ct'){tutLearn(m,n,slot,csOwned().includes(n)&&CSS_.some(x=>x[1]===n)?'cs':'ct');return}
  if(src==='egg'){const it=itm();if((it.capoeuf||0)<1)return;it.capoeuf--}
  if(src==='tut'){tutLearn(m,n,slot);return}
  const old=m.moves[slot];if(slot>=m.moves.length)m.moves.push(n);else m.moves[slot]=n;P.flash=old?`${BY[m.id][1]} a oublié ${old} et appris ${n} !`:`${BY[m.id][1]} a appris ${n} !`;P.slot=null;save();render(true);
@@ -4036,7 +4044,8 @@ function sac(){
  const evo=[...Object.entries(STONE).map(([n,k])=>mk(k,n,xn(ITEMICO[k]),'Fait évoluer certains Pokémon.',ub(k))),...Object.entries(CAPS).map(([k,c])=>mk(k,c.n,c.ic,c.d,ub(k)))];
  const div=[...(((it.eclat||0)>0)?[mk('eclat','Éclat de Ligue','diamond',"Monnaie du Tuteur d'attaques.")]:[]),...(((it.botte||0)>0)?[mk('botte','Vieille Botte','boot-item','Un vieil objet trouvé en pêchant.')]:[]),mk('baie','Baie',xn(ITEMICO.baie)),mk('dodo','Dodo',xn(ITEMICO.dodo)),mk('appat','Appât',xn(ITEMICO.appat))];
  const ow=l=>l.filter(x=>x.own!==false&&(x.own===undefined||x.own));
- const TABS=[['balls','Balls',balls,'ball'],['peche','Pêche',[...rods,...baits],'key'],['bonbons','Bonbons et vitamines',ow(bon),'candy'],['tenus','Objets tenus',ow(tenu),'other'],['evo','Pierres et capsules',ow(evo),'battle'],['div','Divers',ow(div),'berry']];
+ const ctl=[...CTS.filter(([c,n])=>(ctQ()[n]||0)>0).map(([c,n])=>({k:'ct:'+n,n:c+' · '+n,ic:'<i class="ti ti-disc"></i>',q:'×'+ctQ()[n],d:`${MD[n][0]} · Puiss. ${MD[n][2]||'—'} · Préc. ${Math.round(MD[n][3]*100)} · PP ${MD[n][4]}`,btn:`<a class="btn sm y" data-act="ctuse" data-v="${n}" data-s="ct">Utiliser</a>`})),...CSS_.filter(([c,n])=>csOwned().includes(n)).map(([c,n])=>({k:'cs:'+n,n:c+' · '+n,ic:'<i class="ti ti-disc"></i>',q:'CS',d:'Capacité de déplacement, réutilisable.',btn:`<a class="btn sm y" data-act="ctuse" data-v="${n}" data-s="cs">Utiliser</a>`}))];
+ const TABS=[['balls','Balls',balls,'ball'],['peche','Pêche',[...rods,...baits],'key'],['ct','CT',ctl,'tm'],['bonbons','Bonbons et vitamines',ow(bon),'candy'],['tenus','Objets tenus',ow(tenu),'other'],['evo','Pierres et capsules',ow(evo),'battle'],['div','Divers',ow(div),'berry']];
  if(!TABS.some(t=>t[0]===SACTAB))SACTAB='balls';
  const cur=TABS.find(t=>t[0]===SACTAB),r=bagRows(cur[0],cur[2]);
  return `<div class="bag"><div class="bh"><h3><i class="ti ti-backpack"></i>SAC</h3><a class="shp" data-go="boutique"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/><path d="M2 3h3l2.6 12.2a1.5 1.5 0 0 0 1.5 1.2h9.1a1.5 1.5 0 0 0 1.5-1.1L21.5 7H6"/></svg>Boutique</a></div>
@@ -4087,11 +4096,11 @@ function boutique(){
  const rod=S.rod||0;ctRot();
  const item=x=>{let st='',dis=false;
   if(x.ty==='rod'){if(rod>=x.lv){st='Possédée';dis=true}else if(rod<x.lv-1){st='Achète d\'abord la '+ROD[x.lv-1].n;dis=true}}
-  if(x.ty==='ct'&&ctOwned().includes(x.n)){st='Possédée';dis=true}
+  if(x.ty==='ct'&&x.rare&&(ctB()[x.n]||0)>=1){st='Épuisée (1 par jour)';dis=true}
   if(!dis&&S.coins<x.p)dis=true;
   const ic=x.ty==='ball'?`<img src="${BI(x.b)}" alt="">`:`<i class="ti ti-${x.ic}"></i>`;
-  return{k:x.k,n:x.t,ic,q:st==='Possédée'?'<i class="ti ti-check"></i>':`<i class="ti ti-coin"></i>${fmtN(x.p)}`,dim:dis,d:st&&st!=='Possédée'?st:x.d,btn:`<a class="btn sm ${dis?'off':'y'}" data-act="buy" data-v="${x.k}">${st==='Possédée'?'Possédée':'Acheter · '+fmtN(x.p)}</a>`}};
- const TB=[['balls','Balls','ball',['Balls']],['peche','Pêche','key',['Cannes','Appâts de pêche']],['ct','CT','other',['CT']],['bonb','Bonbons et vitamines','candy',['Bonbons','Vitamines']],['obj','Objets','berry',['Objets','Objets à tenir']],['evo','Pierres et capsules','battle',['Pierres','Capsules']],['tut','Tuteur','treasure',['Tuteur']]];
+  return{k:x.k,n:x.t,ic,q:st==='Possédée'?'<i class="ti ti-check"></i>':`<i class="ti ti-coin"></i>${fmtN(x.p)}`,dim:dis,d:st&&st!=='Possédée'?st:x.ty==='ct'?x.d+' · En stock : ×'+(ctQ()[x.n]||0):x.d,btn:`<a class="btn sm ${dis?'off':'y'}" data-act="buy" data-v="${x.k}">${st==='Possédée'?'Possédée':x.ty==='ct'&&st?'Épuisée':'Acheter · '+fmtN(x.p)}</a>`}};
+ const TB=[['balls','Balls','ball',['Balls']],['peche','Pêche','key',['Cannes','Appâts de pêche']],['ct','CT','tm',['CT']],['bonb','Bonbons et vitamines','candy',['Bonbons','Vitamines']],['tenus','Objets tenus','other',['Objets à tenir']],['evo','Pierres et capsules','battle',['Pierres','Capsules']],['div','Divers','berry',['Objets']],['tut','Tuteur','treasure',['Tuteur']]];
  if(!TB.some(t=>t[0]===SHOPTAB))SHOPTAB='balls';
  const cur=TB.find(t=>t[0]===SHOPTAB),r=bagRows('s'+cur[0],cur[0]==='tut'?tutItems():SHOP.filter(x=>cur[3].includes(x.g)).map(item)),lab=cur[0]==='ct'?`CT · nouvelles demain (${fmtDur(new Date().setHours(24,0,0,0)-Date.now())})`:cur[0]==='tut'?`Tuteur · ${itm().eclat||0} Éclats de Ligue`:cur[1];
  return `<div class="bag shop"><div class="bh"><h3><svg class="cart" viewBox="0 0 24 24" fill="none" stroke="#1b0f00" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/><path d="M2 3h3l2.6 12.2a1.5 1.5 0 0 0 1.5 1.2h9.1a1.5 1.5 0 0 0 1.5-1.1L21.5 7H6"/></svg>BOUTIQUE</h3><span class="chip pk"><i class="ti ti-coin" style="color:var(--y)"></i>${fmtN(S.coins)}</span></div>
@@ -4135,7 +4144,7 @@ function pickMon(k){
 function buy1(k){
  const x=SHOP.find(q=>q.k===k);if(!x||S.coins<x.p)return false;if(x.i==='bonbonxp'){const d=dayS();if((d.bx||0)>=3)return false;d.bx=(d.bx||0)+1}
  if(x.ty==='rod'){if((S.rod||0)!==x.lv-1)return false;S.rod=x.lv}
- else if(x.ty==='ct'){if(ctOwned().includes(x.n))return false;ctOwned().push(x.n)}
+ else if(x.ty==='ct'){if(x.rare){const b=ctB();if((b[x.n]||0)>=1)return false;b[x.n]=1}ctQ()[x.n]=(ctQ()[x.n]||0)+1}
  else if(x.ty==='ball')S.balls[x.b]=(S.balls[x.b]||0)+x.n;
  else{const it=itm();it[x.i]=(it[x.i]||0)+x.n}
  S.coins-=x.p;qEv('buy');qEv('spend',{n:x.p});return true;
@@ -4143,7 +4152,7 @@ function buy1(k){
 function buy(k,n=1){for(let i=0;i<n;i++)if(!buy1(k))break;save();render(true)}
 function buyAsk(k){
  const x=SHOP.find(q=>q.k===k);if(!x)return;
- let max=Math.floor(S.coins/x.p);if(x.i==='bonbonxp')max=Math.min(max,3-(dayS().bx||0));if(x.ty==='rod'||x.ty==='ct')max=Math.min(max,1);
+ let max=Math.floor(S.coins/x.p);if(x.i==='bonbonxp')max=Math.min(max,3-(dayS().bx||0));if(x.ty==='rod'||(x.ty==='ct'&&x.rare))max=Math.min(max,1);
  if(max<=0)return;if(max===1)return buy(k);
  qtyPop({title:x.t,max,unit:x.p,ok:'Acheter',onOk:n=>buy(k,n)});
 }
