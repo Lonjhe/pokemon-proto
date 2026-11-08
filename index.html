@@ -948,6 +948,11 @@ input{flex:1;min-width:140px}
 .bag .bh{gap:8px}.bag .bh h3{font-size:clamp(22px,7.4vw,34px);min-width:0;white-space:nowrap}.bag .bh .cart{width:clamp(24px,7vw,34px);height:clamp(24px,7vw,34px);flex:none}
 .sb{position:relative}.sbd{position:absolute;top:0;right:2px;width:11px;height:11px;border-radius:50%;background:#ff3b5c;border:2px solid #fff}
 .sbt{gap:2px}
+
+.bag .chip.pk{flex-direction:row!important;align-items:center!important;gap:6px!important;white-space:nowrap!important;padding:4px 12px!important;height:auto!important;min-height:0!important;line-height:1}
+.bag .chip.pk img,.bag .chip.pk .gi{width:20px!important;height:20px!important;max-width:20px;filter:none!important;flex:none}
+.br.sel .ic .ti{color:#fff}.br .ic svg{width:30px;height:30px;color:#1b0f00}.br.sel .ic svg{color:#fff}
+.sb svg{width:34px;height:34px;color:#fff;filter:drop-shadow(0 0 1px #8a5a00)}.sb.on svg{color:#000;filter:none}
 </style>
 </head>
 <body>
@@ -3479,6 +3484,7 @@ function learnset(id){
 const compat=(id,n)=>lsHas(id,'t',n)||lsHas(id,'h',n)||lsHas(id,'u',n);
 const CTS=LSTM.filter(([n,g])=>MD[g]).map(([n,g])=>['CT'+String(n).padStart(2,'0'),g]);
 const CSS_=[['CS01','Coupe'],['CS02','Vol'],['CS03','Surf'],['CS04','Force'],['CS05','Cascade']];
+const GRAD='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11.5V16c0 1.5 3 3 6 3s6-1.5 6-3v-4.5"/><path d="M22 9v6"/></svg>';
 const tutCost=n=>Math.max(3,Math.round((MD[n][2]||60)/15));
 const TUT=LSTU.filter(n=>MD[n]).map(n=>[n,tutCost(n)]);
 const csOwned=()=>S.cs||(S.cs=[]);
@@ -3505,8 +3511,8 @@ function tutPickMon(n){
   if(m.moves.length<4){o.remove();P.flash='';if(tutLearn(m,n,m.moves.length))msgPop(`${BY[m.id][1]} a appris ${n} !`);return false}
   o.remove();P.sel=m.uid;P.tab='box';P.dt='moves';P.src='tut';P.tutPick=n;P.slot=null;P.flash=`Choisis l'attaque à oublier pour apprendre ${n}.`;go('pokemon');return false}}
 function tutItems(){const st=tutorSt(),it=itm(),have=it.eclat||0;
- if(!st.on)return[{k:'tabs',n:'Tuteur absent',ic:'<i class="ti ti-walk"></i>',q:'',dim:true,d:`Il repasse dans ${fmtDur(st.next-Date.now())}. Gagne des Éclats de Ligue en battant champions et Conseil.`}];
- return TUT.map(([n,c])=>({k:'tu:'+n,n,ic:'<i class="ti ti-sparkles"></i>',q:`<i class="ti ti-diamond"></i>${c}`,dim:have<c,d:`${MD[n][0]} · Puiss. ${MD[n][2]} · Reparti dans ${fmtDur(st.end-Date.now())}`,btn:`<a class="btn sm ${have<c?'off':'y'}" data-act="tutor" data-v="${n}">Enseigner · ${c} Éclats</a>`}))}
+ if(!st.on)return[{k:'tabs',n:'Tuteur absent',ic:GRAD,q:'',dim:true,d:`Il repasse dans ${fmtDur(st.next-Date.now())}. Gagne des Éclats de Ligue en battant champions et Conseil.`}];
+ return TUT.map(([n,c])=>({k:'tu:'+n,n,ic:GRAD,q:`<i class="ti ti-diamond"></i>${c}`,dim:have<c,d:`${MD[n][0]} · Puiss. ${MD[n][2]} · Reparti dans ${fmtDur(st.end-Date.now())}`,btn:`<a class="btn sm ${have<c?'off':'y'}" data-act="tutor" data-v="${n}">Enseigner · ${c} Éclats</a>`}))}
 
 const ctOwned=()=>S.ct||(S.ct=['Tonnerre','Lance-Flammes','Surf','Plaquage','Psyko','Éco-Sphère']);
 function evFix(m){if(!m.ev)return;m.ev=m.ev.map(v=>Math.max(0,Math.min(252,v|0)));let t=m.ev.reduce((a,b)=>a+b,0);while(t>510){const i=m.ev.indexOf(Math.max(...m.ev));const d=Math.min(m.ev[i],t-510);m.ev[i]-=d;t-=d}}
@@ -4034,7 +4040,7 @@ function sac(){
  if(!TABS.some(t=>t[0]===SACTAB))SACTAB='balls';
  const cur=TABS.find(t=>t[0]===SACTAB),r=bagRows(cur[0],cur[2]);
  return `<div class="bag"><div class="bh"><h3><i class="ti ti-backpack"></i>SAC</h3><a class="shp" data-go="boutique"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/><path d="M2 3h3l2.6 12.2a1.5 1.5 0 0 0 1.5 1.2h9.1a1.5 1.5 0 0 0 1.5-1.1L21.5 7H6"/></svg>Boutique</a></div>
- <div class="sbt">${TABS.map(([k,lb,,ib])=>`<a class="sb ${k===SACTAB?'on':''}" data-act="sactab" data-k="${k}" title="${lb}"><img src="img/bag_${ib}.png" alt="">${k==='tut'&&tutorOn()?'<i class="sbd"></i>':''}</a>`).join('')}</div>
+ <div class="sbt">${TABS.map(([k,lb,,ib])=>`<a class="sb ${k===SACTAB?'on':''}" data-act="sactab" data-k="${k}" title="${lb}"><img src="img/bag_${ib}.png" alt=""></a>`).join('')}</div>
  <div class="sbl">${cur[1]}</div>
  <div class="bl">${r.rows}</div>${r.det}</div>`;
 }
@@ -4089,7 +4095,7 @@ function boutique(){
  if(!TB.some(t=>t[0]===SHOPTAB))SHOPTAB='balls';
  const cur=TB.find(t=>t[0]===SHOPTAB),r=bagRows('s'+cur[0],cur[0]==='tut'?tutItems():SHOP.filter(x=>cur[3].includes(x.g)).map(item)),lab=cur[0]==='ct'?`CT · nouvelles demain (${fmtDur(new Date().setHours(24,0,0,0)-Date.now())})`:cur[0]==='tut'?`Tuteur · ${itm().eclat||0} Éclats de Ligue`:cur[1];
  return `<div class="bag shop"><div class="bh"><h3><svg class="cart" viewBox="0 0 24 24" fill="none" stroke="#1b0f00" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.6"/><circle cx="18" cy="20" r="1.6"/><path d="M2 3h3l2.6 12.2a1.5 1.5 0 0 0 1.5 1.2h9.1a1.5 1.5 0 0 0 1.5-1.1L21.5 7H6"/></svg>BOUTIQUE</h3><span class="chip pk"><i class="ti ti-coin" style="color:var(--y)"></i>${fmtN(S.coins)}</span></div>
- <div class="sbt">${TB.map(([k,lb,ib])=>`<a class="sb ${k===SHOPTAB?'on':''}" data-act="shoptab" data-k="${k}" title="${lb}"><img src="img/bag_${ib}.png" alt=""></a>`).join('')}</div>
+ <div class="sbt">${TB.map(([k,lb,ib])=>`<a class="sb ${k===SHOPTAB?'on':''}" data-act="shoptab" data-k="${k}" title="${lb}">${k==='tut'?GRAD:`<img src="img/bag_${ib}.png" alt="">`}${k==='tut'&&tutorOn()?'<i class="sbd"></i>':''}</a>`).join('')}</div>
  <div class="sbl">${lab}</div>
  <div class="bl">${r.rows}</div>${r.det}</div>`;
 }
