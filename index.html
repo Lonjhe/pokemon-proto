@@ -932,6 +932,17 @@ input{flex:1;min-width:140px}
 .pkg .pkc{min-width:0;min-height:0;overflow:hidden}.pkg .pkc img{position:absolute;inset:0;margin:auto;max-width:82%;max-height:82%}
 .pkf input{flex:1 1 100%}.pkf select{flex:1 1 40%}
 .bztabs{flex-wrap:nowrap}.bztabs a{white-space:nowrap;padding-left:6px;padding-right:6px;font-size:13px}
+
+.evo-ov{position:fixed;inset:0;z-index:9500;background:#05071c;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:20px;transition:background .3s}
+.evo-ov.fl{background:#fff;transition:background .4s}.evo-ov.ok{background:radial-gradient(circle at 50% 40%,#2b3a8f,#05071c 70%)}
+.evo-st{position:relative;width:min(68vw,250px);aspect-ratio:1;max-width:100%}
+.evo-st img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.evo-st img.sil{filter:brightness(0) invert(1) drop-shadow(0 0 12px #9fb4ff)}
+.evo-st .rg{position:absolute;inset:-18%;border-radius:50%;background:radial-gradient(#6f8cff66,transparent 65%);animation:evop 1s ease-in-out infinite alternate}
+@keyframes evop{from{transform:scale(.85);opacity:.5}to{transform:scale(1.1);opacity:1}}
+.evo-t{color:#fff;font-weight:900;font-size:17px;text-align:center;min-height:2.4em;max-width:320px}
+.evo-ov.fl .evo-t{color:#05071c}.evo-no{min-width:200px;justify-content:center}
+.mvc.mve{border-style:dashed;opacity:.8;display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:44px;cursor:pointer}.mvc.mve b{color:var(--m)}
 </style>
 </head>
 <body>
@@ -2217,7 +2228,7 @@ document.addEventListener('click',e=>{
  else if(a==='xpcandy'){const it=itm(),have=it.bonbonxp||0,use=c=>{for(let i=0;i<c&&(it.bonbonxp||0)>0;i++){it.bonbonxp--;S.xp+=500;while(S.lvl<100&&S.xp>=need()){S.xp-=need();S.lvl++}}save();render(true)};if(have>1)qtyPop({title:'Super Bonbon XP',max:have,ok:'Utiliser',onOk:use});else if(have>0)use(1)}
  else if(a==='cap'){if(m)useCap(m,t.dataset.k)}
  else if(a==='hold'){if(m)holdItem(m,t.dataset.k)}
- else if(a==='evolve'){if(m)evolve(m,+t.dataset.to)}
+ else if(a==='evolve'){if(m)evoStart(m,+t.dataset.to,{manual:1})}
  else if(a==='eq'){S.eq=S.eq||{};S.eq[t.dataset.k]=t.dataset.k==='rod'?+t.dataset.v:t.dataset.v;save();render(true)}
  else if(a==='pks'){const m=S.box.find(x=>x.uid===t.dataset.uid),rp=S.box.find(x=>x.uid===PKREP);if(rp&&m&&m.team){m.team=false;rp.team=true;PKREP=null;save();render(true)}else{PKREP=null;pkSum(t.dataset.uid)}}
  else if(a==='pkrepx'){PKREP=null;render(true)}
@@ -3101,7 +3112,7 @@ function finish(win){
  B.over=true;B.busy=false;const lines=[];if(win&&B.mode==='duel'&&B.hw==null)qTrainer();
  if(B.hw!=null)hwFinish(win,lines);
  else if(B.adv!=null)advFinish(win,lines);
- else if(B.mode==='duel'){const c=win?60+B.foe.lvl*5:10,x=addXp(win?40+B.foe.lvl*3:5);S.coins+=c;lines.push(`+${fmtN(c)} pièces · +${x} XP${xpNote()}`);if(win){const up=S.box.filter(m=>m.team&&m.lvl<capLv()&&m.lvl<B.foe.lvl+5);up.forEach(m=>{m.lvl=Math.min(capLv(),m.lvl+(m.lvl<B.foe.lvl?2:1))});if(up.length)lines.push(`Niveau supérieur : ${up.map(m=>BY[m.id][1]+' → '+m.lvl).join(', ')}`)}}
+ else if(B.mode==='duel'){const c=win?60+B.foe.lvl*5:10,x=addXp(win?40+B.foe.lvl*3:5);S.coins+=c;lines.push(`+${fmtN(c)} pièces · +${x} XP${xpNote()}`);if(win)lines.push(...teamXp(S.box.filter(m=>m.team),B.foe.lvl,20+B.foe.lvl*6))}
  else{const b=bossS(),c=Math.round(B.dealt/30);S.coins+=c;const xb=addXp(100+Math.min(300,Math.floor(B.dealt/500)));lines.push(`${fmtN(B.dealt)} dégâts infligés au boss`,`+${fmtN(c)} pièces · +${xb} XP${xpNote()}`);
   if(bossStat().dead)lines.push('Le boss est vaincu ! Ouvre l\'onglet Boss pour le récap et tes lots.')}
  B.res={win,lines};say(win?'Victoire !':B.mode==='boss'?'Tentative terminée.':'Défaite...');save();LOBBY=null;render(true);
@@ -3112,7 +3123,7 @@ function battleView(){
  const f=B.foe,m=B.team[B.i],boss=B.mode==='boss',st=boss?bossStat():null,inn=B.fresh?' in':'';B.fresh=false;
  const fr=boss?st.pct/100:f.hp/f.max,mr=m.hp/m.max;
  if(m.moves.every(v=>v.pp<=0)&&!m.moves.some(v=>v.n==='Lutte'))m.moves.push({n:'Lutte',t:'Normal',p:40,pp:99,max:99});
- const mvs=m.moves.map((v,k)=>`<a class="btn mvb ${v.pp<=0||B.busy||B.over||B.pick?'off':''}" data-b="mv" data-k="${k}" style="border-color:${TC[v.t]||'#555'}"><b>${v.n}</b><small>${v.t} · ${v.stat?'Statut · '+STN[v.stat]:'Puiss. '+v.p}${v.max<90?` · PP ${v.pp}/${v.max}`:''}</small></a>`).join('');
+ const mvs=m.moves.map((v,k)=>`<a class="btn mvb ${v.pp<=0||B.busy||B.over||B.pick?'off':''}" data-b="mv" data-k="${k}" style="border-color:${TC[v.t]||'#555'}"><b>${v.n}</b><small>${v.t} · ${v.stat?'Statut · '+STN[v.stat]:'Puiss. '+v.p}${v.max<90?` · PP ${v.pp}/${v.max}`:''}</small></a>`).join('')+Array.from({length:Math.max(0,4-m.moves.length)},()=>`<a class="btn mvb off" style="opacity:.35"><b>—</b><small>Emplacement vide</small></a>`).join('');
  const strip=B.team.map((t,k)=>{const r=t.hp/t.max;return `<div class="tm ${k===B.i?'sel':''} ${t.hp<=0?'ko':''} ${B.busy&&!B.pick?'off':''}" data-b="sw" data-k="${k}"><img class="pmi" src="${t.sh?SH(t.id):SP(t.id)}" referrerpolicy="no-referrer" alt=""><b>${t.name}</b><div class="bar"><i style="width:${r*100}%;background:${hpc(r)}"></i></div><small>${t.hp}/${t.max}</small></div>`}).join('');
  const arena=`<div class="arena" id="arena"><div id="stage"><div class="sky"></div><div class="gr"></div><div class="gr2"></div><div class="bgimg" style="background-image:url(${BG_}${B.bg}.png)"></div>${boss?'<div class="aura"></div>':''}
  <img class="sp${inn}" id="foe" ${boss?'data-boss=1':''} src="${f.sh?SH(f.id):SP(f.id)}" style="right:12%;top:${boss?2:10}%;width:${boss?'clamp(130px,34cqw,250px)':'clamp(90px,24cqw,170px)'}" referrerpolicy="no-referrer" alt="">
@@ -3388,7 +3399,7 @@ function advFinish(win,lines){
  const c=Math.round(s.reward*(first?1:.4)),bx=s.kind==='gym'||s.kind==='elite'?150+8*s.top:s.kind==='champ'?1.5*(150+8*s.top):s.kind==='rival'?1.5*(25+3*s.top):25+3*s.top,x=addXp(Math.round(bx*(first?(s.kind==='gym'||s.kind==='elite'||s.kind==='champ'?1.5:1):.4)));S.coins+=c;lines.push(`+${fmtN(c)} pièces · +${x} XP${xpNote()}`);
  if(!first)return;
  A.step=B.adv+1;
- const up=S.box.filter(m=>m.team&&m.lvl<s.top&&m.lvl<capLv());up.forEach(m=>{m.lvl+=Math.min(3,Math.ceil((s.top-m.lvl)/5),capLv()-m.lvl)});if(up.length)lines.push(`Équipe : niveaux +${Math.min(3,Math.ceil((s.top-up[0].lvl)/5))} environ (${up.length} Pokémon)`);
+ lines.push(...teamXp(S.box.filter(m=>m.team),s.top,60+s.top*10));
  if(s.kind==='gym'){A.badges.push(s.badge);const it=itm();it.appat+=1;it.baie+=2;lines.push(`${s.badge} obtenu !`,'+2 Baies, +1 Appât');}
  if(s.kind==='champ')lines.push('Tu es Maître de la Ligue !');
  const nx=ADV[A.step];if(nx&&nx.zone!==s.zone)lines.push('Nouvelle zone : '+ZONES[nx.zone].name);
@@ -3468,7 +3479,7 @@ function ensure(m){
  m.ev=[0,0,0,0,0,0];
  evFix(m);m.nat=Math.floor(seeded(sd,20)*25);m.ot=String(100000+sd%900000);
  const ls=learnset(m.id).filter(x=>x[0]<=m.lvl);m.moves=ls.slice(-4).map(x=>x[1]);
- if(m.moves.length<4)for(const n of['Charge','Vive-Attaque']){if(m.moves.length<4&&!m.moves.includes(n))m.moves.push(n)}
+ if(!m.moves.length)m.moves=['Charge'];
  return m;
 }
 function stat6(m){
@@ -3503,13 +3514,13 @@ function detail(m){
  let body='';
  if(tab==='info'){
   const row=(a,b)=>`<div class="svr"><span>${a}</span><b>${b}</b></div>`;
-  body=`<div class="svl">${row('N° Pokédex','#'+String(m.id).padStart(4,'0'))}${row('Nom',s[1]+(m.sh?' ✦':''))}${row('Type',s[2].map(ty).join(' '))}${row('Taille',`${fmtLen(szCm(m))} ${szBadge(m)} <small style="color:var(--m)">(moy. ${fmtLen((HGT[m.id]||10)*10)})</small>`)}${row("Groupes d'œuf",eg(m.id).map(g=>EGN[g]||g).join(' · '))}${row('Amitié',friendHTML(m))}${row('Objet tenu',m.held?HELD[m.held].n:'Aucun')}${row('N° ID',m.ot)}${row('Nature',`${nat[0]}${nat[1]?` <small style="color:var(--m)">(+${SN[nat[1]]} −${SN[nat[2]]})</small>`:' <small style="color:var(--m)">(neutre)</small>'}`)}${row('Talent',`${ab[0]}<small style="display:block;color:var(--m);font-weight:600">${ab[1]}</small>`)}</div>
+  body=`<div class="svl">${row('N° Pokédex','#'+String(m.id).padStart(4,'0'))}${row('Nom',s[1]+(m.sh?' ✦':''))}${row('Type',s[2].map(ty).join(' '))}${row('Taille',`${fmtLen(szCm(m))} ${szBadge(m)} <small style="color:var(--m)">(moy. ${fmtLen((HGT[m.id]||10)*10)})</small>`)}${row("Groupes d'œuf",eg(m.id).map(g=>EGN[g]||g).join(' · '))}${row('Expérience',m.lvl>=100?'Niveau max':`${fmtN(m.xp||0)} / ${fmtN(pxNeed(m.lvl))} XP`)}${row('Amitié',friendHTML(m))}${row('Objet tenu',m.held?HELD[m.held].n:'Aucun')}${row('N° ID',m.ot)}${row('Nature',`${nat[0]}${nat[1]?` <small style="color:var(--m)">(+${SN[nat[1]]} −${SN[nat[2]]})</small>`:' <small style="color:var(--m)">(neutre)</small>'}`)}${row('Talent',`${ab[0]}<small style="display:block;color:var(--m);font-weight:600">${ab[1]}</small>`)}</div>
   <div class="svnote"><i class="ti ti-map-pin"></i> Rencontré au Niv. ${Math.max(1,m.lvl-3)}, Prairie des Brumes. ${m.sh?'Un spécimen shiny exceptionnel !':'Un Pokémon plein de vie.'}</div>`;
  }else if(tab==='stats'){
   body=`<div class="svs"><div>${radarSVG(m)}<div class="lg"><span><i style="background:#4dd0e1"></i>IV (0–31)</span><span><i style="background:#ff9800"></i>EV (0–252)</span></div></div>
   <div class="svnote" style="margin-top:0"><b style="color:var(--y)">Potentiel : ${ivl}</b> · IV ${ivs}/186 · EV ${evs}/510<br>Les EV se gagnent en combattant, les IV sont fixés à la capture.</div></div>`;
  }else if(tab==='items'){body=itemsTab(m)}else{
-  const slot=P.slot,eq=m.moves.map((n,k)=>mvCard(n,undefined,{sel:slot===k,attr:`data-act="slot" data-k="${k}" data-uid="${m.uid}"`,right:`<span class="chg">${slot===k?'Choisis une attaque →':'Changer'}</span>`})).join('');
+  const slot=P.slot,eq=[0,1,2,3].map(k=>{const n=m.moves[k],at=`data-act="slot" data-k="${k}" data-uid="${m.uid}"`;return n?mvCard(n,undefined,{sel:slot===k,attr:at,right:`<span class="chg">${slot===k?'Choisis une attaque →':'Changer'}</span>`}):`<div class="mvc mve ${slot===k?'sel':''}" ${at}><b>Emplacement vide</b><span class="chg">${slot===k?'Choisis une attaque →':'Apprendre'}</span></div>`}).join('');
   let right='<div class="svnote">Touche une attaque pour la remplacer : par <b>niveau</b>, par <b>CT / CS</b> ou chez le <b>Tuteur</b>.</div>';
   if(slot!=null){
    const src=P.src||'lvl',stab=[['lvl','Niveau'],['ct','CT / CS'],['tut','Tuteur'],['egg','Œuf']].map(([k,l])=>`<a data-act="src" data-v="${k}" class="${src===k?'on':''}">${l}</a>`).join('');
@@ -3518,7 +3529,7 @@ function detail(m){
    if(src==='ct')rows=[...CTS.filter(([c,n])=>lsHas(m.id,'t',n)),...CSS_.filter(([c,n])=>lsHas(m.id,'h',n))].map(([c,n])=>{const own=c.startsWith('CS')||ctOwned().includes(n);return ap(n,`<small>${c}</small>`,(!own&&S.coins<400)?'400 🪙 requis':'',own?'Utiliser':'Acheter 400 🪙')}).join('')||'<div class="svnote">Aucune CT compatible.</div>';
    if(src==='egg')rows=eggMoves(m).map(n=>ap(n,'<small>Capacité Œuf</small>',(itm().capoeuf||0)<1&&!known(n)?'Capsule Œuf requise':'',`Apprendre (Capsule Œuf ×${itm().capoeuf||0})`)).join('')||'<div class="svnote">Aucune capacité Œuf disponible.</div>';
    if(src==='tut')rows=TUT.filter(([n])=>lsHas(m.id,'u',n)).map(([n,c])=>ap(n,'<small>Tuteur</small>',S.coins<c&&!known(n)?`${c} 🪙 requis`:'',`${c} 🪙 · Apprendre`)).join('')||'<div class="svnote">Aucune attaque du Tuteur compatible avec ce type.</div>';
-   right=`<div class="seg" style="margin-bottom:8px">${stab}</div><div class="svnote" style="margin:0 0 6px">Remplace <b>${m.moves[slot]}</b></div><div class="mvl">${rows}</div>`;
+   right=`<div class="seg" style="margin-bottom:8px">${stab}</div><div class="svnote" style="margin:0 0 6px">${m.moves[slot]?`Remplace <b>${m.moves[slot]}</b>`:'<b>Emplacement vide</b> : choisis une attaque'}</div><div class="mvl">${rows}</div>`;
   }
   body=`<div class="svm"><div class="mvl">${eq}</div><div>${right}</div></div>`;
  }
@@ -3531,7 +3542,7 @@ function learnMove(m,i){
  if(src==='ct'){const c=CTS.find(x=>x[1]===n);if(c&&!ctOwned().includes(n)){if(S.coins<400)return;S.coins-=400;ctOwned().push(n)}}
  if(src==='egg'){const it=itm();if((it.capoeuf||0)<1)return;it.capoeuf--}
  if(src==='tut'){const t=TUT.find(x=>x[0]===n);if(!t||S.coins<t[1])return;S.coins-=t[1]}
- const old=m.moves[slot];m.moves[slot]=n;P.flash=`${BY[m.id][1]} a oublié ${old} et appris ${n} !`;P.slot=null;save();render(true);
+ const old=m.moves[slot];if(slot>=m.moves.length)m.moves.push(n);else m.moves[slot]=n;P.flash=old?`${BY[m.id][1]} a oublié ${old} et appris ${n} !`:`${BY[m.id][1]} a appris ${n} !`;P.slot=null;save();render(true);
 }
 
 /* ===== PARTENAIRE, AMITIÉ, ÉVOLUTIONS, BONBONS, CAPSULES, OBJETS TENUS ===== */
@@ -3544,14 +3555,45 @@ const EVP={};Object.entries(EVO).forEach(([a,l])=>l.forEach(([b])=>EVP[b]=+a));
 const evTxt=c=>typeof c==='number'?`Niv. ${c}`:c;
 const evoShort=id=>{const e=EVO[id];if(!e)return EVP[id]?'Forme finale':'Ne change pas';return e.map(([to,c])=>`${evTxt(c)} → ${BY[to][1]}`).join(' · ')};
 const STONE={'Pierre Feu':'pfeu','Pierre Eau':'peau','Pierre Foudre':'pfoudre','Pierre Lune':'plune','Pierre Feuille':'pfeuille'};
-const CANDY={bonbon:{n:'Bonbon Rare',lv:1},bonbonm:{n:'Bonbon EXP M',lv:3},bonbonxl:{n:'Bonbon EXP XL',lv:8}};
+const CANDY={bonbon:{n:'Bonbon Rare',xp:250},bonbonm:{n:'Bonbon EXP M',xp:1000},bonbonxl:{n:'Bonbon EXP XL',xp:3500}};
 const CAPS={capargent:{n:'Capsule Argent',d:'IV le plus faible au maximum',ic:'circle-dot'},capor:{n:'Capsule Or',d:'Tous les IV au maximum',ic:'star'},captal:{n:'Capsule Talent',d:'Change la nature',ic:'refresh'},capoeuf:{n:'Capsule Œuf',d:'Apprend une capacité Œuf',ic:'egg'}};
 const HELD={restes:{n:'Restes',d:'Soigne 1/16 des PV à chaque tour',ic:'heart-plus'},orbe:{n:'Orbe Vie',d:'Dégâts +30 %',ic:'diamond'},sitrus:{n:'Baie Sitrus',d:'Soigne 25 % sous 50 % de PV (une fois)',ic:'apple'},ceinture:{n:'Ceinture Force',d:'Survit à un coup fatal à PV pleins',ic:'shield'}};
 const EGGP=['Ultralaser','Séisme','Close Combat','Pouvoir Lunaire','Poing Ombre','Lame d\'Air','Tir de Boue','Choc Mental','Étincelle','Pisto-Poing'];
 const eggMoves=m=>LS_(m.id).e.map(i=>LSN[i]).filter(n=>MD[n]&&!m.moves.includes(n));
+
+/* ===== XP PAR POKÉMON, ÉVOLUTION AUTOMATIQUE ===== */
+const pxNeed=l=>Math.round(15+l*l*.8+l*6);
+const EVQ=[];
+function gainPx(m,xp){ensure(m);const cap=capLv(),l0=m.lvl,res={lv:0,mv:[]};if(m.lvl>=cap)return res;
+ m.xp=(m.xp||0)+Math.max(0,Math.round(xp));
+ while(m.lvl<cap&&m.xp>=pxNeed(m.lvl)){m.xp-=pxNeed(m.lvl);m.lvl++}
+ if(m.lvl>=cap)m.xp=Math.min(m.xp,Math.max(0,pxNeed(m.lvl)-1));
+ res.lv=m.lvl-l0;
+ if(res.lv){learnset(m.id).forEach(([lv,n])=>{if(lv>l0&&lv<=m.lvl&&!m.moves.includes(n)&&m.moves.length<4){m.moves.push(n);res.mv.push(n)}});
+  const e=(EVO[m.id]||[]).find(([to,c])=>typeof c==='number'&&m.lvl>=c);
+  if(e&&!(m.evr>=m.lvl)&&!EVQ.some(q=>q.uid===m.uid)){EVQ.push({uid:m.uid,to:e[0]});setTimeout(evoFlush,700)}}
+ return res}
+function teamXp(list,foeLv,base){const out=[],ups=[],mv=[];let tot=0,n=0;
+ list.forEach(m=>{if(m.lvl>=capLv())return;const x=Math.round(base*(m.lvl<foeLv?1.4:m.lvl>=foeLv+8?.4:1)),r=gainPx(m,x);tot+=x;n++;if(r.lv)ups.push(`${BY[m.id][1]} → ${m.lvl}`);r.mv.forEach(a=>mv.push(`${BY[m.id][1]} apprend ${a}`))});
+ if(n)out.push(`Équipe : environ +${fmtN(Math.round(tot/n))} XP par Pokémon`);if(ups.length)out.push(`Niveau supérieur : ${ups.join(', ')}`);if(mv.length)out.push(mv.join(' · '));return out}
+let EVOPEN=false;
+function evoFlush(){if(EVOPEN||!EVQ.length)return;const q=EVQ.shift(),m=S.box.find(x=>x.uid===q.uid);if(!m||!EVO[m.id]||!EVO[m.id].some(e=>e[0]===q.to)){evoFlush();return}evoStart(m,q.to,{})}
+function evoStart(m,to,o={}){
+ if(EVOPEN)return;EVOPEN=true;const fr=BY[m.id][1],tn=BY[to][1],im=id=>m.sh?ARS(id):AR(id);
+ const ov=document.createElement('div');ov.className='evo-ov';
+ ov.innerHTML=`<div class="evo-st"><div class="rg"></div><img id="evA" src="${im(m.id)}" alt="" referrerpolicy="no-referrer"><img id="evB" src="${im(to)}" alt="" referrerpolicy="no-referrer" style="opacity:0"></div><div class="evo-t" id="evT">Quoi ? ${esc(fr)} évolue !</div><a class="btn r evo-no" id="evNo">${o.manual?'Annuler':"Refuser l'évolution"}</a>`;
+ document.body.appendChild(ov);
+ const A=ov.querySelector('#evA'),Bb=ov.querySelector('#evB'),T=ov.querySelector('#evT'),NO=ov.querySelector('#evNo');
+ let tm=null,done=false,n=0,gap=520,showB=false;
+ const close=()=>{clearTimeout(tm);ov.remove();EVOPEN=false;render(true);setTimeout(evoFlush,300)};
+ const fin=txt=>{done=true;clearTimeout(tm);NO.textContent='OK';NO.className='btn y evo-no';NO.onclick=close;T.textContent=txt};
+ NO.onclick=()=>{if(done)return;if(!o.manual)m.evr=m.lvl;save();A.className=Bb.className='';A.style.opacity=1;Bb.style.opacity=0;ov.classList.remove('fl');fin(`${fr} n'a pas évolué.`)};
+ const step=()=>{if(done)return;showB=!showB;A.className=Bb.className='sil';A.style.opacity=showB?0:1;Bb.style.opacity=showB?1:0;n++;gap=Math.max(70,gap*.86);
+  if(n<24)tm=setTimeout(step,gap);else{ov.classList.add('fl');tm=setTimeout(()=>{if(done)return;evolve(m,to);A.style.opacity=0;A.className='';Bb.className='';Bb.style.opacity=1;ov.classList.remove('fl');ov.classList.add('ok');fin(`Félicitations ! ${fr} a évolué en ${tn} !`)},450)}};
+ tm=setTimeout(()=>{if(done)return;step()},1300)}
 function evoOpts(m){return(EVO[m.id]||[]).map(([to,c])=>{const own=typeof c==='number'?m.lvl>=c:c==='Échange'?false:(itm()[STONE[c]]||0)>0;return{to,c,ok:own,why:typeof c==='number'?(own?'':`Niv. ${c} requis`):c==='Échange'?'Échange (bientôt)':own?'':`${c} requise`}})}
-function evolve(m,to){const o=evoOpts(m).find(x=>x.to===to);if(!o||!o.ok)return;if(typeof o.c==='string')itm()[STONE[o.c]]--;const from=BY[m.id][1];m.id=to;S.dex[to]='c';qEv('evo');P.flash=`Félicitations ! ${from} évolue en ${BY[to][1]} !`;save();render(true)}
-function candy(m,k){const it=itm();if((it[k]||0)<1)return;if(m.lvl>=capLv()){P.flash=`Niveau max atteint (${capLv()}) : monte de niveau ou gagne un badge.`;render(true);return}it[k]--;m.lvl=Math.min(capLv(),m.lvl+CANDY[k].lv);P.flash=`${BY[m.id][1]} monte au niveau ${m.lvl} !`;save();render(true)}
+function evolve(m,to){const o=evoOpts(m).find(x=>x.to===to);if(!o||!o.ok)return;if(typeof o.c==='string')itm()[STONE[o.c]]--;const from=BY[m.id][1];m.id=to;m.evr=0;S.dex[to]='c';qEv('evo');P.flash=`Félicitations ! ${from} évolue en ${BY[to][1]} !`;save();render(true)}
+function candy(m,k){const it=itm();if((it[k]||0)<1)return;if(m.lvl>=capLv()){P.flash=`Niveau max atteint (${capLv()}) : gagne un badge pour monter plus haut.`;render(true);return}it[k]--;const r=gainPx(m,CANDY[k].xp);P.flash=`${BY[m.id][1]} gagne ${fmtN(CANDY[k].xp)} XP${r.lv?` et passe au niveau ${m.lvl} !`:'.'}${r.mv.length?' Apprend '+r.mv.join(', ')+' !':''}`;save();render(true)}
 function useCap(m,k){const it=itm();if((it[k]||0)<1)return;ensure(m);
  if(k==='capargent'){const i=m.iv.indexOf(Math.min(...m.iv));if(m.iv[i]>=31){P.flash='Tous les IV sont déjà au maximum.';render(true);return}m.iv[i]=31;P.flash=`IV ${SN[i]} porté à 31 !`}
  else if(k==='capor'){if(m.iv.every(v=>v===31)){P.flash='Tous les IV sont déjà au maximum.';render(true);return}m.iv=m.iv.map(()=>31);P.flash='Tous les IV sont au maximum !'}
@@ -3562,7 +3604,7 @@ function holdItem(m,k){const it=itm();if(m.held)it[m.held]=(it[m.held]||0)+1;if(
 function itemsTab(m){
  const it=itm(),sec=(t,b)=>`<div class="svit"><h5 class="px">${t}</h5>${b}</div>`;
  const evo=evoOpts(m),evh=evo.length?evo.map(o=>`<a class="btn sm ${o.ok?'y':'off'}" ${o.ok?`data-act="evolve" data-to="${o.to}" data-uid="${m.uid}"`:''}><i class="ti ti-sparkles"></i>${o.ok?`Évoluer en ${BY[o.to][1]}`:`${BY[o.to][1]} · ${o.why}`}</a>`).join(''):`<div class="svnote" style="margin:0">${EVP[m.id]?'Forme finale : ne peut plus évoluer.':'Ce Pokémon n\'évolue pas.'}</div>`;
- const cd=Object.entries(CANDY).map(([k,c])=>`<a class="btn sm ${(it[k]||0)>0&&m.lvl<capLv()?'y':'off'}" ${(it[k]||0)>0&&m.lvl<capLv()?`data-act="candy" data-k="${k}" data-uid="${m.uid}"`:''}><i class="ti ti-candy"></i>${c.n} +${c.lv} <small>×${it[k]||0}</small></a>`).join('');
+ const cd=Object.entries(CANDY).map(([k,c])=>`<a class="btn sm ${(it[k]||0)>0&&m.lvl<capLv()?'y':'off'}" ${(it[k]||0)>0&&m.lvl<capLv()?`data-act="candy" data-k="${k}" data-uid="${m.uid}"`:''}><i class="ti ti-candy"></i>${c.n} +${c.xp} XP <small>×${it[k]||0}</small></a>`).join('');
  const cp=Object.entries(CAPS).map(([k,c])=>`<a class="btn sm ${(it[k]||0)>0?'y':'off'}" title="${c.d}" ${(it[k]||0)>0?`data-act="cap" data-k="${k}" data-uid="${m.uid}"`:''}><i class="ti ti-${c.ic}"></i>${c.n} <small>×${it[k]||0}</small></a>`).join('');
  const hl=Object.entries(HELD).map(([k,h])=>`<div class="li pick ${m.held===k?'sel':''} ${(it[k]||0)>0||m.held===k?'':'dim'}" ${(it[k]||0)>0&&m.held!==k?`data-act="hold" data-k="${k}" data-uid="${m.uid}"`:''}><div class="ico"><i class="ti ti-${h.ic}"></i></div><div class="grow"><b>${h.n}</b><div style="color:var(--m);font-size:12px">${h.d}</div></div>${m.held===k?'<i class="ti ti-check" style="color:var(--g)"></i>':`<span class="chip">×${it[k]||0}</span>`}</div>`).join('');
  const vt=VIT.map(([k,n,ic],i)=>`<a class="btn sm ${(it[k]||0)>0?'y':'off'}" title="+10 EV ${SN[i]}" ${(it[k]||0)>0?`data-act="vit" data-k="${k}" data-uid="${m.uid}"`:''}><i class="ti ti-${ic}"></i>${n} <small>×${it[k]||0}</small></a>`).join('');
@@ -3944,7 +3986,7 @@ function sac(){
  const baits=[['none','Aucun appât','Pêche normale',null],...Object.entries(BAIT).map(([k,b])=>[k,b.n,b.d,it[k]||0])].filter(x=>x[3]===null?Object.keys(BAIT).some(q=>(it[q]||0)>0):x[3]>0).map(([k,n,d,c])=>{const own=c===null||c>0,on=bait===k||(k==='none'&&(bait==='none'||!(it[bait]>0)));return{k:'b'+k,n,ic:`<i class="ti ti-${k==='none'?'ban':BAIT[k].ic}"></i>`,q:c===null?(on?'Équipé':''):'×'+c,dim:!own,d,btn:own&&!on?eqb('bait',k):''}});
  const ub=(k,l)=>(it[k]||0)>0?`<a class="btn sm y" data-act="useitem" data-k="${k}">${l||'Utiliser'}</a>`:'';
  const mk=(k,n,ic,d,x)=>({k,n,ic:`<i class="ti ti-${ic}"></i>`,q:'×'+(it[k]||0),d:d||itemD(k),btn:x||'',own:(it[k]||0)>0});
- const bon=[...(((it.bonbonxp||0)>0)?[mk('bonbonxp','Super Bonbon XP',xn('Rare Candy'),"Donne de l'XP au dresseur.",`<a class="btn sm y" data-act="xpcandy">Utiliser</a>`)]:[]),...Object.entries(CANDY).map(([k,c])=>mk(k,c.n,xn(ITEMICO[k]),'+'+c.lv+' niveau'+(c.lv>1?'x':'')+' au Pokémon.',ub(k))),...VIT.map(v=>mk(v[0],v[1],v[2],'',ub(v[0])))];
+ const bon=[...(((it.bonbonxp||0)>0)?[mk('bonbonxp','Super Bonbon XP',xn('Rare Candy'),"Donne de l'XP au dresseur.",`<a class="btn sm y" data-act="xpcandy">Utiliser</a>`)]:[]),...Object.entries(CANDY).map(([k,c])=>mk(k,c.n,xn(ITEMICO[k]),'+'+c.xp+' XP au Pokémon.',ub(k))),...VIT.map(v=>mk(v[0],v[1],v[2],'',ub(v[0])))];
  const tenu=Object.entries(HELD).map(([k,h])=>mk(k,h.n,h.ic,h.d,ub(k,'Donner')));
  const evo=[...Object.entries(STONE).map(([n,k])=>mk(k,n,xn(ITEMICO[k]),'Fait évoluer certains Pokémon.',ub(k))),...Object.entries(CAPS).map(([k,c])=>mk(k,c.n,c.ic,c.d,ub(k)))];
  const div=[...(((it.botte||0)>0)?[mk('botte','Vieille Botte','boot-item','Un vieil objet trouvé en pêchant.')]:[]),mk('baie','Baie',xn(ITEMICO.baie)),mk('dodo','Dodo',xn(ITEMICO.dodo)),mk('appat','Appât',xn(ITEMICO.appat))];
@@ -3980,10 +4022,10 @@ const SHOP=[
  {k:'vit5',g:'Vitamines',t:'Carbone',d:'+10 EV Vitesse',p:500,ty:'item',i:'vit5',n:1,ic:'bolt'},
  {k:'bcap1',g:'Capture boss',t:'Appât Boss',d:'+50 % de capture sur un lancer de boss',p:500,ty:'item',i:'bcap1',n:1,ic:'bug'},
  {k:'bcap2',g:'Capture boss',t:'Super Appât Boss',d:'+100 % de capture sur un lancer de boss',p:1200,ty:'item',i:'bcap2',n:1,ic:'sparkles'},
- {k:'bonbon3',g:'Bonbons',t:'Bonbon Rare ×3',d:'+1 niveau chacun',p:300,ty:'item',i:'bonbon',n:3,ic:'candy'},
- {k:'bonbonm3',g:'Bonbons',t:'Bonbon EXP M ×3',d:'+3 niveaux chacun',p:450,ty:'item',i:'bonbonm',n:3,ic:'candy'},
+ {k:'bonbon3',g:'Bonbons',t:'Bonbon Rare ×3',d:'+250 XP chacun',p:300,ty:'item',i:'bonbon',n:3,ic:'candy'},
+ {k:'bonbonm3',g:'Bonbons',t:'Bonbon EXP M ×3',d:'+1 000 XP chacun',p:450,ty:'item',i:'bonbonm',n:3,ic:'candy'},
  {k:'bxp1',g:'Bonbons',t:'Super Bonbon XP',d:'+500 XP joueur · 3 par jour',p:1500,ty:'item',i:'bonbonxp',n:1,ic:'candy'},
- {k:'bonbonxl1',g:'Bonbons',t:'Bonbon EXP XL',d:'+8 niveaux',p:600,ty:'item',i:'bonbonxl',n:1,ic:'candy'},
+ {k:'bonbonxl1',g:'Bonbons',t:'Bonbon EXP XL',d:'+3 500 XP',p:600,ty:'item',i:'bonbonxl',n:1,ic:'candy'},
  {k:'capargent',g:'Capsules',t:'Capsule Argent',d:'IV le plus faible au maximum',p:800,ty:'item',i:'capargent',n:1,ic:'circle-dot'},
  {k:'capor',g:'Capsules',t:'Capsule Or',d:'Tous les IV au maximum',p:2500,ty:'item',i:'capor',n:1,ic:'star'},
  {k:'captal',g:'Capsules',t:'Capsule Talent',d:'Change la nature',p:500,ty:'item',i:'captal',n:1,ic:'refresh'},
@@ -4026,13 +4068,14 @@ function itReason(k,m){const kd=itKind(k),it=itm();
 function msgPop(txt){const ov=document.createElement('div');ov.className='pick-ov qp-ov';ov.innerHTML=`<div class="qp"><div class="qpt" style="font-weight:700">${txt}</div><a class="qpo" data-q="no"><i>▶</i>OK</a></div>`;ov.addEventListener('click',e=>{if(e.target.closest('[data-q]')||e.target===ov)ov.remove()});document.body.appendChild(ov)}
 function useOn(k,uid,n){
  const m=S.box.find(x=>x.uid===uid);if(!m)return;const it=itm(),kd=itKind(k),lv0=m.lvl;let used=0,msg='';P.flash='';
+ if(kd==='stone'){const st=Object.entries(STONE).find(([nm,v])=>v===k)[0],o=evoOpts(m).find(x=>x.c===st&&x.ok);if(o){evoStart(m,o.to,{manual:1});render(true)}else msgPop('Rien ne se passe.');return}
  for(let i=0;i<n;i++){const b=it[k]||0;if(b<=0)break;
   if(kd==='candy')candy(m,k);else if(kd==='vit')useVit(m,k);else if(kd==='cap')useCap(m,k);else if(kd==='held')holdItem(m,k);
   else{const st=Object.entries(STONE).find(([nm,v])=>v===k)[0],o=evoOpts(m).find(x=>x.c===st&&x.ok);if(o)evolve(m,o.to)}
   msg=P.flash||msg;if((it[k]||0)<b)used++;else break;if(kd==='held'||kd==='stone'||k==='capoeuf')break}
  P.flash='';
  if(k==='capoeuf'&&used){P.sel=uid;P.tab='box';go('pokemon');return}
- if(kd==='candy'&&used)msg=`${BY[m.id][1]} monte au niveau ${m.lvl} !${used>1?' (+'+(m.lvl-lv0)+' niveaux)':''}`;
+ if(kd==='candy'&&used)msg=`${BY[m.id][1]} gagne ${fmtN(CANDY[k].xp*used)} XP${m.lvl>lv0?` et passe au niveau ${m.lvl} !`:'.'}${used>1&&m.lvl>lv0?' (+'+(m.lvl-lv0)+' niveaux)':''}`;
  render(true);msgPop(msg||'Rien ne se passe.');
 }
 function pickMon(k){
